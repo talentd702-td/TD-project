@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signOut } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 import { generateSoulmateAnalysis, generateSoulmateImagePrompt, generateSoulmateImage } from '../lib/gemini';
 
 export default function SoulmateResults({ user, userData, onBack }) {
@@ -13,6 +14,40 @@ export default function SoulmateResults({ user, userData, onBack }) {
   const [imageError, setImageError] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
 
+  // Load existing soulmate data when component mounts
+  useEffect(() => {
+    const loadExistingSoulmateData = async () => {
+      if (user) {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            
+            // Load existing analysis
+            if (userData.soulmateReading?.analysis) {
+              setAnalysis(userData.soulmateReading.analysis);
+            }
+            
+            // Load existing portrait
+            if (userData.soulmatePortrait?.imageUrl) {
+              setSoulmateImage({
+                url: userData.soulmatePortrait.imageUrl,
+                prompt: userData.soulmatePortrait.prompt,
+                seed: userData.soulmatePortrait.seed
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error loading existing soulmate data:', error);
+        }
+      }
+    };
+
+    loadExistingSoulmateData();
+  }, [user]);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -21,7 +56,47 @@ export default function SoulmateResults({ user, userData, onBack }) {
     }
   };
 
+  const saveSoulmateReading = async (readingText) => {
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, {
+        soulmateReading: {
+          analysis: readingText,
+          generatedAt: new Date().toISOString(),
+        },
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error saving soulmate reading:', error);
+      throw new Error('Failed to save reading');
+    }
+  };
+
+  const saveSoulmatePortrait = async (portraitData) => {
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, {
+        soulmatePortrait: {
+          imageUrl: portraitData.imageUrl,
+          prompt: portraitData.prompt,
+          seed: portraitData.seed,
+          generatedAt: new Date().toISOString(),
+        },
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error saving soulmate portrait:', error);
+      throw new Error('Failed to save portrait');
+    }
+  };
+
   const handleGenerateAnalysis = async () => {
+    // If analysis already exists, don't regenerate
+    if (analysis) {
+      setActiveTab('analysis');
+      return;
+    }
+
     setAnalysisLoading(true);
     setAnalysisError('');
     setAnalysis('');
@@ -29,6 +104,10 @@ export default function SoulmateResults({ user, userData, onBack }) {
     try {
       const result = await generateSoulmateAnalysis(userData);
       setAnalysis(result);
+      
+      // Save to Firestore
+      await saveSoulmateReading(result);
+      
       setActiveTab('analysis');
     } catch (err) {
       setAnalysisError(err.message);
@@ -38,17 +117,34 @@ export default function SoulmateResults({ user, userData, onBack }) {
   };
 
   const handleGenerateImage = async () => {
+    // If image already exists, don't regenerate
+    if (soulmateImage) {
+      setActiveTab('portrait');
+      return;
+    }
+
     setImageLoading(true);
     setImageError('');
 
     try {
       const imagePrompt = await generateSoulmateImagePrompt(userData);
       const imageResult = await generateSoulmateImage(imagePrompt);
-      setSoulmateImage({
+      
+      const portraitData = {
         url: imageResult.imageUrl,
         prompt: imagePrompt,
         seed: imageResult.seed
+      };
+      
+      setSoulmateImage(portraitData);
+      
+      // Save to Firestore
+      await saveSoulmatePortrait({
+        imageUrl: imageResult.imageUrl,
+        prompt: imagePrompt,
+        seed: imageResult.seed
       });
+      
       setActiveTab('portrait');
     } catch (err) {
       setImageError(err.message);
@@ -290,13 +386,13 @@ export default function SoulmateResults({ user, userData, onBack }) {
                       <div className="space-y-4">
                         <div className="text-green-600 font-bold flex items-center justify-center space-x-2 text-base sm:text-lg">
                           <span className="text-lg sm:text-xl">✓</span>
-                          <span>Reading Complete</span>
+                          <span>Your Cosmic Reading</span>
                         </div>
                         <button
                           onClick={() => setActiveTab('analysis')}
                           className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
                         >
-                          View Reading
+                          View Your Reading
                         </button>
                       </div>
                     )}
@@ -345,7 +441,7 @@ export default function SoulmateResults({ user, userData, onBack }) {
                       <div className="space-y-4">
                         <div className="text-green-600 font-bold flex items-center justify-center space-x-2 text-base sm:text-lg">
                           <span className="text-lg sm:text-xl">✓</span>
-                          <span>Portrait Complete</span>
+                          <span>Your Soulmate's Portrait</span>
                         </div>
                         <button
                           onClick={() => setActiveTab('portrait')}
