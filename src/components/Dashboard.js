@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { signOut } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
@@ -15,6 +15,71 @@ export default function Dashboard({ user }) {
   });
   const [loading, setLoading] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
+  
+  // Location autocomplete states
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const locationInputRef = useRef(null);
+  const suggestionsRef = useRef(null);
+
+  // Popular cities database for autocomplete
+  const popularCities = [
+    // Major Indian Metropolitan Cities
+    "Mumbai, India", "Delhi, India", "Bangalore, India", "Hyderabad, India", 
+    "Chennai, India", "Kolkata, India", "Pune, India", "Ahmedabad, India",
+    
+    // State Capitals & Major Cities
+    "Jaipur, India", "Lucknow, India", "Kanpur, India", "Nagpur, India",
+    "Indore, India", "Thane, India", "Bhopal, India", "Visakhapatnam, India",
+    "Vadodara, India", "Ludhiana, India", "Rajkot, India", "Agra, India", 
+    "Nashik, India", "Faridabad, India", "Meerut, India", "Varanasi, India", 
+    "Srinagar, India", "Dhanbad, India", "Jodhpur, India", "Amritsar, India", 
+    "Raipur, India", "Allahabad, India", "Coimbatore, India", "Jabalpur, India", 
+    "Gwalior, India", "Vijayawada, India", "Madurai, India", "Guwahati, India", 
+    "Chandigarh, India", "Ranchi, India", "Jalandhar, India", "Tiruchirappalli, India", 
+    "Bhubaneswar, India",
+    
+    // Additional Popular Indian Cities
+    "Ajmer, India", "Udaipur, India", "Kota, India", "Bikaner, India", "Alwar, India",
+    "Mathura, India", "Vrindavan, India", "Haridwar, India", "Rishikesh, India", "Dehradun, India",
+    "Mussoorie, India", "Shimla, India", "Manali, India", "Dharamshala, India", "Amritsar, India",
+    "Jammu, India", "Leh, India", "Goa, India", "Panaji, India", "Vasco da Gama, India",
+    "Mysore, India", "Mangalore, India", "Hubli, India", "Belgaum, India", "Gulbarga, India",
+    "Kochi, India", "Thiruvananthapuram, India", "Kozhikode, India", "Thrissur, India", "Kollam, India",
+    "Vellore, India", "Salem, India", "Tirunelveli, India", "Erode, India", "Tirupur, India",
+    "Guntur, India", "Nellore, India", "Warangal, India", "Karimnagar, India", "Nizamabad, India",
+    "Cuttack, India", "Rourkela, India", "Sambalpur, India", "Berhampur, India", "Puri, India",
+    "Siliguri, India", "Asansol, India", "Durgapur, India", "Howrah, India", "Malda, India",
+    "Patna, India", "Gaya, India", "Bhagalpur, India", "Muzaffarpur, India", "Darbhanga, India",
+    "Gorakhpur, India", "Bareilly, India", "Aligarh, India", "Moradabad, India", "Saharanpur, India",
+    "Firozabad, India", "Jhansi, India", "Muzaffarnagar, India", "Mathura, India", "Rampur, India",
+    "Shahjahanpur, India", "Farrukhabad, India", "Mau, India", "Hapur, India", "Etawah, India",
+    "Mirzapur, India", "Bulandshahr, India", "Sambhal, India", "Amroha, India", "Hardoi, India",
+    "Fatehpur, India", "Raebareli, India", "Orai, India", "Sitapur, India", "Bahraich, India",
+    "Modinagar, India", "Unnao, India", "Jaunpur, India", "Lakhimpur, India", "Hathras, India",
+    "Banda, India", "Pilibhit, India", "Barabanki, India", "Khurja, India", "Ghaziabad, India",
+    "Noida, India", "Greater Noida, India", "Gurgaon, India", "Faridabad, India", "Panipat, India",
+    "Ambala, India", "Yamunanagar, India", "Rohtak, India", "Hisar, India", "Karnal, India",
+    "Sonipat, India", "Panchkula, India", "Bahadurgarh, India", "Jind, India", "Thanesar, India",
+    "Kaithal, India", "Rewari, India", "Narnaul, India",
+    
+    // Major International Cities
+    "New York, USA", "Los Angeles, USA", "Chicago, USA", "Houston, USA",
+    "Phoenix, USA", "Philadelphia, USA", "San Antonio, USA", "San Diego, USA",
+    "Dallas, USA", "San Jose, USA", "Austin, USA", "Jacksonville, USA",
+    "London, UK", "Birmingham, UK", "Manchester, UK", "Glasgow, UK",
+    "Liverpool, UK", "Newcastle, UK", "Sheffield, UK", "Bristol, UK",
+    "Toronto, Canada", "Montreal, Canada", "Vancouver, Canada", "Calgary, Canada",
+    "Edmonton, Canada", "Ottawa, Canada", "Winnipeg, Canada", "Quebec City, Canada",
+    "Sydney, Australia", "Melbourne, Australia", "Brisbane, Australia", "Perth, Australia",
+    "Adelaide, Australia", "Gold Coast, Australia", "Newcastle, Australia", "Canberra, Australia",
+    "Dubai, UAE", "Abu Dhabi, UAE", "Sharjah, UAE", "Ajman, UAE",
+    "Singapore, Singapore", "Kuala Lumpur, Malaysia", "Bangkok, Thailand", "Manila, Philippines",
+    "Jakarta, Indonesia", "Ho Chi Minh City, Vietnam", "Hanoi, Vietnam", "Yangon, Myanmar",
+    "Dhaka, Bangladesh", "Karachi, Pakistan", "Lahore, Pakistan", "Islamabad, Pakistan",
+    "Colombo, Sri Lanka", "Kathmandu, Nepal", "Male, Maldives", "Thimphu, Bhutan"
+  ];
 
   useEffect(() => {
     // Check if user already has a profile
@@ -56,6 +121,61 @@ export default function Dashboard({ user }) {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  // Location autocomplete functions
+  const handleLocationInputChange = (e) => {
+    const value = e.target.value;
+    setFormData({...formData, birthPlace: value});
+    
+    if (value.length > 0) {
+      const filtered = popularCities.filter(city => 
+        city.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 10); // Increased to 10 suggestions for better coverage
+      
+      setLocationSuggestions(filtered);
+      setShowSuggestions(true);
+      setSelectedSuggestionIndex(-1);
+    } else {
+      setShowSuggestions(false);
+      setLocationSuggestions([]);
+    }
+  };
+
+  const handleLocationKeyDown = (e) => {
+    if (!showSuggestions || locationSuggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev < locationSuggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev > 0 ? prev - 1 : locationSuggestions.length - 1
+        );
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedSuggestionIndex >= 0) {
+          selectLocation(locationSuggestions[selectedSuggestionIndex]);
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+        break;
+    }
+  };
+
+  const selectLocation = (location) => {
+    setFormData({...formData, birthPlace: location});
+    setShowSuggestions(false);
+    setLocationSuggestions([]);
+    setSelectedSuggestionIndex(-1);
   };
 
   const handleNext = () => {
@@ -307,19 +427,62 @@ export default function Dashboard({ user }) {
                   />
                 </div>
 
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Birth Place
                   </label>
-                  <input
-                    type="text"
-                    name="birthPlace"
-                    value={formData.birthPlace}
-                    onChange={handleChange}
-                    className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
-                    placeholder="City, Country (e.g., Mumbai, India)"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      ref={locationInputRef}
+                      type="text"
+                      name="birthPlace"
+                      value={formData.birthPlace}
+                      onChange={handleLocationInputChange}
+                      onKeyDown={handleLocationKeyDown}
+                      onFocus={() => {
+                        if (formData.birthPlace && locationSuggestions.length > 0) {
+                          setShowSuggestions(true);
+                        }
+                      }}
+                      onBlur={() => {
+                        // Delay hiding suggestions to allow for click events
+                        setTimeout(() => setShowSuggestions(false), 150);
+                      }}
+                      className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                      placeholder="Start typing your city... (e.g., Mumbai, Kanpur, Ajmer)"
+                      required
+                      autoComplete="off"
+                    />
+                    
+                    {/* Location Suggestions Dropdown */}
+                    {showSuggestions && locationSuggestions.length > 0 && (
+                      <div 
+                        ref={suggestionsRef}
+                        className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg sm:rounded-xl shadow-lg max-h-48 overflow-y-auto"
+                      >
+                        {locationSuggestions.map((location, index) => (
+                          <div
+                            key={location}
+                            className={`px-3 sm:px-4 py-2 cursor-pointer text-sm sm:text-base transition-colors ${
+                              index === selectedSuggestionIndex
+                                ? 'bg-orange-50 text-orange-700'
+                                : 'text-gray-700 hover:bg-gray-50'
+                            }`}
+                            onClick={() => selectLocation(location)}
+                            onMouseEnter={() => setSelectedSuggestionIndex(index)}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <span className="text-gray-400">📍</span>
+                              <span>{location}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    💡 Start typing to see location suggestions
+                  </div>
                 </div>
 
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg sm:rounded-xl p-3 sm:p-4">
