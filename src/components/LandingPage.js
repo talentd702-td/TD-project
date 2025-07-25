@@ -73,7 +73,7 @@ export default function LandingPage() {
             <div className="flex items-center space-x-2">
               <div className="text-2xl">✨</div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
-                SoulMate AI
+                AstroJaano
               </h1>
             </div>
             <button
@@ -272,11 +272,11 @@ export default function LandingPage() {
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="text-2xl">✨</div>
-              <h3 className="text-xl font-bold">SoulMate AI</h3>
+              <h3 className="text-xl font-bold">AstroJaano</h3>
             </div>
             <p className="text-gray-400 mb-6">Connecting hearts through cosmic wisdom</p>
             <div className="text-sm text-gray-500">
-              © 2024 SoulMate AI. Made with 💫 for love seekers worldwide.
+              © 2025 AstroJaano. Made with 💫 for love seekers worldwide.
             </div>
           </div>
         </div>

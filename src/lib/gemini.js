@@ -11,47 +11,50 @@ export async function generateSoulmateAnalysis(userData) {
     const { name, gender, dateOfBirth, timeOfBirth, birthPlace } = userData;
     
     const prompt = `
-Based on the following birth details, provide a detailed life partner/soulmate analysis including physical appearance, personality traits, and compatibility insights:
+Create a concise, mystical soulmate reading for ${name}. Use the birth details below to provide specific insights. Format the response EXACTLY as shown with clear sections and bullet points for easy display:
 
-Personal Details:
+Birth Details:
 - Name: ${name}
 - Gender: ${gender}
 - Date of Birth: ${dateOfBirth}
 - Time of Birth: ${timeOfBirth}
 - Birth Place: ${birthPlace}
 
-Please provide a comprehensive analysis covering:
+Format your response EXACTLY like this:
 
-1. **Physical Appearance of Life Partner:**
-   - Height and build
-   - Facial features
-   - Hair color and style
-   - Eye color
-   - Overall appearance and style
+APPEARANCE
+Height: Medium to tall with an elegant presence
+Build: Well-proportioned and naturally graceful
+Face: Strong jawline with expressive, kind eyes
+Hair: Dark brown or black, well-maintained style
+Style: Classic and sophisticated, attention to detail
 
-2. **Personality Traits:**
-   - Core personality characteristics
-   - Strengths and positive qualities
-   - Communication style
-   - Emotional nature
+PERSONALITY
+Core Traits: Loyal, intelligent, ambitious, independent
+Strengths: Strong integrity, excellent communication, supportive nature
+Communication: Direct and honest, values transparency
+Emotional Nature: Stable and balanced, mature emotional handling
 
-3. **Compatibility Analysis:**
-   - What makes you compatible
-   - Shared interests and values
-   - How you complement each other
-   - Potential challenges and how to overcome them
+COMPATIBILITY
+Shared Values: Loyalty, honesty, commitment to growth
+Mutual Interests: Learning, culture, travel, building secure future
+Complement: Your creativity balanced by their practicality
+Connection Score: 94% - Extraordinary cosmic alignment
 
-4. **Relationship Timeline:**
-   - When you might meet
-   - How your relationship will develop
-   - Key milestones in your relationship
+TIMELINE
+Meeting Period: Within next 8-14 months, likely spring/summer
+Meeting Place: Educational or cultural setting (bookstore, gallery, workshop)
+Relationship Development: Starts as friendship, builds gradually on trust
+Key Milestone: Deep commitment within 2-3 years
 
-5. **Advice for Finding Your Soulmate:**
-   - Where you might meet them
-   - What to look for
-   - How to recognize them
+RECOGNITION SIGNS
+Instant Connection: Deep understanding and easy communication
+Shared Vision: Similar life goals and values alignment
+Peaceful Presence: Feel calm and inspired in their company
+Intellectual Bond: Stimulating conversations and mutual respect
+Intuitive Knowing: Your heart will recognize them immediately
 
-Please make this analysis detailed, positive, and insightful based on astrological and numerological principles. Format the response in a clear, easy-to-read structure with proper headings and bullet points.
+Keep each section concise and mystical. Use specific details based on the birth information provided.
     `;
 
     const response = await fetch(GEMINI_API_URL, {
@@ -74,7 +77,7 @@ Please make this analysis detailed, positive, and insightful based on astrologic
           temperature: 0.7,
           topK: 1,
           topP: 1,
-          maxOutputTokens: 2048,
+          maxOutputTokens: 1500,
         },
         safetySettings: [
           {
@@ -113,35 +116,58 @@ export async function generateSoulmateImagePrompt(userData) {
   try {
     const { name, gender, dateOfBirth, timeOfBirth, birthPlace } = userData;
     
-    const prompt = `
-Based on the following birth details, create a detailed visual description for generating a pencil sketch portrait of their ideal life partner/soulmate:
+    // Extract country/region from birth place
+    const getRegionalFeatures = (birthPlace) => {
+      const place = birthPlace.toLowerCase();
+      if (place.includes('india') || place.includes('indian')) {
+        return 'South Asian features, warm brown or dark eyes, naturally tanned complexion';
+      } else if (place.includes('china') || place.includes('chinese') || place.includes('taiwan') || place.includes('hong kong')) {
+        return 'East Asian features, dark eyes, fair to medium complexion';
+      } else if (place.includes('japan') || place.includes('japanese')) {
+        return 'Japanese features, dark eyes, fair complexion';
+      } else if (place.includes('korea') || place.includes('korean')) {
+        return 'Korean features, dark eyes, fair complexion';
+      } else if (place.includes('africa') || place.includes('nigeria') || place.includes('kenya') || place.includes('ghana')) {
+        return 'African features, dark brown eyes, rich dark complexion';
+      } else if (place.includes('middle east') || place.includes('iran') || place.includes('iraq') || place.includes('turkey')) {
+        return 'Middle Eastern features, dark eyes, olive to medium complexion';
+      } else if (place.includes('mexico') || place.includes('spain') || place.includes('latin') || place.includes('hispanic')) {
+        return 'Latino/Hispanic features, brown eyes, olive to medium complexion';
+      } else if (place.includes('russia') || place.includes('eastern europe') || place.includes('poland') || place.includes('ukraine')) {
+        return 'Eastern European features, light to medium eyes, fair complexion';
+      } else if (place.includes('scandinavia') || place.includes('norway') || place.includes('sweden') || place.includes('denmark')) {
+        return 'Scandinavian features, light eyes, fair complexion';
+      } else {
+        return 'Mixed heritage features, expressive eyes, medium complexion';
+      }
+    };
 
-Personal Details:
+    const prompt = `
+Based on these birth details, create a realistic portrait description for ${name}'s astrologically compatible soulmate:
+
+Birth Details:
 - Name: ${name}
-- Gender: ${gender}
 - Date of Birth: ${dateOfBirth}
 - Time of Birth: ${timeOfBirth}
 - Birth Place: ${birthPlace}
 
-Generate a detailed physical description for a pencil sketch portrait that includes:
+Create a description for a natural, realistic pencil sketch portrait considering:
 
-1. **Facial Structure**: Face shape, jawline, cheekbones
-2. **Eyes**: Shape, size, expression, eyebrows
-3. **Hair**: Style, length, texture, how it frames the face
-4. **Nose and Mouth**: Shape and characteristics
-5. **Overall Expression**: The emotion/feeling they convey
-6. **Age Range**: Approximate age appearance
-7. **Style Elements**: Any distinctive features or accessories
+Regional Features: ${getRegionalFeatures(birthPlace)}
+Astrological Compatibility: Someone whose appearance reflects complementary cosmic energies
+Realistic Appearance: Natural, everyday beauty - not model-like or overly perfect
+Age Range: Compatible life stage (late 20s to mid 30s)
 
-Create a single, cohesive description that would work well for a pencil sketch portrait. Focus on:
-- Attractive, harmonious features
-- Warm, kind expression
-- Features that would complement the user based on astrological compatibility
-- Details that work well in pencil sketch format
+Focus on:
+- Authentic, natural facial features typical of the region
+- Kind, intelligent expression showing depth of character
+- Realistic proportions and natural beauty
+- Features that suggest compatibility and harmony
+- Subtle astrological influences in their overall presence
 
-Format this as a single paragraph description suitable for an AI image generator, focusing on creating a beautiful pencil sketch portrait. The description should be specific enough to generate a consistent image but artistic and appealing.
+Format as: "Realistic pencil sketch portrait of a person with [regional features], natural [specific facial details], authentic everyday appearance, kind intelligent expression, [age], drawn in realistic graphite style with natural shading and proportions..."
 
-Example format: "Pencil sketch portrait of [detailed description], soft shading, artistic sketching style, detailed facial features, warm expression..."
+Keep the description grounded in reality - this should look like a real person you might meet, not an idealized fantasy.
     `;
 
     const response = await fetch(GEMINI_API_URL, {
@@ -161,10 +187,10 @@ Example format: "Pencil sketch portrait of [detailed description], soft shading,
           }
         ],
         generationConfig: {
-          temperature: 0.8,
+          temperature: 0.6,
           topK: 1,
           topP: 1,
-          maxOutputTokens: 1024,
+          maxOutputTokens: 400,
         },
         safetySettings: [
           {
@@ -205,8 +231,8 @@ export async function generateSoulmateImage(imagePrompt) {
       throw new Error('FLUX API key not configured. Please add NEXT_PUBLIC_FLUX_API_KEY to your environment variables.');
     }
 
-    // Enhance the prompt for pencil sketch style
-    const enhancedPrompt = `${imagePrompt}, detailed pencil sketch, graphite drawing, artistic shading, soft lines, portrait drawing style, realistic pencil artwork, fine art sketch, detailed facial features, expressive eyes, beautiful pencil portrait`;
+    // Enhance the prompt for realistic pencil sketch style
+    const enhancedPrompt = `${imagePrompt}, natural realistic pencil sketch, authentic graphite drawing, realistic proportions, everyday natural beauty, genuine expression, detailed shading, portrait drawing style, not glamorous or model-like, authentic human features, realistic art style, natural lighting, honest portrayal`;
 
     const response = await fetch(FLUX_API_URL, {
       method: 'POST',
@@ -216,7 +242,7 @@ export async function generateSoulmateImage(imagePrompt) {
       },
       body: JSON.stringify({
         prompt: enhancedPrompt,
-        guidance_scale: 3.5,
+        guidance_scale: 2.5, // Lower for more natural, less stylized results
         num_images: 1,
         output_format: "jpeg",
         safety_tolerance: "2",

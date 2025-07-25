@@ -107,7 +107,7 @@ export default function Dashboard({ user }) {
             <div className="flex items-center space-x-2">
               <div className="text-2xl">✨</div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
-                SoulMate AI
+                AstroJaano
               </h1>
             </div>
             <div className="flex items-center space-x-4">
