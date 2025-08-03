@@ -17,270 +17,127 @@ export default function LandingPage() {
     }
   };
 
-  const testimonials = [
+  const services = [
     {
-      name: "Sarah M.",
-      location: "California, USA",
-      text: "I met my husband 3 months after getting my soulmate reading! The description was so accurate it gave me chills.",
-      rating: 5,
-      image: "👩‍🦰"
+      icon: "💕",
+      title: "Romantic compatibility",
+      description: "Discover your perfect match through cosmic alignment",
+      gradient: "from-pink-500 to-purple-500"
     },
     {
-      name: "Raj K.",
-      location: "Mumbai, India",
-      text: "The AI-generated portrait looked exactly like my girlfriend I met 6 months later. This app is magical!",
-      rating: 5,
-      image: "👨‍💼"
+      icon: "☁️",
+      title: "Dream interpreter",
+      description: "Unlock the hidden meanings in your dreams",
+      gradient: "from-orange-500 to-red-500"
     },
     {
-      name: "Emma L.",
-      location: "London, UK",
-      text: "Finally found love after understanding what to look for. The timing predictions were spot on!",
-      rating: 5,
-      image: "👩‍🎨"
-    }
-  ];
-
-  const features = [
-    {
-      icon: "🔮",
-      title: "Ancient Vedic Wisdom",
-      description: "Based on 5000+ years of astrological knowledge combined with modern AI"
+      icon: "📚",
+      title: "Career help",
+      description: "Find your true calling and professional path",
+      gradient: "from-green-500 to-teal-500"
     },
     {
-      icon: "🎨",
-      title: "Visual Soulmate Portrait",
-      description: "See exactly how your life partner will look with our AI-generated sketch"
-    },
-    {
-      icon: "📅",
-      title: "Perfect Timing",
-      description: "Know when and where you'll meet your destined partner"
-    },
-    {
-      icon: "💝",
-      title: "Personality Match",
-      description: "Understand their traits, compatibility, and how you complement each other"
+      icon: "⚡",
+      title: "Conflict advice",
+      description: "Navigate life's challenges with cosmic wisdom",
+      gradient: "from-yellow-500 to-orange-500"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-yellow-50">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-sm border-b border-orange-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="text-2xl">✨</div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
-                AstroJaano
+    <div className="min-h-screen bg-black text-white">
+      {/* Cosmic Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-2 h-2 bg-white rounded-full animate-pulse opacity-60"></div>
+        <div className="absolute top-32 right-20 w-1 h-1 bg-white rounded-full animate-pulse delay-300 opacity-40"></div>
+        <div className="absolute bottom-40 left-20 w-3 h-3 bg-white rounded-full animate-pulse delay-700 opacity-50"></div>
+        <div className="absolute bottom-60 right-10 w-1 h-1 bg-white rounded-full animate-pulse delay-1000 opacity-30"></div>
+        <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-white rounded-full animate-pulse delay-500 opacity-40"></div>
+        <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-white rounded-full animate-pulse delay-200 opacity-60"></div>
+      </div>
+
+      {/* Main Content Container */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Top Spacer */}
+        <div className="flex-1 flex flex-col justify-center py-12 px-4">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Logo */}
+            <div className="mb-8 sm:mb-12">
+              <h1 className="text-5xl sm:text-6xl md:text-8xl font-light tracking-wider mb-4 sm:mb-6">
+                Lunatica
               </h1>
+              <div className="flex justify-center space-x-2 mb-6 sm:mb-8">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center">
+                  <div className="w-4 h-4 sm:w-6 sm:h-6 bg-black rounded-full flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></div>
+                  </div>
+                </div>
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
             </div>
+
+            {/* Services Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-2xl mx-auto">
+              {services.map((service, index) => (
+                <div key={index} className="group cursor-pointer">
+                  <div className="bg-gray-900 rounded-2xl p-4 sm:p-6 hover:bg-gray-800 transition-all duration-300 border border-gray-800 hover:border-gray-700">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${service.gradient} rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <span className="text-lg sm:text-xl">{service.icon}</span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-semibold text-white mb-2">{service.title}</h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">{service.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Button */}
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 disabled:opacity-50 disabled:transform-none flex items-center space-x-2 sm:space-x-3 mx-auto mb-4 sm:mb-6"
             >
-              {isLoading ? 'Signing In...' : 'Get Started Free'}
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-black"></div>
+                  <span>Connecting...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  <span>Continue</span>
+                </>
+              )}
             </button>
-          </div>
-        </div>
-      </nav>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-100/20 to-yellow-100/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="mb-8 inline-flex items-center bg-gradient-to-r from-orange-100 to-yellow-100 rounded-full px-6 py-2">
-              <span className="text-orange-600 font-medium">✨ Over 50,000+ soulmates found</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Discover Your 
-              <span className="bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent"> Destined </span>
-              Life Partner
-            </h1>
-            
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Using ancient Vedic astrology and cutting-edge AI, we reveal exactly what your soulmate looks like, 
-              their personality, and when you'll meet them. Join thousands who found love through cosmic guidance.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <button
-                onClick={handleGoogleLogin}
-                disabled={isLoading}
-                className="group bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center space-x-2"
-              >
-                <svg className="w-6 h-6" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                <span>{isLoading ? 'Connecting...' : 'Start Your Journey'}</span>
-              </button>
-              <div className="text-sm text-gray-500 flex items-center space-x-2">
-                <span>🔒 100% Free & Secure</span>
-                <span>•</span>
-                <span>⚡ Results in 2 minutes</span>
-              </div>
-            </div>
-
-            {/* Social Proof */}
-            <div className="flex flex-wrap justify-center items-center gap-8 text-gray-500 text-sm">
-              <div className="flex items-center space-x-2">
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full flex items-center justify-center text-white text-xs">S</div>
-                  <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-white text-xs">R</div>
-                  <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full flex items-center justify-center text-white text-xs">E</div>
-                </div>
-                <span>Join 50,000+ happy souls</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                {'⭐'.repeat(5)}
-                <span>4.9/5 rating (2,847 reviews)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              How It Works
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Ancient wisdom meets modern technology in 3 simple steps
+            {/* Terms */}
+            <p className="text-gray-500 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
+              By clicking "Continue" you agree to our{' '}
+              <span className="text-gray-400 underline cursor-pointer">Terms of Service</span>
+              {' '}and{' '}
+              <span className="text-gray-400 underline cursor-pointer">Privacy Policy</span>
             </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center group">
-              <div className="bg-gradient-to-r from-orange-100 to-yellow-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
-                <span className="text-3xl">📝</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Share Your Birth Details</h3>
-              <p className="text-gray-600">Provide your name, birth date, time, and location for precise astrological calculations</p>
-            </div>
-
-            <div className="text-center group">
-              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
-                <span className="text-3xl">🔮</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">AI Analyzes Your Stars</h3>
-              <p className="text-gray-600">Our advanced AI combines Vedic astrology with cosmic patterns to reveal your soulmate</p>
-            </div>
-
-            <div className="text-center group">
-              <div className="bg-gradient-to-r from-orange-100 to-yellow-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
-                <span className="text-3xl">💕</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Meet Your Destiny</h3>
-              <p className="text-gray-600">Get detailed insights, visual portrait, and timing predictions for your perfect match</p>
-            </div>
-          </div>
         </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-20 bg-gradient-to-b from-orange-50/50 to-yellow-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              What You'll Discover
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Comprehensive insights about your destined life partner
+        {/* Bottom Section - No longer absolute */}
+        <div className="px-4 pb-8 sm:pb-12">
+          <div className="max-w-md mx-auto text-center">
+            <h3 className="text-lg sm:text-xl font-semibold mb-2 text-white">
+              Lunatica is designed to change your life.
+            </h3>
+            <p className="text-gray-400 text-sm sm:text-base">
+              Turn on notifications to enable the most full app experience.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200 border border-orange-100">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Love Stories That Started Here
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Real people who found their soulmates through cosmic guidance
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-b from-orange-50 to-yellow-50 rounded-2xl p-8 border border-orange-100">
-                <div className="flex items-center mb-4">
-                  {'⭐'.repeat(testimonial.rating)}
-                </div>
-                <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
-                <div className="flex items-center">
-                  <div className="text-3xl mr-3">{testimonial.image}</div>
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.location}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-yellow-500">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Your Soulmate is Waiting
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Don't let destiny wait. Discover your perfect match today and start your love story.
-          </p>
-          <button
-            onClick={handleGoogleLogin}
-            disabled={isLoading}
-            className="bg-white text-orange-600 hover:text-orange-700 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 inline-flex items-center space-x-2"
-          >
-            <span>{isLoading ? 'Getting Started...' : 'Find My Soulmate Now'}</span>
-            <span>→</span>
-          </button>
-          <div className="mt-4 text-white/80 text-sm">
-            Free • No credit card required • Instant results
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="text-2xl">✨</div>
-              <h3 className="text-xl font-bold">AstroJaano</h3>
-            </div>
-            <p className="text-gray-400 mb-6">Connecting hearts through cosmic wisdom</p>
-            <div className="text-sm text-gray-500">
-              © 2025 AstroJaano. Made with 💫 for love seekers worldwide.
-            </div>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }

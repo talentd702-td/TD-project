@@ -1,10 +1,145 @@
 // Gemini AI Service
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyCyB-UP1k3jtiIxoTWSToeXc8ejvLDq2vo';
+//const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyCksCq1mV5q-5SgCRv42M-1yke3ajLSVDs';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 // FLUX API Configuration
 const FLUX_API_KEY = process.env.NEXT_PUBLIC_FLUX_API_KEY; // You'll need to add this to your .env.local
 const FLUX_API_URL = 'https://fal.run/fal-ai/flux-pro/kontext/text-to-image';
+
+// Helper function to get zodiac sign
+function getZodiacSign(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString + 'T00:00:00');
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'Aries';
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'Taurus';
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'Gemini';
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'Cancer';
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'Leo';
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'Virgo';
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'Libra';
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'Scorpio';
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'Sagittarius';
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'Capricorn';
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'Aquarius';
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'Pisces';
+  return '';
+}
+
+export async function generateChatResponse({ category, userMessage, userData, conversationHistory }) {
+  try {
+    // Create category-specific system prompts
+    const categoryPrompts = {
+      'ask-anything': `You are Lunatica, a wise cosmic advisor. Provide brief, personalized insights based on astrology and spirituality. Keep responses under 100 words, warm and mystical.`,
+      
+      'daily-horoscope': `You are Lunatica, an astrologer providing concise daily horoscopes. Give specific, actionable guidance for today in under 100 words. Include planetary influences and practical advice.`,
+      
+      'romantic-compatibility': `You are Lunatica, a relationship expert using astrological wisdom. Provide brief insights about love and compatibility in under 100 words. Be mystical yet practical.`,
+      
+      'friend-compatibility': `You are Lunatica, a social astrologer. Give concise friendship advice through cosmic wisdom in under 100 words. Focus on social connections and compatibility.`,
+      
+      'dream-interpreter': `You are Lunatica, a dream interpreter. Provide brief, meaningful dream interpretations combining psychology and spirituality in under 100 words.`,
+      
+      'astrological-events': `You are Lunatica, an expert on celestial events. Explain current astrological events and their personal impact concisely in under 100 words.`,
+      
+      'tarot-interpreter': `You are Lunatica, a tarot reader. Provide concise, meaningful tarot interpretations and guidance in under 100 words.`
+    };
+
+    // Get the user's zodiac sign for more personalized responses
+    const zodiacSign = userData?.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : '';
+    
+    // Build the conversation context
+    let conversationContext = '';
+    if (conversationHistory && conversationHistory.length > 0) {
+      conversationContext = '\n\nPrevious conversation context:\n' + 
+        conversationHistory.slice(-6).map(msg => `${msg.role}: ${msg.content}`).join('\n');
+    }
+
+    // Create the main prompt
+    const prompt = `
+${categoryPrompts[category] || categoryPrompts['ask-anything']}
+
+User Profile:
+- Name: ${userData?.name || 'Seeker'}
+- Birth Date: ${userData?.dateOfBirth || 'Unknown'}
+- Birth Time: ${userData?.timeOfBirth || 'Unknown'}  
+- Birth Place: ${userData?.birthPlace || 'Unknown'}
+- Zodiac Sign: ${zodiacSign || 'Unknown'}
+
+${conversationContext}
+
+Current User Message: "${userMessage}"
+
+Instructions:
+- Provide a personalized response that references their birth information when relevant
+- Use their name naturally in the conversation
+- Include specific astrological insights based on their birth data
+- Keep the mystical, cosmic tone while being helpful and specific
+- Reference previous conversation if relevant
+- Keep response under 100 words - be concise and impactful
+- Use emojis sparingly but meaningfully
+- Be encouraging and positive while honest about challenges
+
+Respond as Lunatica:
+    `;
+
+    const response = await fetch(GEMINI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-goog-api-key': GEMINI_API_KEY,
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.8,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 150,
+        },
+        safetySettings: [
+          {
+            category: "HARM_CATEGORY_HARASSMENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_HATE_SPEECH",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    console.error('Error calling Gemini API for chat:', error);
+    throw new Error('Failed to generate AI response. Please try again.');
+  }
+}
 
 export async function generateSoulmateAnalysis(userData) {
   try {
