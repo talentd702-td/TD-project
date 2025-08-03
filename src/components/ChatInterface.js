@@ -6,10 +6,10 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   const categoryConfig = {
     'ask-anything': {
@@ -129,58 +129,60 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     return '';
   };
 
-  // Track initial viewport height
+  // Keyboard detection using Visual Viewport API (more reliable)
   useEffect(() => {
-    const updateViewportHeight = () => {
-      setViewportHeight(window.innerHeight);
-    };
-    
-    updateViewportHeight();
-    window.addEventListener('resize', updateViewportHeight);
-    
-    return () => window.removeEventListener('resize', updateViewportHeight);
-  }, []);
+    if (!window.visualViewport) return;
 
-  // Keyboard visibility detection
-  useEffect(() => {
-    const handleResize = () => {
-      const currentHeight = window.innerHeight;
-      const heightDifference = viewportHeight - currentHeight;
+    const handleViewportChange = () => {
+      const viewport = window.visualViewport;
+      const isKeyboardVisible = viewport.height < window.screen.height * 0.75;
+      setIsKeyboardOpen(isKeyboardVisible);
       
-      // If height decreased by more than 150px, assume keyboard is visible
-      if (heightDifference > 150) {
-        setIsKeyboardVisible(true);
-      } else {
-        setIsKeyboardVisible(false);
+      if (isKeyboardVisible) {
+        setTimeout(scrollToBottom, 100);
       }
     };
 
+    window.visualViewport.addEventListener('resize', handleViewportChange);
+    return () => {
+      window.visualViewport.removeEventListener('resize', handleViewportChange);
+    };
+  }, []);
+
+  // Fallback keyboard detection for older browsers
+  useEffect(() => {
+    if (window.visualViewport) return; // Skip if Visual Viewport API is available
+
+    let initialHeight = window.innerHeight;
+    
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const heightDiff = initialHeight - currentHeight;
+      setIsKeyboardOpen(heightDiff > 150);
+    };
+
     const handleFocus = () => {
-      setIsKeyboardVisible(true);
-      // Small delay to ensure keyboard is fully shown before scrolling
       setTimeout(() => {
-        scrollToBottom();
+        const currentHeight = window.innerHeight;
+        const heightDiff = initialHeight - currentHeight;
+        setIsKeyboardOpen(heightDiff > 150);
+        setTimeout(scrollToBottom, 200);
       }, 300);
     };
 
-    const handleBlur = () => {
-      setIsKeyboardVisible(false);
-    };
-
-    window.addEventListener('resize', handleResize);
     if (inputRef.current) {
       inputRef.current.addEventListener('focus', handleFocus);
-      inputRef.current.addEventListener('blur', handleBlur);
     }
-
+    
+    window.addEventListener('resize', handleResize);
+    
     return () => {
       window.removeEventListener('resize', handleResize);
       if (inputRef.current) {
         inputRef.current.removeEventListener('focus', handleFocus);
-        inputRef.current.removeEventListener('blur', handleBlur);
       }
     };
-  }, [viewportHeight]);
+  }, []);
 
   useEffect(() => {
     // Load any existing conversation for this category
@@ -190,7 +192,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     if (savedConversation) {
       const parsed = JSON.parse(savedConversation);
       setMessages(parsed);
-      // Only hide suggestions if there are user messages (actual conversation)
+      // Only show suggestions if there are no user messages
       const hasUserMessages = parsed.some(msg => msg.type === 'user');
       if (!hasUserMessages) {
         setSuggestions(config.suggestions);
@@ -223,42 +225,34 @@ export default function ChatInterface({ category, user, userData, onBack }) {
 
   // Auto-scroll when new messages are added
   useEffect(() => {
-    const timer = setTimeout(() => {
-      scrollToBottom();
-    }, 100); // Small delay to ensure DOM is updated
-
+    const timer = setTimeout(scrollToBottom, 100);
     return () => clearTimeout(timer);
   }, [messages.length]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ 
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest"
-    });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: "smooth",
+        block: "end"
+      });
+    }
   };
 
   const addMessage = (sender, content, type = 'user') => {
     const newMessage = { sender, content, type, timestamp: Date.now() };
     setMessages(prev => [...prev, newMessage]);
-    
-    // Force scroll after state update
-    setTimeout(() => {
-      scrollToBottom();
-    }, 50);
+    setTimeout(scrollToBottom, 50);
   };
 
   const generateAIResponse = async (userMessage) => {
     setIsTyping(true);
     
     try {
-      // Get conversation history (excluding the current user message)
       const conversationHistory = messages.filter(msg => msg.type !== 'welcome').map(msg => ({
         role: msg.type === 'user' ? 'user' : 'assistant',
         content: msg.content
       }));
 
-      // Call the actual Gemini API with full context
       const response = await generateChatResponse({
         category,
         userMessage,
@@ -283,26 +277,14 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     const userMessage = inputValue.trim();
     addMessage("You", userMessage, 'user');
     setInputValue('');
-    // Don't clear suggestions - keep them visible
 
-    // Scroll after user message
-    setTimeout(() => {
-      scrollToBottom();
-    }, 100);
-
+    setTimeout(scrollToBottom, 100);
     await generateAIResponse(userMessage);
-    
-    // Scroll after AI response
-    setTimeout(() => {
-      scrollToBottom();
-    }, 100);
+    setTimeout(scrollToBottom, 100);
   };
 
   const handleSuggestionClick = (suggestion) => {
     addMessage("You", suggestion, 'user');
-    // Don't clear suggestions - keep them available for more questions
-    
-    // Scroll after suggestion click
     setTimeout(() => {
       scrollToBottom();
       generateAIResponse(suggestion);
@@ -313,7 +295,6 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     const conversationKey = `lunatica_chat_${category}_${user.uid}`;
     sessionStorage.removeItem(conversationKey);
     
-    // Reset to welcome message
     const welcomeMessage = {
       sender: "Lunatica",
       content: config.welcomeMessage,
@@ -321,164 +302,151 @@ export default function ChatInterface({ category, user, userData, onBack }) {
       timestamp: Date.now()
     };
     setMessages([welcomeMessage]);
-    setSuggestions(config.suggestions); // Show suggestions again
+    setSuggestions(config.suggestions);
     sessionStorage.setItem(conversationKey, JSON.stringify([welcomeMessage]));
   };
 
   return (
-    <div className="h-screen bg-black text-white flex flex-col overflow-hidden">
-      {/* Header - Enhanced for mobile */}
-      <div className="border-b border-gray-800 p-3 sm:p-4 flex-shrink-0 safe-area-top">
+    <div 
+      className="fixed inset-0 bg-black text-white flex flex-col"
+      style={{ height: '100vh', height: '100dvh' }}
+    >
+      {/* Header - Fixed at top */}
+      <div className="bg-black border-b border-gray-800 px-4 py-3 flex-shrink-0 safe-area-top">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <button 
             onClick={onBack}
-            className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 touch-manipulation active:scale-95 rounded-lg hover:bg-gray-800"
+            className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 touch-manipulation active:scale-95 rounded-lg"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <div className="flex items-center space-x-2 min-w-0 flex-1 justify-center">
-            <span className="text-lg sm:text-xl">{config.icon}</span>
-            <h1 className="text-base sm:text-lg font-semibold truncate">{config.title}</h1>
+          <div className="flex items-center space-x-2">
+            <span className="text-xl">{config.icon}</span>
+            <h1 className="text-lg font-semibold truncate">{config.title}</h1>
           </div>
           <button
             onClick={clearConversation}
-            className="text-gray-400 hover:text-white transition-colors p-2 -mr-2 touch-manipulation active:scale-95 rounded-lg hover:bg-gray-800"
-            title="Clear conversation"
+            className="text-gray-400 hover:text-white transition-colors p-2 -mr-2 touch-manipulation active:scale-95 rounded-lg"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
         </div>
       </div>
 
-      {/* Messages - Enhanced mobile layout */}
+      {/* Messages Area - Flexible height */}
       <div 
-        className={`flex-1 p-3 sm:p-4 max-w-lg mx-auto w-full overflow-y-auto scroll-smooth ${isKeyboardVisible ? 'pb-2' : 'pb-4'}`} 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto"
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          height: isKeyboardVisible ? 'calc(100vh - 140px)' : 'auto'
+          overscrollBehavior: 'contain'
         }}
       >
-        {/* Personalization indicator - Mobile optimized */}
-        {userData?.name && (
-          <div className="mb-3 sm:mb-4 text-center">
-            <div className="inline-flex items-center space-x-2 bg-purple-900/30 border border-purple-700/50 rounded-full px-3 py-1.5 text-xs text-purple-300">
-              <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
-              <span className="truncate max-w-48">Personalized for {userData.name} • {userData.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : 'Unknown sign'}</span>
-            </div>
-          </div>
-        )}
-        
-        <div className="space-y-3 sm:space-y-4">
-          {messages.map((message, index) => (
-            <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
-              <div className={`max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl whitespace-pre-line ${
-                message.type === 'user' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-800 text-white'
-              }`}>
-                <div className="text-xs text-gray-400 mb-1">{message.sender}:</div>
-                <div className="text-sm leading-relaxed">{message.content}</div>
-              </div>
-            </div>
-          ))}
-          
-          {isTyping && (
-            <div className="flex justify-start animate-fadeIn">
-              <div className="bg-gray-800 text-white max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl">
-                <div className="text-xs text-gray-400 mb-1">Lunatica:</div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">Consulting the cosmos</span>
-                  <div className="flex space-x-1">
-                    <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce"></div>
-                    <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-100"></div>
-                    <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-200"></div>
-                  </div>
-                </div>
+        <div className="px-4 py-3 max-w-lg mx-auto">
+          {/* Personalization indicator */}
+          {userData?.name && (
+            <div className="mb-4 text-center">
+              <div className="inline-flex items-center space-x-2 bg-purple-900/30 border border-purple-700/50 rounded-full px-3 py-1.5 text-xs text-purple-300">
+                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
+                <span className="truncate max-w-48">
+                  Personalized for {userData.name} • {userData.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : 'Unknown sign'}
+                </span>
               </div>
             </div>
           )}
+          
+          {/* Messages */}
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] px-4 py-3 rounded-2xl ${
+                  message.type === 'user' 
+                    ? 'bg-blue-600 text-white ml-auto' 
+                    : 'bg-gray-800 text-white mr-auto'
+                }`}>
+                  <div className="text-xs text-gray-400 mb-1">{message.sender}:</div>
+                  <div className="text-sm leading-relaxed whitespace-pre-line">{message.content}</div>
+                </div>
+              </div>
+            ))}
+            
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-gray-800 text-white max-w-[85%] px-4 py-3 rounded-2xl">
+                  <div className="text-xs text-gray-400 mb-1">Lunatica:</div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm">Consulting the cosmos</span>
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce"></div>
+                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-100"></div>
+                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-200"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div ref={messagesEndRef} className="h-4" />
         </div>
-        <div ref={messagesEndRef} className="h-2 sm:h-4" />
       </div>
 
-      {/* Suggestions - Enhanced mobile scrolling - Hide when keyboard is visible */}
-      {suggestions && suggestions.length > 0 && !isKeyboardVisible && (
-        <div className="bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-2.5 sm:py-3 flex-shrink-0">
-          <div className="w-full">
-            <div className="relative px-3 sm:px-4">
-              <div 
-                className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-3 sm:-mx-4 px-3 sm:px-4"
-                style={{
-                  scrollBehavior: 'smooth',
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                {suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="flex-shrink-0 w-44 sm:w-48 text-left p-2.5 sm:p-3 bg-gray-800/70 hover:bg-purple-800/80 active:bg-purple-700/80 backdrop-blur-sm rounded-xl border border-gray-600/50 hover:border-purple-400/70 active:border-purple-300/70 transition-all duration-200 text-xs sm:text-sm text-gray-200 hover:text-white active:text-white shadow-lg touch-manipulation active:scale-95"
-                  >
-                    <div className="truncate font-medium leading-tight" title={suggestion}>
-                      {suggestion}
-                    </div>
-                  </button>
-                ))}
-                {/* Add extra spacing at the end */}
-                <div className="flex-shrink-0 w-3 sm:w-4"></div>
-              </div>
-              {/* Scroll indicator - Enhanced for mobile */}
-              {suggestions.length > 2 && (
-                <div className="absolute right-3 sm:right-4 top-0 bottom-2 w-6 sm:w-8 bg-gradient-to-l from-black/40 via-black/20 to-transparent pointer-events-none flex items-center justify-end pr-1 sm:pr-2">
-                  <div className="text-purple-400/80 text-xs sm:text-sm font-bold animate-pulse">→</div>
-                </div>
-              )}
+      {/* Suggestions - Only show when keyboard is closed */}
+      {suggestions && suggestions.length > 0 && !isKeyboardOpen && (
+        <div className="bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-3 flex-shrink-0">
+          <div className="overflow-x-auto">
+            <div className="flex gap-3 px-4 pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
+              {suggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="flex-shrink-0 bg-gray-800/70 hover:bg-purple-800/80 active:bg-purple-700/80 text-gray-200 hover:text-white active:text-white px-4 py-3 rounded-xl border border-gray-600/50 hover:border-purple-400/70 active:border-purple-300/70 transition-all duration-200 touch-manipulation active:scale-95 text-sm font-medium whitespace-nowrap"
+                >
+                  {suggestion}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       )}
 
-      {/* Input Area - Enhanced for mobile browsers */}
+      {/* Input Area - Fixed at bottom */}
       <div className="bg-black border-t border-gray-800 flex-shrink-0 safe-area-bottom">
-        <div className="p-3 sm:p-4 pb-safe">
-          <div className="max-w-lg mx-auto">
-            <div className="flex space-x-2 sm:space-x-3">
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSubmit(e);
-                  }
-                }}
-                placeholder="Ask me anything..."
-                className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 sm:py-3.5 border border-gray-700 focus:border-purple-600 focus:outline-none disabled:opacity-50 text-sm sm:text-base touch-manipulation"
-                disabled={isTyping}
-                autoComplete="off"
-                autoCapitalize="sentences"
-                autoCorrect="on"
-                spellCheck="true"
-              />
-              <button
-                onClick={handleSubmit}
-                disabled={!inputValue.trim() || isTyping}
-                className="bg-white text-black px-4 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 touch-manipulation active:scale-95 min-w-[52px] flex items-center justify-center"
-              >
-                {isTyping ? (
-                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-black"></div>
-                ) : (
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                )}
-              </button>
-            </div>
+        <div className="px-4 py-3 pb-safe">
+          <div className="max-w-lg mx-auto flex space-x-3">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(e);
+                }
+              }}
+              placeholder="Ask me anything..."
+              className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 border border-gray-700 focus:border-purple-600 focus:outline-none disabled:opacity-50 text-base touch-manipulation"
+              disabled={isTyping}
+              autoComplete="off"
+              autoCapitalize="sentences"
+              autoCorrect="on"
+            />
+            <button
+              onClick={handleSubmit}
+              disabled={!inputValue.trim() || isTyping}
+              className="bg-white text-black px-6 py-3 rounded-full font-semibold disabled:opacity-50 hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 touch-manipulation active:scale-95 flex items-center justify-center min-w-[60px]"
+            >
+              {isTyping ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </div>
