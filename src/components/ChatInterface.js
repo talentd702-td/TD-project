@@ -129,58 +129,63 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     return '';
   };
 
-  // Keyboard detection using Visual Viewport API (more reliable)
+  // Prevent page scroll when input is focused
   useEffect(() => {
-    if (!window.visualViewport) return;
+    const preventScroll = (e) => {
+      e.preventDefault();
+      return false;
+    };
 
-    const handleViewportChange = () => {
-      const viewport = window.visualViewport;
-      const isKeyboardVisible = viewport.height < window.screen.height * 0.75;
-      setIsKeyboardOpen(isKeyboardVisible);
+    const handleInputFocus = (e) => {
+      // Prevent browser from scrolling the page
+      e.target.scrollIntoView = () => {};
       
-      if (isKeyboardVisible) {
-        setTimeout(scrollToBottom, 100);
-      }
-    };
-
-    window.visualViewport.addEventListener('resize', handleViewportChange);
-    return () => {
-      window.visualViewport.removeEventListener('resize', handleViewportChange);
-    };
-  }, []);
-
-  // Fallback keyboard detection for older browsers
-  useEffect(() => {
-    if (window.visualViewport) return; // Skip if Visual Viewport API is available
-
-    let initialHeight = window.innerHeight;
-    
-    const handleResize = () => {
-      const currentHeight = window.innerHeight;
-      const heightDiff = initialHeight - currentHeight;
-      setIsKeyboardOpen(heightDiff > 150);
-    };
-
-    const handleFocus = () => {
+      // Disable body scroll temporarily
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      
+      // Add event listener to prevent any scroll
+      document.addEventListener('scroll', preventScroll, { passive: false });
+      document.addEventListener('touchmove', preventScroll, { passive: false });
+      
       setTimeout(() => {
         const currentHeight = window.innerHeight;
-        const heightDiff = initialHeight - currentHeight;
+        const heightDiff = window.screen.height - currentHeight;
         setIsKeyboardOpen(heightDiff > 150);
-        setTimeout(scrollToBottom, 200);
+        setTimeout(scrollToBottom, 100);
       }, 300);
     };
 
+    const handleInputBlur = () => {
+      // Re-enable body scroll
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      
+      // Remove scroll prevention
+      document.removeEventListener('scroll', preventScroll);
+      document.removeEventListener('touchmove', preventScroll);
+      
+      setIsKeyboardOpen(false);
+    };
+
     if (inputRef.current) {
-      inputRef.current.addEventListener('focus', handleFocus);
+      inputRef.current.addEventListener('focus', handleInputFocus);
+      inputRef.current.addEventListener('blur', handleInputBlur);
     }
-    
-    window.addEventListener('resize', handleResize);
-    
+
     return () => {
-      window.removeEventListener('resize', handleResize);
       if (inputRef.current) {
-        inputRef.current.removeEventListener('focus', handleFocus);
+        inputRef.current.removeEventListener('focus', handleInputFocus);
+        inputRef.current.removeEventListener('blur', handleInputBlur);
       }
+      // Clean up on unmount
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.removeEventListener('scroll', preventScroll);
+      document.removeEventListener('touchmove', preventScroll);
     };
   }, []);
 
@@ -309,10 +314,19 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   return (
     <div 
       className="fixed inset-0 bg-black text-white flex flex-col"
-      style={{ height: '100vh', height: '100dvh' }}
+      style={{ 
+        height: '100vh', 
+        height: '100dvh',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        overflow: 'hidden'
+      }}
     >
-      {/* Header - Fixed at top */}
-      <div className="bg-black border-b border-gray-800 px-4 py-3 flex-shrink-0 safe-area-top">
+      {/* Header - Always visible at top */}
+      <div className="bg-black border-b border-gray-800 px-4 py-3 flex-shrink-0 relative z-50">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <button 
             onClick={onBack}
@@ -337,13 +351,15 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         </div>
       </div>
 
-      {/* Messages Area - Flexible height */}
+      {/* Messages Area - Only this scrolls */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto"
+        className={`flex-1 overflow-y-auto ${isKeyboardOpen ? 'pb-2' : 'pb-4'}`}
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          overscrollBehavior: 'contain'
+          overscrollBehavior: 'contain',
+          scrollBehavior: 'smooth',
+          maxHeight: isKeyboardOpen ? 'calc(100vh - 140px)' : 'calc(100vh - 180px)'
         }}
       >
         <div className="px-4 py-3 max-w-lg mx-auto">
@@ -396,7 +412,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
 
       {/* Suggestions - Only show when keyboard is closed */}
       {suggestions && suggestions.length > 0 && !isKeyboardOpen && (
-        <div className="bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-3 flex-shrink-0">
+        <div className="bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-3 flex-shrink-0 relative z-40">
           <div className="overflow-x-auto">
             <div className="flex gap-3 px-4 pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
               {suggestions.map((suggestion, index) => (
@@ -413,9 +429,9 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         </div>
       )}
 
-      {/* Input Area - Fixed at bottom */}
-      <div className="bg-black border-t border-gray-800 flex-shrink-0 safe-area-bottom">
-        <div className="px-4 py-3 pb-safe">
+      {/* Input Area - Always visible at bottom */}
+      <div className="bg-black border-t border-gray-800 flex-shrink-0 relative z-50">
+        <div className="px-4 py-3">
           <div className="max-w-lg mx-auto flex space-x-3">
             <input
               ref={inputRef}
@@ -433,6 +449,10 @@ export default function ChatInterface({ category, user, userData, onBack }) {
               autoComplete="off"
               autoCapitalize="sentences"
               autoCorrect="on"
+              style={{ 
+                fontSize: '16px', // Prevents zoom on iOS
+                transform: 'translateZ(0)' // Forces hardware acceleration
+              }}
             />
             <button
               onClick={handleSubmit}
