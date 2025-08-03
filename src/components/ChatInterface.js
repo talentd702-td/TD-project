@@ -221,7 +221,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!inputValue.trim()) return;
 
     const userMessage = inputValue.trim();
@@ -271,49 +271,49 @@ export default function ChatInterface({ category, user, userData, onBack }) {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      {/* Header */}
-      <div className="border-b border-gray-800 p-4 flex-shrink-0">
-        <div className="flex items-center justify-between max-w-md mx-auto">
+      {/* Header - Enhanced for mobile */}
+      <div className="border-b border-gray-800 p-3 sm:p-4 flex-shrink-0 safe-area-top">
+        <div className="flex items-center justify-between max-w-lg mx-auto">
           <button 
             onClick={onBack}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 touch-manipulation active:scale-95 rounded-lg hover:bg-gray-800"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <div className="flex items-center space-x-2">
-            <span className="text-xl">{config.icon}</span>
-            <h1 className="text-lg font-semibold">{config.title}</h1>
+          <div className="flex items-center space-x-2 min-w-0 flex-1 justify-center">
+            <span className="text-lg sm:text-xl">{config.icon}</span>
+            <h1 className="text-base sm:text-lg font-semibold truncate">{config.title}</h1>
           </div>
           <button
             onClick={clearConversation}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors p-2 -mr-2 touch-manipulation active:scale-95 rounded-lg hover:bg-gray-800"
             title="Clear conversation"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className={`flex-1 p-4 max-w-md mx-auto w-full overflow-y-auto scroll-smooth ${suggestions.length > 0 ? 'pb-32' : 'pb-24'}`}>
-        {/* Personalization indicator */}
+      {/* Messages - Enhanced mobile layout */}
+      <div className={`flex-1 p-3 sm:p-4 max-w-lg mx-auto w-full overflow-y-auto scroll-smooth ${suggestions.length > 0 ? 'pb-40 sm:pb-36' : 'pb-24 sm:pb-28'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
+        {/* Personalization indicator - Mobile optimized */}
         {userData?.name && (
-          <div className="mb-4 text-center">
-            <div className="inline-flex items-center space-x-2 bg-purple-900/30 border border-purple-700/50 rounded-full px-3 py-1 text-xs text-purple-300">
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-              <span>Personalized for {userData.name} • {userData.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : 'Unknown sign'}</span>
+          <div className="mb-3 sm:mb-4 text-center">
+            <div className="inline-flex items-center space-x-2 bg-purple-900/30 border border-purple-700/50 rounded-full px-3 py-1.5 text-xs text-purple-300">
+              <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
+              <span className="truncate max-w-48">Personalized for {userData.name} • {userData.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : 'Unknown sign'}</span>
             </div>
           </div>
         )}
         
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
-              <div className={`max-w-[280px] px-4 py-3 rounded-2xl whitespace-pre-line ${
+              <div className={`max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl whitespace-pre-line ${
                 message.type === 'user' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-800 text-white'
@@ -326,7 +326,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
           
           {isTyping && (
             <div className="flex justify-start animate-fadeIn">
-              <div className="bg-gray-800 text-white max-w-[280px] px-4 py-3 rounded-2xl">
+              <div className="bg-gray-800 text-white max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl">
                 <div className="text-xs text-gray-400 mb-1">Lunatica:</div>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm">Consulting the cosmos</span>
@@ -340,16 +340,16 @@ export default function ChatInterface({ category, user, userData, onBack }) {
             </div>
           )}
         </div>
-        <div ref={messagesEndRef} className="h-4" />
+        <div ref={messagesEndRef} className="h-2 sm:h-4" />
       </div>
 
-      {/* Suggestions */}
+      {/* Suggestions - Enhanced mobile scrolling */}
       {suggestions && suggestions.length > 0 && (
-        <div className="fixed bottom-20 left-0 right-0 bg-black/30 backdrop-blur-sm border-t border-gray-700/30 py-3 z-10">
+        <div className="fixed bottom-16 sm:bottom-20 left-0 right-0 bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-2.5 sm:py-3 z-10">
           <div className="w-full">
-            <div className="relative px-4">
+            <div className="relative px-3 sm:px-4">
               <div 
-                className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4"
+                className="flex gap-2.5 sm:gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-3 sm:-mx-4 px-3 sm:px-4"
                 style={{
                   scrollBehavior: 'smooth',
                   WebkitOverflowScrolling: 'touch'
@@ -359,20 +359,20 @@ export default function ChatInterface({ category, user, userData, onBack }) {
                   <button
                     key={index}
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="flex-shrink-0 w-48 text-left p-3 bg-gray-800/70 hover:bg-purple-800/80 backdrop-blur-sm rounded-xl border border-gray-600/50 hover:border-purple-400/70 transition-all duration-200 text-sm text-gray-200 hover:text-white shadow-lg"
+                    className="flex-shrink-0 w-44 sm:w-48 text-left p-2.5 sm:p-3 bg-gray-800/70 hover:bg-purple-800/80 active:bg-purple-700/80 backdrop-blur-sm rounded-xl border border-gray-600/50 hover:border-purple-400/70 active:border-purple-300/70 transition-all duration-200 text-xs sm:text-sm text-gray-200 hover:text-white active:text-white shadow-lg touch-manipulation active:scale-95"
                   >
-                    <div className="truncate font-medium" title={suggestion}>
+                    <div className="truncate font-medium leading-tight" title={suggestion}>
                       {suggestion}
                     </div>
                   </button>
                 ))}
                 {/* Add extra spacing at the end */}
-                <div className="flex-shrink-0 w-4"></div>
+                <div className="flex-shrink-0 w-3 sm:w-4"></div>
               </div>
-              {/* Scroll indicator */}
+              {/* Scroll indicator - Enhanced for mobile */}
               {suggestions.length > 2 && (
-                <div className="absolute right-4 top-0 bottom-2 w-8 bg-gradient-to-l from-black/30 via-black/20 to-transparent pointer-events-none flex items-center justify-end pr-2">
-                  <div className="text-purple-400/80 text-sm font-bold animate-pulse">→</div>
+                <div className="absolute right-3 sm:right-4 top-0 bottom-2 w-6 sm:w-8 bg-gradient-to-l from-black/40 via-black/20 to-transparent pointer-events-none flex items-center justify-end pr-1 sm:pr-2">
+                  <div className="text-purple-400/80 text-xs sm:text-sm font-bold animate-pulse">→</div>
                 </div>
               )}
             </div>
@@ -380,34 +380,44 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         </div>
       )}
 
-      {/* Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 p-4">
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask me anything..."
-              className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 border border-gray-700 focus:border-purple-600 focus:outline-none disabled:opacity-50"
-              disabled={isTyping}
-              autoFocus
-            />
-            <button
-              type="submit"
-              disabled={!inputValue.trim() || isTyping}
-              className="bg-white text-black px-6 py-3 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
-            >
-              {isTyping ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              )}
-            </button>
+      {/* Input Area - Enhanced for mobile browsers */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 safe-area-bottom">
+        <div className="p-3 sm:p-4 pb-safe">
+          <div className="max-w-lg mx-auto">
+            <div className="flex space-x-2 sm:space-x-3">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(e);
+                  }
+                }}
+                placeholder="Ask me anything..."
+                className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 sm:py-3.5 border border-gray-700 focus:border-purple-600 focus:outline-none disabled:opacity-50 text-sm sm:text-base touch-manipulation"
+                disabled={isTyping}
+                autoComplete="off"
+                autoCapitalize="sentences"
+                autoCorrect="on"
+                spellCheck="true"
+              />
+              <button
+                onClick={handleSubmit}
+                disabled={!inputValue.trim() || isTyping}
+                className="bg-white text-black px-4 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 touch-manipulation active:scale-95 min-w-[52px] flex items-center justify-center"
+              >
+                {isTyping ? (
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-black"></div>
+                ) : (
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
