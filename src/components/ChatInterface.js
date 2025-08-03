@@ -6,7 +6,10 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   const categoryConfig = {
     'ask-anything': {
@@ -125,6 +128,59 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'Pisces';
     return '';
   };
+
+  // Track initial viewport height
+  useEffect(() => {
+    const updateViewportHeight = () => {
+      setViewportHeight(window.innerHeight);
+    };
+    
+    updateViewportHeight();
+    window.addEventListener('resize', updateViewportHeight);
+    
+    return () => window.removeEventListener('resize', updateViewportHeight);
+  }, []);
+
+  // Keyboard visibility detection
+  useEffect(() => {
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const heightDifference = viewportHeight - currentHeight;
+      
+      // If height decreased by more than 150px, assume keyboard is visible
+      if (heightDifference > 150) {
+        setIsKeyboardVisible(true);
+      } else {
+        setIsKeyboardVisible(false);
+      }
+    };
+
+    const handleFocus = () => {
+      setIsKeyboardVisible(true);
+      // Small delay to ensure keyboard is fully shown before scrolling
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
+    };
+
+    const handleBlur = () => {
+      setIsKeyboardVisible(false);
+    };
+
+    window.addEventListener('resize', handleResize);
+    if (inputRef.current) {
+      inputRef.current.addEventListener('focus', handleFocus);
+      inputRef.current.addEventListener('blur', handleBlur);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (inputRef.current) {
+        inputRef.current.removeEventListener('focus', handleFocus);
+        inputRef.current.removeEventListener('blur', handleBlur);
+      }
+    };
+  }, [viewportHeight]);
 
   useEffect(() => {
     // Load any existing conversation for this category
@@ -270,7 +326,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="h-screen bg-black text-white flex flex-col overflow-hidden">
       {/* Header - Enhanced for mobile */}
       <div className="border-b border-gray-800 p-3 sm:p-4 flex-shrink-0 safe-area-top">
         <div className="flex items-center justify-between max-w-lg mx-auto">
@@ -299,7 +355,13 @@ export default function ChatInterface({ category, user, userData, onBack }) {
       </div>
 
       {/* Messages - Enhanced mobile layout */}
-      <div className={`flex-1 p-3 sm:p-4 max-w-lg mx-auto w-full overflow-y-auto scroll-smooth ${suggestions.length > 0 ? 'pb-40 sm:pb-36' : 'pb-24 sm:pb-28'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div 
+        className={`flex-1 p-3 sm:p-4 max-w-lg mx-auto w-full overflow-y-auto scroll-smooth ${isKeyboardVisible ? 'pb-2' : 'pb-4'}`} 
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          height: isKeyboardVisible ? 'calc(100vh - 140px)' : 'auto'
+        }}
+      >
         {/* Personalization indicator - Mobile optimized */}
         {userData?.name && (
           <div className="mb-3 sm:mb-4 text-center">
@@ -343,9 +405,9 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         <div ref={messagesEndRef} className="h-2 sm:h-4" />
       </div>
 
-      {/* Suggestions - Enhanced mobile scrolling */}
-      {suggestions && suggestions.length > 0 && (
-        <div className="fixed bottom-16 sm:bottom-20 left-0 right-0 bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-2.5 sm:py-3 z-10">
+      {/* Suggestions - Enhanced mobile scrolling - Hide when keyboard is visible */}
+      {suggestions && suggestions.length > 0 && !isKeyboardVisible && (
+        <div className="bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-2.5 sm:py-3 flex-shrink-0">
           <div className="w-full">
             <div className="relative px-3 sm:px-4">
               <div 
@@ -381,11 +443,12 @@ export default function ChatInterface({ category, user, userData, onBack }) {
       )}
 
       {/* Input Area - Enhanced for mobile browsers */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 safe-area-bottom">
+      <div className="bg-black border-t border-gray-800 flex-shrink-0 safe-area-bottom">
         <div className="p-3 sm:p-4 pb-safe">
           <div className="max-w-lg mx-auto">
             <div className="flex space-x-2 sm:space-x-3">
               <input
+                ref={inputRef}
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
