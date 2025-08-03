@@ -178,10 +178,10 @@ export default function Dashboard({ user }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center text-white">
-          <div className="text-6xl mb-4">✨</div>
+        <div className="text-center text-white px-4">
+          <div className="text-4xl sm:text-6xl mb-4">✨</div>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading Lunatica...</p>
+          <p className="text-gray-400 text-sm sm:text-base">Loading Lunatica...</p>
         </div>
       </div>
     );
@@ -229,53 +229,58 @@ export default function Dashboard({ user }) {
   // Main Dashboard
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="border-b border-gray-800 px-4 py-3">
-        <div className="flex items-center justify-between max-w-md mx-auto">
-          <button className="p-2">
-            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {/* Header - Enhanced for mobile */}
+      <div className="border-b border-gray-800 px-4 py-3 safe-area-top">
+        <div className="flex items-center justify-between max-w-lg mx-auto">
+          <button className="p-2 touch-manipulation active:scale-95 transition-transform rounded-lg hover:bg-gray-800">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1 justify-center">
             <img 
               src={user.photoURL} 
               alt="Profile" 
-              className="w-8 h-8 rounded-full ring-2 ring-purple-500"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full ring-2 ring-purple-500 flex-shrink-0"
             />
-            <span className="text-sm font-medium">
+            <span className="text-sm sm:text-base font-medium truncate">
               Hi, {userData?.name || user.displayName?.split(' ')[0]}!
             </span>
           </div>
 
           <button
             onClick={handleLogout}
-            className="p-2"
+            className="p-2 touch-manipulation active:scale-95 transition-all rounded-lg hover:bg-gray-800"
           >
-            <svg className="w-6 h-6 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
           </button>
         </div>
       </div>
 
-      {/* Features Grid */}
-      <div className="p-4 max-w-md mx-auto">
-        <div className="space-y-3">
+      {/* Features Grid - Enhanced mobile layout */}
+      <div className="p-3 sm:p-4 max-w-lg mx-auto">
+        <div className="space-y-2 sm:space-y-3">
           {dashboardFeatures.map((feature, index) => (
             <button
               key={index}
               onClick={() => handleFeatureClick(feature)}
-              className="w-full bg-gray-900 hover:bg-gray-800 rounded-2xl p-4 transition-all duration-300 border border-gray-800 hover:border-gray-700 group"
+              className="w-full bg-gray-900 hover:bg-gray-800 active:bg-gray-750 rounded-2xl p-3 sm:p-4 transition-all duration-200 border border-gray-800 hover:border-gray-700 group touch-manipulation active:scale-[0.98]"
             >
-              <div className="flex items-center space-x-4">
-                <div className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
-                  <span className="text-xl">{feature.icon}</span>
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 group-active:scale-105 transition-transform duration-200 flex-shrink-0`}>
+                  <span className="text-lg sm:text-xl">{feature.icon}</span>
                 </div>
-                <div className="flex-1 text-left">
-                  <h3 className="text-white font-semibold text-lg">{feature.title}</h3>
-                  <p className="text-gray-400 text-sm">{feature.description}</p>
+                <div className="flex-1 text-left min-w-0">
+                  <h3 className="text-white font-semibold text-sm sm:text-lg leading-tight">{feature.title}</h3>
+                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mt-0.5">{feature.description}</p>
+                </div>
+                <div className="flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 group-hover:text-gray-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </div>
             </button>
@@ -283,27 +288,29 @@ export default function Dashboard({ user }) {
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 px-4 py-3">
-        <div className="flex justify-center max-w-md mx-auto">
-          <div className="flex items-center space-x-8">
-            <button className="p-3 bg-white rounded-full">
-              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            </button>
-            
-            <button className="p-3">
-              <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </button>
+      {/* Bottom Navigation - Enhanced for mobile browsers */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-800 safe-area-bottom">
+        <div className="px-4 py-3 pb-safe">
+          <div className="flex justify-center max-w-lg mx-auto">
+            <div className="flex items-center justify-center space-x-12 sm:space-x-16">
+              <button className="p-3 bg-white rounded-full touch-manipulation active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </button>
+              
+              <button className="p-3 touch-manipulation active:scale-95 transition-all duration-200 rounded-full hover:bg-gray-800">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Add bottom padding to account for fixed navigation */}
-      <div className="h-20"></div>
+      {/* Add bottom padding to account for fixed navigation - Enhanced for mobile */}
+      <div className="h-16 sm:h-20"></div>
     </div>
   );
 }
