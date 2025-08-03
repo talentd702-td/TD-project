@@ -129,49 +129,60 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     return '';
   };
 
-  // Prevent page scroll when input is focused
+  // Prevent page scroll when input is focused, but allow messages to scroll
   useEffect(() => {
-    const preventScroll = (e) => {
-      e.preventDefault();
-      return false;
-    };
-
     const handleInputFocus = (e) => {
-      // Prevent browser from scrolling the page
+      // Prevent browser from scrolling the page to the input
+      e.preventDefault();
+      
+      // Prevent the default scroll-into-view behavior
+      const originalScrollIntoView = e.target.scrollIntoView;
       e.target.scrollIntoView = () => {};
       
-      // Disable body scroll temporarily
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
+      // Restore original function after a delay
+      setTimeout(() => {
+        e.target.scrollIntoView = originalScrollIntoView;
+      }, 1000);
       
-      // Add event listener to prevent any scroll
-      document.addEventListener('scroll', preventScroll, { passive: false });
-      document.addEventListener('touchmove', preventScroll, { passive: false });
+      // Only prevent scrolling on the document/body level
+      const preventDocumentScroll = (e) => {
+        if (e.target === document.body || e.target === document.documentElement) {
+          e.preventDefault();
+        }
+      };
       
+      // Set keyboard state
       setTimeout(() => {
         const currentHeight = window.innerHeight;
-        const heightDiff = window.screen.height - currentHeight;
+        const initialHeight = window.screen.height;
+        const heightDiff = initialHeight - currentHeight;
         setIsKeyboardOpen(heightDiff > 150);
         setTimeout(scrollToBottom, 100);
       }, 300);
+      
+      // Add document-level scroll prevention
+      document.addEventListener('touchmove', preventDocumentScroll, { passive: false });
+      document.addEventListener('scroll', preventDocumentScroll, { passive: false });
+      
+      // Store cleanup function
+      e.target._cleanup = () => {
+        document.removeEventListener('touchmove', preventDocumentScroll);
+        document.removeEventListener('scroll', preventDocumentScroll);
+      };
     };
 
-    const handleInputBlur = () => {
-      // Re-enable body scroll
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      
-      // Remove scroll prevention
-      document.removeEventListener('scroll', preventScroll);
-      document.removeEventListener('touchmove', preventScroll);
+    const handleInputBlur = (e) => {
+      // Clean up scroll prevention
+      if (e.target._cleanup) {
+        e.target._cleanup();
+        delete e.target._cleanup;
+      }
       
       setIsKeyboardOpen(false);
     };
 
     if (inputRef.current) {
-      inputRef.current.addEventListener('focus', handleInputFocus);
+      inputRef.current.addEventListener('focus', handleInputFocus, { passive: false });
       inputRef.current.addEventListener('blur', handleInputBlur);
     }
 
@@ -179,13 +190,11 @@ export default function ChatInterface({ category, user, userData, onBack }) {
       if (inputRef.current) {
         inputRef.current.removeEventListener('focus', handleInputFocus);
         inputRef.current.removeEventListener('blur', handleInputBlur);
+        // Clean up if still active
+        if (inputRef.current._cleanup) {
+          inputRef.current._cleanup();
+        }
       }
-      // Clean up on unmount
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.removeEventListener('scroll', preventScroll);
-      document.removeEventListener('touchmove', preventScroll);
     };
   }, []);
 
@@ -359,7 +368,9 @@ export default function ChatInterface({ category, user, userData, onBack }) {
           WebkitOverflowScrolling: 'touch',
           overscrollBehavior: 'contain',
           scrollBehavior: 'smooth',
-          maxHeight: isKeyboardOpen ? 'calc(100vh - 140px)' : 'calc(100vh - 180px)'
+          maxHeight: isKeyboardOpen ? 'calc(100vh - 140px)' : 'calc(100vh - 180px)',
+          touchAction: 'pan-y',
+          overflowAnchor: 'none'
         }}
       >
         <div className="px-4 py-3 max-w-lg mx-auto">
