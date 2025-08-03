@@ -197,7 +197,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     
     // Handle different input types
     if (currentStep === 1 && !showDatePicker) {
@@ -300,11 +300,11 @@ export default function ConversationalOnboarding({ user, onComplete }) {
   };
 
   const confirmDate = () => {
-    handleSubmit({ preventDefault: () => {} });
+    handleSubmit();
   };
 
   const confirmTime = () => {
-    handleSubmit({ preventDefault: () => {} });
+    handleSubmit();
   };
 
   const skipTime = () => {
@@ -321,22 +321,22 @@ export default function ConversationalOnboarding({ user, onComplete }) {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="border-b border-gray-800 p-4">
-        <div className="flex items-center justify-center max-w-md mx-auto">
+      {/* Header - Enhanced for mobile */}
+      <div className="border-b border-gray-800 p-3 sm:p-4 safe-area-top">
+        <div className="flex items-center justify-center max-w-lg mx-auto">
           <div className="flex items-center space-x-2">
-            <div className="text-2xl">✨</div>
-            <h1 className="text-lg font-semibold">Get set up</h1>
+            <div className="text-xl sm:text-2xl">✨</div>
+            <h1 className="text-base sm:text-lg font-semibold">Get set up</h1>
           </div>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 p-4 pb-32 max-w-md mx-auto">
-        <div className="space-y-4">
+      {/* Messages - Enhanced mobile layout */}
+      <div className="flex-1 p-3 sm:p-4 pb-28 sm:pb-32 max-w-lg mx-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="space-y-3 sm:space-y-4">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
-              <div className={`max-w-[280px] px-4 py-3 rounded-2xl whitespace-pre-line ${
+              <div className={`max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl whitespace-pre-line ${
                 message.type === 'user' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-800 text-white'
@@ -349,7 +349,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
           
           {isTyping && (
             <div className="flex justify-start animate-fadeIn">
-              <div className="bg-gray-800 text-white max-w-[280px] px-4 py-3 rounded-2xl">
+              <div className="bg-gray-800 text-white max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl">
                 <div className="text-xs text-gray-400 mb-1">Lunatica:</div>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm">Consulting the cosmos</span>
@@ -363,23 +363,23 @@ export default function ConversationalOnboarding({ user, onComplete }) {
             </div>
           )}
         </div>
-        <div ref={messagesEndRef} className="h-4" />
+        <div ref={messagesEndRef} className="h-2 sm:h-4" />
       </div>
 
-      {/* Date Picker Modal */}
+      {/* Date Picker Modal - Enhanced for mobile */}
       {showDatePicker && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-black border border-purple-600 rounded-2xl p-6 max-w-sm mx-4 shadow-2xl">
-            <h3 className="text-lg font-semibold mb-6 text-center text-purple-300">Select your birth date</h3>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-black border border-purple-600 rounded-2xl p-4 sm:p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center text-purple-300">Select your birth date</h3>
             
-            <div className="flex justify-center space-x-4 mb-8">
+            <div className="flex justify-center space-x-3 sm:space-x-4 mb-6 sm:mb-8">
               {/* Day */}
-              <div className="text-center">
-                <label className="text-sm text-gray-400 block mb-2">Day</label>
+              <div className="text-center flex-1">
+                <label className="text-xs sm:text-sm text-gray-400 block mb-2">Day</label>
                 <select 
                   value={selectedDay} 
                   onChange={(e) => setSelectedDay(e.target.value)}
-                  className="bg-gray-800 text-white rounded-lg px-3 py-2 text-xl font-mono border border-gray-700 focus:border-purple-500"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
                 >
                   {Array.from({length: 31}, (_, i) => {
                     const day = String(i + 1).padStart(2, '0');
@@ -389,12 +389,12 @@ export default function ConversationalOnboarding({ user, onComplete }) {
               </div>
 
               {/* Month */}
-              <div className="text-center">
-                <label className="text-sm text-gray-400 block mb-2">Month</label>
+              <div className="text-center flex-1">
+                <label className="text-xs sm:text-sm text-gray-400 block mb-2">Month</label>
                 <select 
                   value={selectedMonth} 
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="bg-gray-800 text-white rounded-lg px-3 py-2 text-xl font-mono border border-gray-700 focus:border-purple-500"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
                 >
                   {[
                     '01', '02', '03', '04', '05', '06',
@@ -406,12 +406,12 @@ export default function ConversationalOnboarding({ user, onComplete }) {
               </div>
 
               {/* Year */}
-              <div className="text-center">
-                <label className="text-sm text-gray-400 block mb-2">Year</label>
+              <div className="text-center flex-1">
+                <label className="text-xs sm:text-sm text-gray-400 block mb-2">Year</label>
                 <select 
                   value={selectedYear} 
                   onChange={(e) => setSelectedYear(e.target.value)}
-                  className="bg-gray-800 text-white rounded-lg px-3 py-2 text-xl font-mono border border-gray-700 focus:border-purple-500"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
                 >
                   {Array.from({length: 80}, (_, i) => {
                     const year = String(2010 - i);
@@ -423,7 +423,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
 
             <button
               onClick={confirmDate}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-full transition-all duration-300"
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:from-purple-700 active:to-pink-700 text-white font-semibold py-3 sm:py-4 rounded-full transition-all duration-200 touch-manipulation active:scale-95"
             >
               Confirm Date ✨
             </button>
@@ -431,20 +431,20 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       )}
 
-      {/* Time Picker Modal */}
+      {/* Time Picker Modal - Enhanced for mobile */}
       {showTimePicker && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-black border border-purple-600 rounded-2xl p-6 max-w-sm mx-4 shadow-2xl">
-            <h3 className="text-lg font-semibold mb-6 text-center text-purple-300">Select your birth time</h3>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-black border border-purple-600 rounded-2xl p-4 sm:p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center text-purple-300">Select your birth time</h3>
             
-            <div className="flex justify-center space-x-6 mb-8">
+            <div className="flex justify-center space-x-6 sm:space-x-8 mb-6 sm:mb-8">
               {/* Hour */}
-              <div className="text-center">
-                <label className="text-sm text-gray-400 block mb-2">Hour</label>
+              <div className="text-center flex-1">
+                <label className="text-xs sm:text-sm text-gray-400 block mb-2">Hour</label>
                 <select 
                   value={selectedHour} 
                   onChange={(e) => setSelectedHour(e.target.value)}
-                  className="bg-gray-800 text-white rounded-lg px-3 py-2 text-2xl font-mono border border-gray-700 focus:border-purple-500"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-xl sm:text-2xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
                 >
                   {Array.from({length: 24}, (_, i) => {
                     const hour = String(i).padStart(2, '0');
@@ -454,12 +454,12 @@ export default function ConversationalOnboarding({ user, onComplete }) {
               </div>
 
               {/* Minute */}
-              <div className="text-center">
-                <label className="text-sm text-gray-400 block mb-2">Minute</label>
+              <div className="text-center flex-1">
+                <label className="text-xs sm:text-sm text-gray-400 block mb-2">Minute</label>
                 <select 
                   value={selectedMinute} 
                   onChange={(e) => setSelectedMinute(e.target.value)}
-                  className="bg-gray-800 text-white rounded-lg px-3 py-2 text-2xl font-mono border border-gray-700 focus:border-purple-500"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-xl sm:text-2xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
                 >
                   {Array.from({length: 60}, (_, i) => {
                     const minute = String(i).padStart(2, '0');
@@ -472,13 +472,13 @@ export default function ConversationalOnboarding({ user, onComplete }) {
             <div className="space-y-3">
               <button
                 onClick={confirmTime}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-full transition-all duration-300"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:from-purple-700 active:to-pink-700 text-white font-semibold py-3 sm:py-4 rounded-full transition-all duration-200 touch-manipulation active:scale-95"
               >
                 Confirm Time 🌙
               </button>
               <button
                 onClick={skipTime}
-                className="w-full text-gray-400 font-medium py-2 hover:text-white transition-colors"
+                className="w-full text-gray-400 font-medium py-2 sm:py-3 hover:text-white active:text-gray-300 transition-colors touch-manipulation"
               >
                 I don't know my exact birth time
               </button>
@@ -487,14 +487,14 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       )}
 
-      {/* Location Suggestions */}
+      {/* Location Suggestions - Enhanced for mobile */}
       {showLocationSuggestions && (
-        <div className="fixed bottom-24 left-4 right-4 z-50">
-          <div className="max-w-md mx-auto bg-gray-800 rounded-xl border border-gray-700 shadow-2xl">
-            <div className="p-3 border-b border-gray-700">
+        <div className="fixed bottom-20 sm:bottom-24 left-3 right-3 sm:left-4 sm:right-4 z-50">
+          <div className="max-w-lg mx-auto bg-gray-800/95 backdrop-blur-sm rounded-xl border border-gray-700 shadow-2xl">
+            <div className="p-2.5 sm:p-3 border-b border-gray-700">
               <div className="text-xs text-gray-400 text-center">🌍 Suggested locations:</div>
             </div>
-            <div className="max-h-48 overflow-y-auto">
+            <div className="max-h-40 sm:max-h-48 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
               {locationSuggestions.map((location, index) => (
                 <button
                   key={index}
@@ -505,17 +505,17 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                     }
                   }}
                   disabled={location.includes('🔮')}
-                  className={`w-full text-left px-4 py-3 transition-colors border-b border-gray-700 last:border-b-0 ${
+                  className={`w-full text-left px-3 sm:px-4 py-3 transition-all duration-200 border-b border-gray-700 last:border-b-0 touch-manipulation ${
                     location.includes('🔮') 
                       ? 'text-purple-400 cursor-wait animate-pulse' 
-                      : 'hover:bg-gray-700 text-white cursor-pointer'
+                      : 'hover:bg-gray-700 active:bg-gray-600 text-white cursor-pointer active:scale-[0.98]'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <span className="text-gray-400">
+                    <span className="text-gray-400 text-sm">
                       {location.includes('🔮') ? '🔮' : '📍'}
                     </span>
-                    <span>{location}</span>
+                    <span className="text-sm">{location}</span>
                   </div>
                 </button>
               ))}
@@ -524,44 +524,55 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       )}
 
-      {/* Input Area */}
+      {/* Input Area - Enhanced for mobile browsers */}
       {!showDatePicker && !showTimePicker && currentStep < steps.length && (
-        <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 p-4">
-          <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => currentStep === 3 ? handleLocationInput(e.target.value) : setInputValue(e.target.value)}
-                onClick={() => {
-                  if (currentStep === 1) {
-                    setShowDatePicker(true);
-                  } else if (currentStep === 2) {
-                    setShowTimePicker(true);
+        <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 safe-area-bottom">
+          <div className="p-3 sm:p-4 pb-safe">
+            <div className="max-w-lg mx-auto">
+              <div className="flex space-x-2 sm:space-x-3">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => currentStep === 3 ? handleLocationInput(e.target.value) : setInputValue(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSubmit();
+                    }
+                  }}
+                  onClick={() => {
+                    if (currentStep === 1) {
+                      setShowDatePicker(true);
+                    } else if (currentStep === 2) {
+                      setShowTimePicker(true);
+                    }
+                  }}
+                  placeholder={
+                    currentStep === 0 ? 'Type your name...' :
+                    currentStep === 1 ? 'Tap here to select date' :
+                    currentStep === 2 ? 'Tap here to select time' :
+                    'Start typing your city...'
                   }
-                }}
-                placeholder={
-                  currentStep === 0 ? 'Type your name...' :
-                  currentStep === 1 ? 'Tap here to select date' :
-                  currentStep === 2 ? 'Tap here to select time' :
-                  'Start typing your city...'
-                }
-                className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 border border-gray-700 focus:border-purple-600 focus:outline-none cursor-pointer"
-                autoFocus={currentStep === 0 || currentStep === 3}
-                required={currentStep !== 2}
-                readOnly={currentStep === 1 || currentStep === 2}
-              />
-              <button
-                type="submit"
-                disabled={(!inputValue.trim() && currentStep !== 1 && currentStep !== 2) || isTyping}
-                className="bg-white text-black px-6 py-3 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </button>
+                  className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 sm:py-3.5 border border-gray-700 focus:border-purple-600 focus:outline-none touch-manipulation text-sm sm:text-base"
+                  autoFocus={currentStep === 0 || currentStep === 3}
+                  required={currentStep !== 2}
+                  readOnly={currentStep === 1 || currentStep === 2}
+                  autoComplete="off"
+                  autoCapitalize={currentStep === 0 || currentStep === 3 ? "words" : "off"}
+                  autoCorrect={currentStep === 0 || currentStep === 3 ? "on" : "off"}
+                  spellCheck={currentStep === 0 || currentStep === 3}
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={(!inputValue.trim() && currentStep !== 1 && currentStep !== 2) || isTyping}
+                  className="bg-white text-black px-4 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 touch-manipulation active:scale-95 min-w-[52px] flex items-center justify-center"
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </button>
+              </div>
             </div>
-          </form>
+          </div>
         </div>
       )}
     </div>
