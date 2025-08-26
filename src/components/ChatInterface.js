@@ -132,26 +132,21 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   // Prevent page scroll when input is focused, but allow messages to scroll
   useEffect(() => {
     const handleInputFocus = (e) => {
-      // Prevent browser from scrolling the page to the input
       e.preventDefault();
       
-      // Prevent the default scroll-into-view behavior
       const originalScrollIntoView = e.target.scrollIntoView;
       e.target.scrollIntoView = () => {};
       
-      // Restore original function after a delay
       setTimeout(() => {
         e.target.scrollIntoView = originalScrollIntoView;
       }, 1000);
       
-      // Only prevent scrolling on the document/body level
       const preventDocumentScroll = (e) => {
         if (e.target === document.body || e.target === document.documentElement) {
           e.preventDefault();
         }
       };
       
-      // Set keyboard state
       setTimeout(() => {
         const currentHeight = window.innerHeight;
         const initialHeight = window.screen.height;
@@ -160,11 +155,9 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         setTimeout(scrollToBottom, 100);
       }, 300);
       
-      // Add document-level scroll prevention
       document.addEventListener('touchmove', preventDocumentScroll, { passive: false });
       document.addEventListener('scroll', preventDocumentScroll, { passive: false });
       
-      // Store cleanup function
       e.target._cleanup = () => {
         document.removeEventListener('touchmove', preventDocumentScroll);
         document.removeEventListener('scroll', preventDocumentScroll);
@@ -172,7 +165,6 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     };
 
     const handleInputBlur = (e) => {
-      // Clean up scroll prevention
       if (e.target._cleanup) {
         e.target._cleanup();
         delete e.target._cleanup;
@@ -190,7 +182,6 @@ export default function ChatInterface({ category, user, userData, onBack }) {
       if (inputRef.current) {
         inputRef.current.removeEventListener('focus', handleInputFocus);
         inputRef.current.removeEventListener('blur', handleInputBlur);
-        // Clean up if still active
         if (inputRef.current._cleanup) {
           inputRef.current._cleanup();
         }
@@ -199,22 +190,19 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   }, []);
 
   useEffect(() => {
-    // Load any existing conversation for this category
-    const conversationKey = `lunatica_chat_${category}_${user.uid}`;
+    const conversationKey = `askthestars_chat_${category}_${user.uid}`;
     const savedConversation = sessionStorage.getItem(conversationKey);
     
     if (savedConversation) {
       const parsed = JSON.parse(savedConversation);
       setMessages(parsed);
-      // Only show suggestions if there are no user messages
       const hasUserMessages = parsed.some(msg => msg.type === 'user');
       if (!hasUserMessages) {
         setSuggestions(config.suggestions);
       }
     } else {
-      // Add welcome message for new conversation
       const welcomeMessage = {
-        sender: "Lunatica",
+        sender: "Ask the Stars",
         content: config.welcomeMessage,
         type: 'bot',
         timestamp: Date.now()
@@ -222,7 +210,6 @@ export default function ChatInterface({ category, user, userData, onBack }) {
       setMessages([welcomeMessage]);
       setSuggestions(config.suggestions);
       
-      // Save the initial message
       sessionStorage.setItem(conversationKey, JSON.stringify([welcomeMessage]));
     }
   }, [category, user.uid]);
@@ -230,14 +217,12 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   useEffect(() => {
     scrollToBottom();
     
-    // Save conversation to sessionStorage whenever messages change
     if (messages.length > 0) {
-      const conversationKey = `lunatica_chat_${category}_${user.uid}`;
+      const conversationKey = `askthestars_chat_${category}_${user.uid}`;
       sessionStorage.setItem(conversationKey, JSON.stringify(messages));
     }
   }, [messages, category, user.uid]);
 
-  // Auto-scroll when new messages are added
   useEffect(() => {
     const timer = setTimeout(scrollToBottom, 100);
     return () => clearTimeout(timer);
@@ -274,11 +259,11 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         conversationHistory
       });
       
-      addMessage("Lunatica", response, 'bot');
+      addMessage("Ask the Stars", response, 'bot');
       
     } catch (err) {
       console.error('Error generating AI response:', err);
-      addMessage("Lunatica", "I'm having trouble connecting to the cosmic realm right now. Please try asking again in a moment! ✨", 'bot');
+      addMessage("Ask the Stars", "I'm having trouble connecting to the cosmic realm right now. Please try asking again in a moment!", 'bot');
     } finally {
       setIsTyping(false);
     }
@@ -306,11 +291,11 @@ export default function ChatInterface({ category, user, userData, onBack }) {
   };
 
   const clearConversation = () => {
-    const conversationKey = `lunatica_chat_${category}_${user.uid}`;
+    const conversationKey = `askthestars_chat_${category}_${user.uid}`;
     sessionStorage.removeItem(conversationKey);
     
     const welcomeMessage = {
-      sender: "Lunatica",
+      sender: "Ask the Stars",
       content: config.welcomeMessage,
       type: 'bot',
       timestamp: Date.now()
@@ -322,7 +307,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
 
   return (
     <div 
-      className="fixed inset-0 bg-black text-white flex flex-col"
+      className="fixed inset-0 bg-gradient-to-b from-black via-gray-950 to-black text-white flex flex-col relative overflow-hidden"
       style={{ 
         height: '100vh', 
         height: '100dvh',
@@ -334,8 +319,30 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         overflow: 'hidden'
       }}
     >
-      {/* Header - Always visible at top */}
-      <div className="bg-black border-b border-gray-800 px-4 py-3 flex-shrink-0 relative z-50">
+      {/* Ambient Lighting */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-radial from-red-500/3 via-orange-500/1 to-transparent blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-gradient-radial from-orange-500/2 via-red-500/1 to-transparent blur-3xl"></div>
+      </div>
+
+      {/* Floating Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className={`absolute w-0.5 h-0.5 bg-gradient-to-r from-white via-orange-400 to-red-500 rounded-full animate-float shadow-sm shadow-orange-400/20`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${4 + Math.random() * 4}s`
+            }}
+          ></div>
+        ))}
+      </div>
+
+      {/* Header */}
+      <div className="bg-black/80 backdrop-blur-sm border-b border-gray-800 px-4 py-3 flex-shrink-0 relative z-50">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <button 
             onClick={onBack}
@@ -360,10 +367,10 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         </div>
       </div>
 
-      {/* Messages Area - Only this scrolls */}
+      {/* Messages Area */}
       <div 
         ref={messagesContainerRef}
-        className={`flex-1 overflow-y-auto ${isKeyboardOpen ? 'pb-2' : 'pb-4'}`}
+        className={`flex-1 overflow-y-auto ${isKeyboardOpen ? 'pb-2' : 'pb-4'} relative z-10`}
         style={{ 
           WebkitOverflowScrolling: 'touch',
           overscrollBehavior: 'contain',
@@ -377,8 +384,8 @@ export default function ChatInterface({ category, user, userData, onBack }) {
           {/* Personalization indicator */}
           {userData?.name && (
             <div className="mb-4 text-center">
-              <div className="inline-flex items-center space-x-2 bg-purple-900/30 border border-purple-700/50 rounded-full px-3 py-1.5 text-xs text-purple-300">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
+              <div className="inline-flex items-center space-x-2 bg-red-900/30 border border-red-700/50 rounded-full px-3 py-1.5 text-xs bg-gradient-to-r from-red-300 to-orange-300 bg-clip-text text-transparent">
+                <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></div>
                 <span className="truncate max-w-48">
                   Personalized for {userData.name} • {userData.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : 'Unknown sign'}
                 </span>
@@ -392,10 +399,10 @@ export default function ChatInterface({ category, user, userData, onBack }) {
               <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] px-4 py-3 rounded-2xl ${
                   message.type === 'user' 
-                    ? 'bg-blue-600 text-white ml-auto' 
-                    : 'bg-gray-800 text-white mr-auto'
+                    ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white ml-auto' 
+                    : 'bg-gray-800 text-white mr-auto border border-gray-700'
                 }`}>
-                  <div className="text-xs text-gray-400 mb-1">{message.sender}:</div>
+                  <div className="text-xs text-gray-300 mb-1">{message.sender}:</div>
                   <div className="text-sm leading-relaxed whitespace-pre-line">{message.content}</div>
                 </div>
               </div>
@@ -403,14 +410,14 @@ export default function ChatInterface({ category, user, userData, onBack }) {
             
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-gray-800 text-white max-w-[85%] px-4 py-3 rounded-2xl">
-                  <div className="text-xs text-gray-400 mb-1">Lunatica:</div>
+                <div className="bg-gray-800 text-white max-w-[85%] px-4 py-3 rounded-2xl border border-gray-700">
+                  <div className="text-xs text-gray-300 mb-1">Ask the Stars:</div>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm">Consulting the cosmos</span>
                     <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce"></div>
-                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-100"></div>
-                      <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-200"></div>
+                      <div className="w-1 h-1 bg-red-400 rounded-full animate-bounce"></div>
+                      <div className="w-1 h-1 bg-orange-400 rounded-full animate-bounce delay-100"></div>
+                      <div className="w-1 h-1 bg-red-400 rounded-full animate-bounce delay-200"></div>
                     </div>
                   </div>
                 </div>
@@ -421,16 +428,16 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         </div>
       </div>
 
-      {/* Suggestions - Only show when keyboard is closed */}
+      {/* Suggestions */}
       {suggestions && suggestions.length > 0 && !isKeyboardOpen && (
-        <div className="bg-black/40 backdrop-blur-sm border-t border-gray-700/30 py-3 flex-shrink-0 relative z-40">
+        <div className="bg-black/60 backdrop-blur-sm border-t border-gray-700/30 py-3 flex-shrink-0 relative z-40">
           <div className="overflow-x-auto">
             <div className="flex gap-3 px-4 pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
               {suggestions.map((suggestion, index) => (
                 <button
                   key={index}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="flex-shrink-0 bg-gray-800/70 hover:bg-purple-800/80 active:bg-purple-700/80 text-gray-200 hover:text-white active:text-white px-4 py-3 rounded-xl border border-gray-600/50 hover:border-purple-400/70 active:border-purple-300/70 transition-all duration-200 touch-manipulation active:scale-95 text-sm font-medium whitespace-nowrap"
+                  className="flex-shrink-0 bg-gray-800/70 hover:bg-red-800/80 active:bg-red-700/80 text-gray-200 hover:text-white active:text-white px-4 py-3 rounded-xl border border-gray-600/50 hover:border-red-400/70 active:border-red-300/70 transition-all duration-200 touch-manipulation active:scale-95 text-sm font-medium whitespace-nowrap"
                 >
                   {suggestion}
                 </button>
@@ -440,8 +447,8 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         </div>
       )}
 
-      {/* Input Area - Always visible at bottom */}
-      <div className="bg-black border-t border-gray-800 flex-shrink-0 relative z-50">
+      {/* Input Area */}
+      <div className="bg-black/80 backdrop-blur-sm border-t border-gray-800 flex-shrink-0 relative z-50">
         <div className="px-4 py-3">
           <div className="max-w-lg mx-auto flex space-x-3">
             <input
@@ -455,23 +462,23 @@ export default function ChatInterface({ category, user, userData, onBack }) {
                 }
               }}
               placeholder="Ask me anything..."
-              className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 border border-gray-700 focus:border-purple-600 focus:outline-none disabled:opacity-50 text-base touch-manipulation"
+              className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 border border-gray-700 focus:border-red-500 focus:outline-none disabled:opacity-50 text-base touch-manipulation"
               disabled={isTyping}
               autoComplete="off"
               autoCapitalize="sentences"
               autoCorrect="on"
               style={{ 
-                fontSize: '16px', // Prevents zoom on iOS
-                transform: 'translateZ(0)' // Forces hardware acceleration
+                fontSize: '16px',
+                transform: 'translateZ(0)'
               }}
             />
             <button
               onClick={handleSubmit}
               disabled={!inputValue.trim() || isTyping}
-              className="bg-white text-black px-6 py-3 rounded-full font-semibold disabled:opacity-50 hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 touch-manipulation active:scale-95 flex items-center justify-center min-w-[60px]"
+              className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-full font-semibold disabled:opacity-50 hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 transition-all duration-200 touch-manipulation active:scale-95 flex items-center justify-center min-w-[60px]"
             >
               {isTyping ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               ) : (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -481,6 +488,20 @@ export default function ChatInterface({ category, user, userData, onBack }) {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-10px) rotate(120deg); }
+          66% { transform: translateY(5px) rotate(240deg); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        .bg-gradient-radial {
+          background: radial-gradient(circle, var(--tw-gradient-stops));
+        }
+      `}</style>
     </div>
   );
 }

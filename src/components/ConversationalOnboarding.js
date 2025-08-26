@@ -32,7 +32,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
 
   const steps = [
     {
-      question: "Welcome to Lunatica! ✨ I'm here to create your cosmic profile. Let's start with something simple - what's your first name?",
+      question: "Welcome to Ask the Stars! ✨ I'm here to create your cosmic profile. Let's start with something simple - what's your first name?",
       field: 'name',
       type: 'text'
     },
@@ -67,7 +67,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
   useEffect(() => {
     // Add initial message with delay for natural feel
     setTimeout(() => {
-      addMessage("Lunatica", steps[0].question, 'lunatica');
+      addMessage("Ask the Stars", steps[0].question, 'assistant');
     }, 500);
   }, []);
 
@@ -89,7 +89,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
     const typingDelay = Math.min(response.length * 30, 2000);
     await new Promise(resolve => setTimeout(resolve, typingDelay));
     setIsTyping(false);
-    addMessage("Lunatica", response, 'lunatica');
+    addMessage("Ask the Stars", response, 'assistant');
   };
 
   const validateWithAI = async (field, value) => {
@@ -320,9 +320,32 @@ export default function ConversationalOnboarding({ user, onComplete }) {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header - Enhanced for mobile */}
-      <div className="border-b border-gray-800 p-3 sm:p-4 safe-area-top">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white relative overflow-hidden">
+      {/* Ambient Lighting */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-radial from-red-500/5 via-orange-500/2 to-transparent blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-gradient-radial from-orange-500/3 via-red-500/1 to-transparent blur-3xl"></div>
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-radial from-orange-400/3 to-transparent blur-3xl"></div>
+      </div>
+
+      {/* Floating Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className={`absolute w-0.5 h-0.5 bg-gradient-to-r from-white via-orange-400 to-red-500 rounded-full animate-float shadow-sm shadow-orange-400/20`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${4 + Math.random() * 4}s`
+            }}
+          ></div>
+        ))}
+      </div>
+
+      {/* Header */}
+      <div className="border-b border-gray-800 p-3 sm:p-4 safe-area-top relative z-20">
         <div className="flex items-center justify-center max-w-lg mx-auto">
           <div className="flex items-center space-x-2">
             <div className="text-xl sm:text-2xl">✨</div>
@@ -331,17 +354,17 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       </div>
 
-      {/* Messages - Enhanced mobile layout */}
-      <div className="flex-1 p-3 sm:p-4 pb-28 sm:pb-32 max-w-lg mx-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+      {/* Messages */}
+      <div className="flex-1 p-3 sm:p-4 pb-28 sm:pb-32 max-w-lg mx-auto relative z-10" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="space-y-3 sm:space-y-4">
           {messages.map((message, index) => (
             <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
               <div className={`max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl whitespace-pre-line ${
                 message.type === 'user' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-800 text-white'
+                  ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' 
+                  : 'bg-gray-800 text-white border border-gray-700'
               }`}>
-                <div className="text-xs text-gray-400 mb-1">{message.sender}:</div>
+                <div className="text-xs text-gray-300 mb-1">{message.sender}:</div>
                 <div className="text-sm leading-relaxed">{message.content}</div>
               </div>
             </div>
@@ -349,14 +372,14 @@ export default function ConversationalOnboarding({ user, onComplete }) {
           
           {isTyping && (
             <div className="flex justify-start animate-fadeIn">
-              <div className="bg-gray-800 text-white max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl">
-                <div className="text-xs text-gray-400 mb-1">Lunatica:</div>
+              <div className="bg-gray-800 text-white max-w-[85%] sm:max-w-[280px] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-gray-700">
+                <div className="text-xs text-gray-300 mb-1">Ask the Stars:</div>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm">Consulting the cosmos</span>
                   <div className="flex space-x-1">
-                    <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce"></div>
-                    <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-100"></div>
-                    <div className="w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-200"></div>
+                    <div className="w-1 h-1 bg-red-400 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-orange-400 rounded-full animate-bounce delay-100"></div>
+                    <div className="w-1 h-1 bg-red-400 rounded-full animate-bounce delay-200"></div>
                   </div>
                 </div>
               </div>
@@ -366,11 +389,11 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         <div ref={messagesEndRef} className="h-2 sm:h-4" />
       </div>
 
-      {/* Date Picker Modal - Enhanced for mobile */}
+      {/* Date Picker Modal */}
       {showDatePicker && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-black border border-purple-600 rounded-2xl p-4 sm:p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center text-purple-300">Select your birth date</h3>
+          <div className="bg-gradient-to-br from-gray-900/80 via-black/90 to-gray-900/80 backdrop-blur-xl border border-red-500/40 rounded-2xl p-4 sm:p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">Select your birth date</h3>
             
             <div className="flex justify-center space-x-3 sm:space-x-4 mb-6 sm:mb-8">
               {/* Day */}
@@ -379,7 +402,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                 <select 
                   value={selectedDay} 
                   onChange={(e) => setSelectedDay(e.target.value)}
-                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-red-500 touch-manipulation"
                 >
                   {Array.from({length: 31}, (_, i) => {
                     const day = String(i + 1).padStart(2, '0');
@@ -394,7 +417,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                 <select 
                   value={selectedMonth} 
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-red-500 touch-manipulation"
                 >
                   {[
                     '01', '02', '03', '04', '05', '06',
@@ -411,7 +434,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                 <select 
                   value={selectedYear} 
                   onChange={(e) => setSelectedYear(e.target.value)}
-                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-lg sm:text-xl font-mono border border-gray-700 focus:border-red-500 touch-manipulation"
                 >
                   {Array.from({length: 80}, (_, i) => {
                     const year = String(2010 - i);
@@ -423,7 +446,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
 
             <button
               onClick={confirmDate}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:from-purple-700 active:to-pink-700 text-white font-semibold py-3 sm:py-4 rounded-full transition-all duration-200 touch-manipulation active:scale-95"
+              className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 text-white font-semibold py-3 sm:py-4 rounded-full transition-all duration-200 touch-manipulation active:scale-95"
             >
               Confirm Date ✨
             </button>
@@ -431,11 +454,11 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       )}
 
-      {/* Time Picker Modal - Enhanced for mobile */}
+      {/* Time Picker Modal */}
       {showTimePicker && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-black border border-purple-600 rounded-2xl p-4 sm:p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center text-purple-300">Select your birth time</h3>
+          <div className="bg-gradient-to-br from-gray-900/80 via-black/90 to-gray-900/80 backdrop-blur-xl border border-red-500/40 rounded-2xl p-4 sm:p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">Select your birth time</h3>
             
             <div className="flex justify-center space-x-6 sm:space-x-8 mb-6 sm:mb-8">
               {/* Hour */}
@@ -444,7 +467,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                 <select 
                   value={selectedHour} 
                   onChange={(e) => setSelectedHour(e.target.value)}
-                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-xl sm:text-2xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-xl sm:text-2xl font-mono border border-gray-700 focus:border-red-500 touch-manipulation"
                 >
                   {Array.from({length: 24}, (_, i) => {
                     const hour = String(i).padStart(2, '0');
@@ -459,7 +482,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                 <select 
                   value={selectedMinute} 
                   onChange={(e) => setSelectedMinute(e.target.value)}
-                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-xl sm:text-2xl font-mono border border-gray-700 focus:border-purple-500 touch-manipulation"
+                  className="w-full bg-gray-800 text-white rounded-lg px-2 sm:px-3 py-2 text-xl sm:text-2xl font-mono border border-gray-700 focus:border-red-500 touch-manipulation"
                 >
                   {Array.from({length: 60}, (_, i) => {
                     const minute = String(i).padStart(2, '0');
@@ -472,7 +495,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
             <div className="space-y-3">
               <button
                 onClick={confirmTime}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 active:from-purple-700 active:to-pink-700 text-white font-semibold py-3 sm:py-4 rounded-full transition-all duration-200 touch-manipulation active:scale-95"
+                className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 text-white font-semibold py-3 sm:py-4 rounded-full transition-all duration-200 touch-manipulation active:scale-95"
               >
                 Confirm Time 🌙
               </button>
@@ -487,7 +510,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       )}
 
-      {/* Location Suggestions - Enhanced for mobile */}
+      {/* Location Suggestions */}
       {showLocationSuggestions && (
         <div className="fixed bottom-20 sm:bottom-24 left-3 right-3 sm:left-4 sm:right-4 z-50">
           <div className="max-w-lg mx-auto bg-gray-800/95 backdrop-blur-sm rounded-xl border border-gray-700 shadow-2xl">
@@ -507,8 +530,8 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                   disabled={location.includes('🔮')}
                   className={`w-full text-left px-3 sm:px-4 py-3 transition-all duration-200 border-b border-gray-700 last:border-b-0 touch-manipulation ${
                     location.includes('🔮') 
-                      ? 'text-purple-400 cursor-wait animate-pulse' 
-                      : 'hover:bg-gray-700 active:bg-gray-600 text-white cursor-pointer active:scale-[0.98]'
+                      ? 'text-red-400 cursor-wait animate-pulse' 
+                      : 'hover:bg-gray-700 active:bg-gray-600 text-white cursor-pointer active:scale-[0.98] hover:text-orange-400'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
@@ -524,9 +547,9 @@ export default function ConversationalOnboarding({ user, onComplete }) {
         </div>
       )}
 
-      {/* Input Area - Enhanced for mobile browsers */}
+      {/* Input Area */}
       {!showDatePicker && !showTimePicker && currentStep < steps.length && (
-        <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 safe-area-bottom">
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-800 safe-area-bottom z-30">
           <div className="p-3 sm:p-4 pb-safe">
             <div className="max-w-lg mx-auto">
               <div className="flex space-x-2 sm:space-x-3">
@@ -552,7 +575,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                     currentStep === 2 ? 'Tap here to select time' :
                     'Start typing your city...'
                   }
-                  className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 sm:py-3.5 border border-gray-700 focus:border-purple-600 focus:outline-none touch-manipulation text-sm sm:text-base"
+                  className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 sm:py-3.5 border border-gray-700 focus:border-red-500 focus:outline-none touch-manipulation text-sm sm:text-base"
                   autoFocus={currentStep === 0 || currentStep === 3}
                   required={currentStep !== 2}
                   readOnly={currentStep === 1 || currentStep === 2}
@@ -564,7 +587,7 @@ export default function ConversationalOnboarding({ user, onComplete }) {
                 <button
                   onClick={handleSubmit}
                   disabled={(!inputValue.trim() && currentStep !== 1 && currentStep !== 2) || isTyping}
-                  className="bg-white text-black px-4 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 touch-manipulation active:scale-95 min-w-[52px] flex items-center justify-center"
+                  className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 sm:px-6 py-3 sm:py-3.5 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:from-red-600 hover:to-orange-600 active:from-red-700 active:to-orange-700 transition-all duration-200 touch-manipulation active:scale-95 min-w-[52px] flex items-center justify-center"
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -575,6 +598,27 @@ export default function ConversationalOnboarding({ user, onComplete }) {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-10px) rotate(120deg); }
+          66% { transform: translateY(5px) rotate(240deg); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        .bg-gradient-radial {
+          background: radial-gradient(circle, var(--tw-gradient-stops));
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
