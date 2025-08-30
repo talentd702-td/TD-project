@@ -1,11 +1,6 @@
-// Gemini AI Service
+// Gemini AI Service - Improved for Natural Conversations
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyCyB-UP1k3jtiIxoTWSToeXc8ejvLDq2vo';
-//const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyCksCq1mV5q-5SgCRv42M-1yke3ajLSVDs';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-
-// FLUX API Configuration
-const FLUX_API_KEY = process.env.NEXT_PUBLIC_FLUX_API_KEY; // You'll need to add this to your .env.local
-const FLUX_API_URL = 'https://fal.run/fal-ai/flux-pro/kontext/text-to-image';
 
 // Helper function to get zodiac sign
 function getZodiacSign(dateString) {
@@ -29,62 +24,181 @@ function getZodiacSign(dateString) {
   return '';
 }
 
+// Helper to vary name usage naturally
+function getNameVariation(name, messageCount, isFollowUp = false) {
+  if (!name || messageCount === undefined) return null;
+  
+  // Don't use name in every message - vary the frequency
+  const shouldUseName = messageCount === 0 || // Always use in first message
+    (messageCount % 4 === 0 && Math.random() > 0.3) || // Occasionally in later messages
+    (isFollowUp && Math.random() > 0.7); // Rarely in follow-ups
+    
+  if (!shouldUseName) return null;
+  
+  // Return the name directly when we want to use it
+  return name;
+}
+
+// Get conversation context length for better responses
+function getConversationDepth(conversationHistory) {
+  return conversationHistory ? conversationHistory.length : 0;
+}
+
 export async function generateChatResponse({ category, userMessage, userData, conversationHistory }) {
   try {
-    // Create category-specific system prompts
+    const conversationDepth = getConversationDepth(conversationHistory);
+    const nameToUse = getNameVariation(userData?.name, conversationDepth);
+    
+    // Enhanced category-specific prompts with more natural language
     const categoryPrompts = {
-      'ask-anything': `You are Lunatica, a wise cosmic advisor. Provide brief, personalized insights based on astrology and spirituality. Keep responses under 100 words, warm and mystical.`,
-      
-      'daily-horoscope': `You are Lunatica, an astrologer providing concise daily horoscopes. Give specific, actionable guidance for today in under 100 words. Include planetary influences and practical advice.`,
-      
-      'romantic-compatibility': `You are Lunatica, a relationship expert using astrological wisdom. Provide brief insights about love and compatibility in under 100 words. Be mystical yet practical.`,
-      
-      'friend-compatibility': `You are Lunatica, a social astrologer. Give concise friendship advice through cosmic wisdom in under 100 words. Focus on social connections and compatibility.`,
-      
-      'dream-interpreter': `You are Lunatica, a dream interpreter. Provide brief, meaningful dream interpretations combining psychology and spirituality in under 100 words.`,
-      
-      'astrological-events': `You are Lunatica, an expert on celestial events. Explain current astrological events and their personal impact concisely in under 100 words.`,
-      
-      'tarot-interpreter': `You are Lunatica, a tarot reader. Provide concise, meaningful tarot interpretations and guidance in under 100 words.`
+      'ask-anything': `You are Lunatica, a direct cosmic advisor who provides clear, practical guidance. Your responses are precise, informative, and objective while maintaining authenticity.
+
+CONVERSATION STYLE:
+- Provide clear, direct answers without unnecessary emotional language
+- Use straightforward sentence structure that conveys information efficiently
+- Reference conversation context when relevant to the answer
+- Avoid formulaic openings or flowery language
+- Be factual and specific in your guidance
+- Focus on actionable insights rather than abstract concepts
+
+RESPONSE GUIDELINES:  
+- Keep responses under 100 words, focusing on useful information
+- Use ${nameToUse ? `"${nameToUse}"` : 'direct address'} only when contextually necessary
+- Include birth chart insights when they directly relate to the question
+- Build on previous conversation points that are relevant to current query
+- Start responses with the most important information first
+- Provide honest assessment without sugar-coating`,
+
+      'daily-horoscope': `You are Lunatica, an astrologer who provides clear, specific daily guidance based on current planetary positions. Focus on practical applications and direct insights.
+
+DIRECT HOROSCOPE STYLE:
+- State planetary influences and their practical effects clearly
+- Provide specific, actionable guidance for the day
+- Use straightforward language that conveys useful information
+- Reference ${nameToUse ? `${nameToUse}'s` : 'their'} chart details when directly relevant
+- Focus on timing and practical considerations
+- Avoid vague generalities
+
+Keep under 100 words with precise, useful information.`,
+
+      'romantic-compatibility': `You are Lunatica, a relationship analyst who uses astrological factors to assess compatibility patterns. Provide direct, honest assessments based on astrological principles.
+
+DIRECT COMPATIBILITY ANALYSIS:
+- State compatibility factors clearly and objectively
+- Address specific relationship dynamics based on chart elements
+- Provide practical relationship advice without excessive sentiment
+- Reference ${nameToUse ? `${nameToUse}'s` : 'their'} romantic patterns when relevant to the question
+- Be honest about challenges and strengths
+- Focus on actionable insights
+
+Under 100 words with clear, practical guidance.`,
+
+      'friend-compatibility': `You are Lunatica, who analyzes social dynamics through astrological patterns. Provide straightforward insights about friendship compatibility and social interactions.
+
+DIRECT FRIENDSHIP ANALYSIS:
+- Explain social compatibility factors clearly
+- Address specific social dynamics based on astrological patterns
+- Provide practical advice for improving social connections
+- Reference ${nameToUse ? `${nameToUse}'s` : 'their'} social tendencies when directly relevant
+- Be honest about potential friction points and natural affinities
+
+Keep under 100 words with clear, actionable advice.`,
+
+      'dream-interpreter': `You are Lunatica, who interprets dreams using established symbolic meanings and psychological principles. Provide clear, specific interpretations without excessive mysticism.
+
+DIRECT DREAM ANALYSIS:
+- Explain dream symbols using recognized interpretive frameworks
+- Connect dream content to relevant life situations directly
+- Provide practical insights about subconscious processing
+- Reference ${nameToUse ? `${nameToUse}'s` : 'their'} current circumstances when relevant to interpretation
+- Focus on actionable understanding rather than abstract meanings
+
+Under 100 words with specific, useful interpretations.`,
+
+      'astrological-events': `You are Lunatica, who tracks current astrological transits and their practical effects. Provide specific information about how celestial events impact individual charts.
+
+DIRECT ASTROLOGICAL ANALYSIS:
+- State current planetary positions and their effects clearly
+- Explain how transits interact with personal chart factors
+- Provide practical timing guidance for decisions and actions
+- Reference ${nameToUse ? `${nameToUse}'s` : 'their'} chart specifics when directly applicable
+- Focus on actionable timing and practical applications
+
+Under 100 words with precise, useful information.`,
+
+      'tarot-interpreter': `You are Lunatica, who interprets tarot cards using established meanings and practical applications. Provide clear, direct card interpretations focused on actionable guidance.
+
+DIRECT TAROT ANALYSIS:
+- State card meanings clearly using recognized interpretations
+- Connect symbolism to practical life applications directly
+- Provide specific guidance based on card combinations and positions
+- Reference ${nameToUse ? `${nameToUse}'s` : 'their'} situation when directly relevant to the reading
+- Focus on actionable insights rather than abstract symbolism
+
+Under 100 words with clear, practical guidance.`
     };
 
-    // Get the user's zodiac sign for more personalized responses
+    // Get the user's zodiac sign for personalization
     const zodiacSign = userData?.dateOfBirth ? getZodiacSign(userData.dateOfBirth) : '';
     
-    // Build the conversation context
+    // Build conversation context more naturally
     let conversationContext = '';
     if (conversationHistory && conversationHistory.length > 0) {
-      conversationContext = '\n\nPrevious conversation context:\n' + 
-        conversationHistory.slice(-6).map(msg => `${msg.role}: ${msg.content}`).join('\n');
+      const recentMessages = conversationHistory.slice(-4); // Only use last 4 messages for context
+      conversationContext = '\n\nCONVERSATION FLOW:\n' + 
+        recentMessages.map((msg, index) => {
+          const isRecent = index >= recentMessages.length - 2;
+          return `${isRecent ? '[RECENT] ' : ''}${msg.role}: "${msg.content}"`;
+        }).join('\n');
     }
 
+    // Create more natural user profile context
+    const profileContext = `
+USER ESSENCE:
+${userData?.name ? `- Known as: ${userData.name}` : '- Identity: Anonymous seeker'}
+${userData?.dateOfBirth ? `- Born: ${userData.dateOfBirth} (${zodiacSign || 'Unknown sign'})` : ''}
+${userData?.timeOfBirth ? `- Birth time: ${userData.timeOfBirth}` : ''}
+${userData?.birthPlace ? `- Birth place: ${userData.birthPlace}` : ''}
+`;
+
+    // Enhanced instructions for natural responses
+    const naturalInstructions = `
+CRITICAL - RESPONSE STYLE REQUIREMENTS:
+- Provide direct, factual answers without excessive emotional language or mystical flourishes
+- Start with the most relevant information first - no warming up or casual openings
+- Reference their name (${nameToUse || 'NO NAME - use direct address'}) only when contextually necessary
+- Address their specific question directly without tangential information
+- Use clear, straightforward sentence structures
+- Be honest about limitations or uncertainties
+- Focus on actionable information rather than abstract concepts
+
+DIRECT ENGAGEMENT PATTERNS:
+- Answer the question asked with specific information
+- Provide practical guidance based on astrological factors when relevant
+- State facts and assessments clearly without sugar-coating
+- Use birth chart information when it directly applies to their question
+- Avoid filler words, emotional padding, or mystical language
+
+AVOID COMPLETELY:
+- Casual conversation starters like "That's a big one!" or "Interesting question!"
+- Excessive warmth or nurturing language
+- Vague mystical references that don't provide useful information
+- Any placeholder text or debug information
+- Repetitive opening patterns
+
+Focus: Give precise, useful information that directly addresses their question.`;
+
     // Create the main prompt
-    const prompt = `
-${categoryPrompts[category] || categoryPrompts['ask-anything']}
+    const prompt = `${categoryPrompts[category] || categoryPrompts['ask-anything']}
 
-User Profile:
-- Name: ${userData?.name || 'Seeker'}
-- Birth Date: ${userData?.dateOfBirth || 'Unknown'}
-- Birth Time: ${userData?.timeOfBirth || 'Unknown'}  
-- Birth Place: ${userData?.birthPlace || 'Unknown'}
-- Zodiac Sign: ${zodiacSign || 'Unknown'}
-
+${profileContext}
 ${conversationContext}
 
-Current User Message: "${userMessage}"
+CURRENT MESSAGE: "${userMessage}"
 
-Instructions:
-- Provide a personalized response that references their birth information when relevant
-- Use their name naturally in the conversation
-- Include specific astrological insights based on their birth data
-- Keep the mystical, cosmic tone while being helpful and specific
-- Reference previous conversation if relevant
-- Keep response under 100 words - be concise and impactful
-- Use emojis sparingly but meaningfully
-- Be encouraging and positive while honest about challenges
+${naturalInstructions}
 
-Respond as Lunatica:
-    `;
+Respond as Lunatica with authentic, varied conversation:`;
 
     const response = await fetch(GEMINI_API_URL, {
       method: 'POST',
@@ -103,10 +217,10 @@ Respond as Lunatica:
           }
         ],
         generationConfig: {
-          temperature: 0.8,
-          topK: 40,
+          temperature: 0.9, // Higher temperature for more varied responses
+          topK: 50, // More diverse token selection
           topP: 0.95,
-          maxOutputTokens: 150,
+          maxOutputTokens: 180, // Slightly higher for more natural expression
         },
         safetySettings: [
           {
@@ -114,7 +228,7 @@ Respond as Lunatica:
             threshold: "BLOCK_MEDIUM_AND_ABOVE"
           },
           {
-            category: "HARM_CATEGORY_HATE_SPEECH",
+            category: "HARM_CATEGORY_HATE_SPEECH", 
             threshold: "BLOCK_MEDIUM_AND_ABOVE"
           },
           {
@@ -134,13 +248,23 @@ Respond as Lunatica:
     }
 
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    let aiResponse = data.candidates[0].content.parts[0].text;
+    
+    // Post-process to ensure natural flow
+    aiResponse = aiResponse
+      .replace(/\*([^*]+)\*/g, '$1') // Remove asterisks
+      .replace(/\n\n+/g, '\n') // Clean up extra line breaks
+      .trim();
+
+    return aiResponse;
+    
   } catch (error) {
     console.error('Error calling Gemini API for chat:', error);
     throw new Error('Failed to generate AI response. Please try again.');
   }
 }
 
+// Keep existing functions unchanged for now
 export async function generateSoulmateAnalysis(userData) {
   try {
     const { name, gender, dateOfBirth, timeOfBirth, birthPlace } = userData;
