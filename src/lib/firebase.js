@@ -1,19 +1,21 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCXMqvcwZ3mRaJyKj7FxR273KNuKEn_dWU",
-  authDomain: "chitramapp.firebaseapp.com",
-  projectId: "chitramapp",
-  storageBucket: "chitramapp.firebasestorage.app",
-  messagingSenderId: "19373309399",
-  appId: "1:19373309399:web:d1173828620a051fb41f92",
-  measurementId: "G-5BRQX5F2WS"
+  apiKey: "AIzaSyADyiRwnf133HWpAMuzlH1bAczhnFPdQBY",
+  authDomain: "askthestars-37936.firebaseapp.com",
+  projectId: "askthestars-37936",
+  storageBucket: "askthestars-37936.firebasestorage.app",
+  messagingSenderId: "92025762925",
+  appId: "1:92025762925:web:f34a38684c872de8e87b64",
+  measurementId: "G-6D3VCGZEVQ"
 };
 
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase only if it hasn't been initialized already
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
