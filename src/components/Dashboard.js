@@ -8,12 +8,14 @@ import TrialSignup from './TrialSignup';
 import ChatInterface from './ChatInterface';
 import SoulmateGenerator from './SoulmateGenerator';
 import UserProfile from './UserProfile';
+import ConversationHistory from './ConversationHistory';
 
 export default function Dashboard({ user }) {
-  const [currentScreen, setCurrentScreen] = useState('loading'); // loading, onboarding, trial, dashboard, results, chat, soulmate-generator, profile
+  const [currentScreen, setCurrentScreen] = useState('loading'); // loading, onboarding, trial, dashboard, results, chat, soulmate-generator, profile, history
   const [currentChatCategory, setCurrentChatCategory] = useState(null);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
   const dashboardFeatures = [
     {
@@ -157,8 +159,18 @@ export default function Dashboard({ user }) {
     setCurrentScreen('profile');
   };
 
+  const handleHistoryClick = () => {
+    setCurrentScreen('history');
+  };
+
   const handleSoulmateClick = () => {
     setCurrentScreen('soulmate-generator');
+  };
+
+  const handleOpenConversation = (conversation) => {
+    setSelectedConversation(conversation);
+    setCurrentChatCategory(conversation.category);
+    setCurrentScreen('chat');
   };
 
   const handleFeatureClick = (feature) => {
@@ -167,10 +179,12 @@ export default function Dashboard({ user }) {
     } else if (feature.category === 'personal-growth') {
       // For personal growth, we can use a special chat interface or separate component
       setCurrentChatCategory('ask-anything'); // For now, treat as general chat
+      setSelectedConversation(null); // Start new conversation
       setCurrentScreen('chat');
     } else {
       // All other features open chat interface with specific category
       setCurrentChatCategory(feature.category);
+      setSelectedConversation(null); // Start new conversation
       setCurrentScreen('chat');
     }
   };
@@ -178,6 +192,7 @@ export default function Dashboard({ user }) {
   const handleBackToDashboard = () => {
     setCurrentScreen('dashboard');
     setCurrentChatCategory(null);
+    setSelectedConversation(null);
   };
 
   if (loading) {
@@ -223,6 +238,17 @@ export default function Dashboard({ user }) {
     );
   }
 
+  if (currentScreen === 'history') {
+    return (
+      <ConversationHistory
+        user={user}
+        userData={userData}
+        onBack={handleBackToDashboard}
+        onOpenConversation={handleOpenConversation}
+      />
+    );
+  }
+
   if (currentScreen === 'results') {
     return (
       <SoulmateResults 
@@ -240,6 +266,7 @@ export default function Dashboard({ user }) {
         user={user}
         userData={userData}
         onBack={handleBackToDashboard}
+        existingConversation={selectedConversation}
       />
     );
   }
@@ -283,8 +310,11 @@ export default function Dashboard({ user }) {
       {/* Header */}
       <div className="border-b border-gray-800 px-4 py-3 safe-area-top relative z-20">
         <div className="flex items-center justify-between max-w-lg mx-auto">
-          <button className="p-2 touch-manipulation active:scale-95 transition-transform rounded-lg hover:bg-gray-800">
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button 
+            onClick={handleHistoryClick}
+            className="p-2 touch-manipulation active:scale-95 transition-transform rounded-lg hover:bg-gray-800"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>

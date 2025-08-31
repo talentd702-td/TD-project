@@ -1,12 +1,15 @@
+// components/ChatInterface.js - Updated version
 import { useState, useEffect, useRef } from 'react';
 import { generateChatResponse } from '../lib/gemini';
+import { saveConversationToFirebase, updateConversationInFirebase } from '../lib/conversationHistory';
 
-export default function ChatInterface({ category, user, userData, onBack }) {
+export default function ChatInterface({ category, user, userData, onBack, existingConversation = null }) {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [currentConversationId, setCurrentConversationId] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -102,6 +105,19 @@ export default function ChatInterface({ category, user, userData, onBack }) {
         "How to read tarot for love?",
         "What do court cards represent?"
       ]
+    },
+    'personal-growth': {
+      title: 'Personal growth',
+      icon: '🪁',
+      welcomeMessage: "Let's explore your path to personal development and reaching your highest potential!",
+      suggestions: [
+        "How can I grow spiritually?",
+        "What are my life lessons?",
+        "How to overcome my fears?",
+        "What is my life purpose?",
+        "How to build confidence?",
+        "What should I focus on improving?"
+      ]
     }
   };
 
@@ -129,104 +145,72 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     return '';
   };
 
-  // Prevent page scroll when input is focused, but allow messages to scroll
+  // Initialize conversation
   useEffect(() => {
-    const handleInputFocus = (e) => {
-      e.preventDefault();
-      
-      const originalScrollIntoView = e.target.scrollIntoView;
-      e.target.scrollIntoView = () => {};
-      
-      setTimeout(() => {
-        e.target.scrollIntoView = originalScrollIntoView;
-      }, 1000);
-      
-      const preventDocumentScroll = (e) => {
-        if (e.target === document.body || e.target === document.documentElement) {
-          e.preventDefault();
-        }
-      };
-      
-      setTimeout(() => {
-        const currentHeight = window.innerHeight;
-        const initialHeight = window.screen.height;
-        const heightDiff = initialHeight - currentHeight;
-        setIsKeyboardOpen(heightDiff > 150);
-        setTimeout(scrollToBottom, 100);
-      }, 300);
-      
-      document.addEventListener('touchmove', preventDocumentScroll, { passive: false });
-      document.addEventListener('scroll', preventDocumentScroll, { passive: false });
-      
-      e.target._cleanup = () => {
-        document.removeEventListener('touchmove', preventDocumentScroll);
-        document.removeEventListener('scroll', preventDocumentScroll);
-      };
-    };
-
-    const handleInputBlur = (e) => {
-      if (e.target._cleanup) {
-        e.target._cleanup();
-        delete e.target._cleanup;
-      }
-      
-      setIsKeyboardOpen(false);
-    };
-
-    if (inputRef.current) {
-      inputRef.current.addEventListener('focus', handleInputFocus, { passive: false });
-      inputRef.current.addEventListener('blur', handleInputBlur);
-    }
-
-    return () => {
-      if (inputRef.current) {
-        inputRef.current.removeEventListener('focus', handleInputFocus);
-        inputRef.current.removeEventListener('blur', handleInputBlur);
-        if (inputRef.current._cleanup) {
-          inputRef.current._cleanup();
-        }
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const conversationKey = `askthestars_chat_${category}_${user.uid}`;
-    const savedConversation = sessionStorage.getItem(conversationKey);
-    
-    if (savedConversation) {
-      const parsed = JSON.parse(savedConversation);
-      setMessages(parsed);
-      const hasUserMessages = parsed.some(msg => msg.type === 'user');
-      if (!hasUserMessages) {
-        setSuggestions(config.suggestions);
-      }
+    if (existingConversation) {
+      // Load existing conversation from Firebase
+      setMessages(existingConversation.messages || []);
+      setCurrentConversationId(existingConversation.id);
+      setSuggestions([]); // No suggestions for existing conversations
     } else {
-      const welcomeMessage = {
-        sender: "Ask the Stars",
-        content: config.welcomeMessage,
-        type: 'bot',
-        timestamp: Date.now()
-      };
-      setMessages([welcomeMessage]);
-      setSuggestions(config.suggestions);
+      // Check sessionStorage first for ongoing conversation
+      const conversationKey = `askthestars_chat_${category}_${user.uid}`;
+      const savedConversation = sessionStorage.getItem(conversationKey);
       
-      sessionStorage.setItem(conversationKey, JSON.stringify([welcomeMessage]));
+      if (savedConversation) {
+        const parsed = JSON.parse(savedConversation);
+        setMessages(parsed);
+        const hasUserMessages = parsed.some(msg => msg.type === 'user');
+        if (!hasUserMessages) {
+          setSuggestions(config.suggestions);
+        }
+      } else {
+        // Start new conversation
+        const welcomeMessage = {
+          sender: "Ask the Stars",
+          content: config.welcomeMessage,
+          type: 'bot',
+          timestamp: Date.now()
+        };
+        setMessages([welcomeMessage]);
+        setSuggestions(config.suggestions);
+        
+        sessionStorage.setItem(conversationKey, JSON.stringify([welcomeMessage]));
+      }
     }
-  }, [category, user.uid]);
+  }, [category, user.uid, existingConversation]);
+
+  // Save to both sessionStorage and Firebase
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Save to sessionStorage for immediate access
+      const conversationKey = `askthestars_chat_${category}_${user.uid}`;
+      sessionStorage.setItem(conversationKey, JSON.stringify(messages));
+      
+      // Save to Firebase for persistent history (only if there are user messages)
+      const hasUserMessages = messages.some(msg => msg.type === 'user');
+      if (hasUserMessages) {
+        const saveToFirebase = async () => {
+          if (!currentConversationId) {
+            // Create new conversation in Firebase
+            const newId = await saveConversationToFirebase(user.uid, category, messages);
+            if (newId) {
+              setCurrentConversationId(newId);
+            }
+          } else {
+            // Update existing conversation
+            await updateConversationInFirebase(currentConversationId, messages);
+          }
+        };
+        
+        saveToFirebase();
+      }
+    }
+  }, [messages, category, user.uid, currentConversationId]);
 
   useEffect(() => {
     scrollToBottom();
-    
-    if (messages.length > 0) {
-      const conversationKey = `askthestars_chat_${category}_${user.uid}`;
-      sessionStorage.setItem(conversationKey, JSON.stringify(messages));
-    }
-  }, [messages, category, user.uid]);
-
-  useEffect(() => {
-    const timer = setTimeout(scrollToBottom, 100);
-    return () => clearTimeout(timer);
-  }, [messages.length]);
+  }, [messages]);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -276,6 +260,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     const userMessage = inputValue.trim();
     addMessage("You", userMessage, 'user');
     setInputValue('');
+    setSuggestions([]); // Clear suggestions after first user message
 
     setTimeout(scrollToBottom, 100);
     await generateAIResponse(userMessage);
@@ -284,6 +269,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
 
   const handleSuggestionClick = (suggestion) => {
     addMessage("You", suggestion, 'user');
+    setSuggestions([]);
     setTimeout(() => {
       scrollToBottom();
       generateAIResponse(suggestion);
@@ -302,6 +288,7 @@ export default function ChatInterface({ category, user, userData, onBack }) {
     };
     setMessages([welcomeMessage]);
     setSuggestions(config.suggestions);
+    setCurrentConversationId(null);
     sessionStorage.setItem(conversationKey, JSON.stringify([welcomeMessage]));
   };
 

@@ -2,6 +2,11 @@
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'AIzaSyCyB-UP1k3jtiIxoTWSToeXc8ejvLDq2vo';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
+// FLUX API Configuration
+const FLUX_API_KEY = process.env.NEXT_PUBLIC_FLUX_API_KEY; // You'll need to add this to your .env.local
+const FLUX_API_URL = 'https://fal.run/fal-ai/flux-pro/kontext/text-to-image';
+
+
 // Helper function to get zodiac sign
 function getZodiacSign(dateString) {
   if (!dateString) return '';
