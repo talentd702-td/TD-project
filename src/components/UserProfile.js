@@ -178,6 +178,7 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-radial from-red-500/5 via-orange-500/2 to-transparent blur-3xl"></div>
         <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-gradient-radial from-orange-500/3 via-red-500/1 to-transparent blur-3xl"></div>
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-radial from-orange-400/3 to-transparent blur-3xl"></div>
       </div>
 
       {/* Floating Elements */}
@@ -197,7 +198,7 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       </div>
 
       {/* Header */}
-      <div className="border-b border-gray-800 p-4 relative z-20">
+      <div className="border-b border-gray-800 px-4 py-3 safe-area-top relative z-20">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <button 
             onClick={onBack}
@@ -213,22 +214,22 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       </div>
 
       {/* Profile Section */}
-      <div className="p-6 max-w-lg mx-auto relative z-10">
-        <div className="text-center mb-8">
+      <div className="p-3 sm:p-4 max-w-lg mx-auto relative z-10">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="relative mb-4">
             <img 
               src={user.photoURL} 
               alt="Profile" 
-              className="w-20 h-20 rounded-full mx-auto ring-2 ring-red-500"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto ring-2 ring-red-500"
             />
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></div>
             </div>
           </div>
-          <h2 className="text-xl font-semibold mb-1">{userData?.name || user.displayName}</h2>
-          <p className="text-gray-400 text-sm mb-2">{user.email}</p>
+          <h2 className="text-lg sm:text-xl font-semibold mb-1">{userData?.name || user.displayName}</h2>
+          <p className="text-gray-400 text-xs sm:text-sm mb-2">{user.email}</p>
           {userData?.dateOfBirth && (
-            <div className="inline-flex items-center space-x-2 bg-red-900/30 border border-red-700/50 rounded-full px-3 py-1 text-xs">
+            <div className="inline-flex items-center space-x-2 bg-red-900/30 border border-red-700/50 rounded-full px-2 sm:px-3 py-1 sm:py-1.5 text-xs">
               <span className="bg-gradient-to-r from-red-300 to-orange-300 bg-clip-text text-transparent">
                 {getZodiacSign(userData.dateOfBirth)} • {formatDate(userData.dateOfBirth)}
               </span>
@@ -237,91 +238,96 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
         </div>
 
         {/* Menu Items */}
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           {menuItems.map((item, index) => (
             <button
               key={index}
               onClick={item.action}
-              className={`w-full bg-gradient-to-br from-gray-900/80 via-black/90 to-gray-900/80 backdrop-blur-xl rounded-2xl p-4 transition-all duration-200 border hover:scale-[1.02] touch-manipulation ${
+              className={`w-full bg-gradient-to-br from-gray-900/80 via-black/90 to-gray-900/80 backdrop-blur-xl rounded-2xl p-3 sm:p-4 transition-all duration-200 border hover:scale-[1.02] touch-manipulation active:scale-[0.98] ${
                 item.danger 
                   ? 'border-red-600/40 hover:border-red-500/60' 
                   : 'border-gray-700 hover:border-red-500/40'
               }`}
             >
-              <div className="flex items-center space-x-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${
                   item.danger 
                     ? 'bg-gradient-to-br from-red-600 to-red-700' 
                     : 'bg-gradient-to-br from-red-500 to-orange-500'
-                } shadow-lg`}>
-                  <span className="text-xl">{item.icon}</span>
+                } shadow-lg flex-shrink-0`}>
+                  <span className="text-lg sm:text-xl">{item.icon}</span>
                 </div>
-                <div className="flex-1 text-left">
-                  <h3 className={`font-semibold ${item.danger ? 'text-red-400' : 'text-white'}`}>
+                <div className="flex-1 text-left min-w-0">
+                  <h3 className={`font-semibold text-sm sm:text-base ${item.danger ? 'text-red-400' : 'text-white'}`}>
                     {item.title}
                   </h3>
-                  <p className="text-gray-400 text-sm">{item.description}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mt-0.5">{item.description}</p>
                 </div>
-                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <div className="flex-shrink-0">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </div>
             </button>
           ))}
         </div>
 
         {/* App Version */}
-        <div className="text-center mt-8 text-gray-500 text-xs">
+        <div className="text-center mt-6 sm:mt-8 text-gray-500 text-xs">
           Ask the Stars v1.0.0
         </div>
       </div>
 
+      {/* Add bottom padding to account for mobile safe areas */}
+      <div className="h-4 sm:h-6"></div>
+
       {/* Edit Profile Modal */}
       {showEditModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-gray-900/90 via-black/95 to-gray-900/90 backdrop-blur-xl border border-red-500/40 rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-6 bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+          <div className="bg-gradient-to-br from-gray-900/90 via-black/95 to-gray-900/90 backdrop-blur-xl border border-red-500/40 rounded-2xl p-4 sm:p-6 w-full max-w-md">
+            <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
               Edit Your Information
             </h3>
             
-            <div className="space-y-4 mb-6">
+            <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Name</label>
+                <label className="block text-xs sm:text-sm text-gray-400 mb-2">Name</label>
                 <input
                   type="text"
                   value={editData.name}
                   onChange={(e) => setEditData({...editData, name: e.target.value})}
-                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 border border-gray-700 focus:border-red-500 focus:outline-none"
+                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:py-2.5 border border-gray-700 focus:border-red-500 focus:outline-none text-sm sm:text-base"
                 />
               </div>
               
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Birth Date</label>
+                <label className="block text-xs sm:text-sm text-gray-400 mb-2">Birth Date</label>
                 <input
                   type="date"
                   value={editData.dateOfBirth}
                   onChange={(e) => setEditData({...editData, dateOfBirth: e.target.value})}
-                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 border border-gray-700 focus:border-red-500 focus:outline-none"
+                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:py-2.5 border border-gray-700 focus:border-red-500 focus:outline-none text-sm sm:text-base"
                 />
               </div>
               
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Birth Time</label>
+                <label className="block text-xs sm:text-sm text-gray-400 mb-2">Birth Time</label>
                 <input
                   type="time"
                   value={editData.timeOfBirth}
                   onChange={(e) => setEditData({...editData, timeOfBirth: e.target.value})}
-                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 border border-gray-700 focus:border-red-500 focus:outline-none"
+                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:py-2.5 border border-gray-700 focus:border-red-500 focus:outline-none text-sm sm:text-base"
                 />
               </div>
               
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Birth Place</label>
+                <label className="block text-xs sm:text-sm text-gray-400 mb-2">Birth Place</label>
                 <input
                   type="text"
                   value={editData.birthPlace}
                   onChange={(e) => setEditData({...editData, birthPlace: e.target.value})}
-                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 border border-gray-700 focus:border-red-500 focus:outline-none"
+                  className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:py-2.5 border border-gray-700 focus:border-red-500 focus:outline-none text-sm sm:text-base"
                 />
               </div>
             </div>
@@ -329,14 +335,14 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowEditModal(false)}
-                className="flex-1 bg-gray-700 text-white py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors"
+                className="flex-1 bg-gray-700 text-white py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveProfile}
                 disabled={loading}
-                className="flex-1 bg-gradient-to-r from-red-500 to-orange-500 text-white py-3 rounded-full font-semibold hover:from-red-600 hover:to-orange-600 transition-colors disabled:opacity-50"
+                className="flex-1 bg-gradient-to-r from-red-500 to-orange-500 text-white py-2.5 sm:py-3 rounded-full font-semibold hover:from-red-600 hover:to-orange-600 transition-colors disabled:opacity-50 text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
@@ -348,19 +354,19 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       {/* Delete Account Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-gray-900/90 via-black/95 to-gray-900/90 backdrop-blur-xl border border-red-500/40 rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4 text-red-400">Delete Account</h3>
-            <p className="text-gray-300 mb-4">
+          <div className="bg-gradient-to-br from-gray-900/90 via-black/95 to-gray-900/90 backdrop-blur-xl border border-red-500/40 rounded-2xl p-4 sm:p-6 w-full max-w-md">
+            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-red-400">Delete Account</h3>
+            <p className="text-gray-300 mb-3 sm:mb-4 text-sm sm:text-base">
               This action cannot be undone. All your data, including your cosmic profile and chat history, will be permanently deleted.
             </p>
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4">
               Type <span className="text-red-400 font-mono">DELETE</span> to confirm:
             </p>
             <input
               type="text"
               value={deleteConfirmText}
               onChange={(e) => setDeleteConfirmText(e.target.value)}
-              className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 mb-6 border border-red-600 focus:border-red-500 focus:outline-none font-mono"
+              className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 sm:py-2.5 mb-4 sm:mb-6 border border-red-600 focus:border-red-500 focus:outline-none font-mono text-sm sm:text-base"
               placeholder="DELETE"
             />
             <div className="flex space-x-3">
@@ -369,14 +375,14 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
                   setShowDeleteConfirm(false);
                   setDeleteConfirmText('');
                 }}
-                className="flex-1 bg-gray-700 text-white py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors"
+                className="flex-1 bg-gray-700 text-white py-2.5 sm:py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteAccount}
                 disabled={loading || deleteConfirmText !== 'DELETE'}
-                className="flex-1 bg-red-600 text-white py-3 rounded-full font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
+                className="flex-1 bg-red-600 text-white py-2.5 sm:py-3 rounded-full font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 text-sm sm:text-base"
               >
                 {loading ? 'Deleting...' : 'Delete Account'}
               </button>
