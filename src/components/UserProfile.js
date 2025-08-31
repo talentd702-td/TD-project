@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { signOut, deleteUser } from 'firebase/auth';
-import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
@@ -82,6 +82,7 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
     }
   };
 
+  // Enhanced delete account function with complete data cleanup
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') {
       alert('Please type DELETE to confirm');
@@ -90,11 +91,82 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
 
     setLoading(true);
     try {
+      console.log('Starting account deletion process...');
+
+      // Step 1: Delete all user conversations
+      try {
+        const conversationsQuery = query(
+          collection(db, 'conversations'),
+          where('userId', '==', user.uid)
+        );
+        const conversationsSnapshot = await getDocs(conversationsQuery);
+        console.log(`Found ${conversationsSnapshot.docs.length} conversations to delete`);
+        
+        const conversationDeletePromises = conversationsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(conversationDeletePromises);
+        console.log('All conversations deleted');
+      } catch (error) {
+        console.log('Error deleting conversations:', error);
+      }
+      
+      // Step 2: Delete soulmate data if exists
+      try {
+        await deleteDoc(doc(db, 'soulmates', user.uid));
+        console.log('Soulmate data deleted');
+      } catch (error) {
+        console.log('No soulmate data to delete');
+      }
+
+      // Step 3: Delete any transaction records for this user
+      try {
+        const transactionsQuery = query(
+          collection(db, 'transactions'),
+          where('userId', '==', user.uid)
+        );
+        const transactionSnapshot = await getDocs(transactionsQuery);
+        console.log(`Found ${transactionSnapshot.docs.length} transactions to delete`);
+        
+        const transactionDeletePromises = transactionSnapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(transactionDeletePromises);
+        console.log('All transactions deleted');
+      } catch (error) {
+        console.log('No transaction data to delete');
+      }
+      
+      // Step 4: Delete main user document
       await deleteDoc(doc(db, 'users', user.uid));
+      console.log('User document deleted');
+      
+      // Step 5: Clear any session storage
+      try {
+        // Clear any cached conversation data
+        const keys = Object.keys(sessionStorage);
+        keys.forEach(key => {
+          if (key.includes(user.uid) || key.startsWith('askthestars_chat_')) {
+            sessionStorage.removeItem(key);
+          }
+        });
+        console.log('Session storage cleared');
+      } catch (error) {
+        console.log('Error clearing session storage:', error);
+      }
+      
+      // Step 6: Delete Firebase Auth user account (this will automatically sign them out)
       await deleteUser(user);
+      console.log('Firebase Auth user deleted - user will be automatically signed out');
+      
     } catch (error) {
       console.error('Error deleting account:', error);
-      alert('Failed to delete account. Please try again or contact support.');
+      
+      // Provide more specific error messages
+      if (error.code === 'auth/requires-recent-login') {
+        alert('For security reasons, please sign out and sign back in, then try deleting your account again.');
+      } else if (error.code === 'permission-denied') {
+        alert('Permission denied. Please contact support at info@askthestarsapp.com for assistance.');
+      } else {
+        alert('Failed to delete account. Please try again or contact support at info@askthestarsapp.com');
+      }
+      
       setLoading(false);
     }
   };
@@ -357,8 +429,14 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
           <div className="bg-gradient-to-br from-gray-900/90 via-black/95 to-gray-900/90 backdrop-blur-xl border border-red-500/40 rounded-2xl p-4 sm:p-6 w-full max-w-md">
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-red-400">Delete Account</h3>
             <p className="text-gray-300 mb-3 sm:mb-4 text-sm sm:text-base">
-              This action cannot be undone. All your data, including your cosmic profile and chat history, will be permanently deleted.
+              This action cannot be undone. All your data will be permanently deleted including:
             </p>
+            <ul className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 list-disc pl-5 space-y-1">
+              <li>Your cosmic profile and personal information</li>
+              <li>All conversation history</li>
+              <li>Soulmate matches and compatibility data</li>
+              <li>Transaction records and subscription data</li>
+            </ul>
             <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4">
               Type <span className="text-red-400 font-mono">DELETE</span> to confirm:
             </p>
