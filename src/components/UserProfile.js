@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { signOut, deleteUser } from 'firebase/auth';
 import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import TermsOfService from './TermsOfService';
+import PrivacyPolicy from './PrivacyPolicy';
+import ContactUs from './ContactUs';
 
 export default function UserProfile({ user, userData, onBack, onEditProfile }) {
+  const [currentView, setCurrentView] = useState('profile'); // 'profile', 'terms', 'privacy', 'contact'
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editData, setEditData] = useState({
@@ -67,7 +71,6 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       });
       
       setShowEditModal(false);
-      // Trigger a refresh of user data
       if (onEditProfile) {
         onEditProfile();
       }
@@ -87,10 +90,7 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
 
     setLoading(true);
     try {
-      // Delete user data from Firestore
       await deleteDoc(doc(db, 'users', user.uid));
-      
-      // Delete user account from Firebase Auth
       await deleteUser(user);
     } catch (error) {
       console.error('Error deleting account:', error);
@@ -106,6 +106,25 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       console.error('Logout error:', error);
     }
   };
+
+  const handleBackToProfile = () => {
+    setCurrentView('profile');
+  };
+
+  // Show Terms of Service page
+  if (currentView === 'terms') {
+    return <TermsOfService onBack={handleBackToProfile} />;
+  }
+
+  // Show Privacy Policy page
+  if (currentView === 'privacy') {
+    return <PrivacyPolicy onBack={handleBackToProfile} />;
+  }
+
+  // Show Contact Us page
+  if (currentView === 'contact') {
+    return <ContactUs onBack={handleBackToProfile} />;
+  }
 
   const menuItems = [
     {
@@ -124,19 +143,19 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
       icon: '📞',
       title: 'Contact Us',
       description: 'Get help from our cosmic support team',
-      action: () => window.open('mailto:support@askthestars.com', '_blank')
+      action: () => setCurrentView('contact')
     },
     {
       icon: '📋',
       title: 'Terms of Service',
       description: 'Read our terms and conditions',
-      action: () => window.open('/terms', '_blank')
+      action: () => setCurrentView('terms')
     },
     {
       icon: '🔒',
       title: 'Privacy Policy',
       description: 'Learn how we protect your data',
-      action: () => window.open('/privacy', '_blank')
+      action: () => setCurrentView('privacy')
     },
     {
       icon: '🚪',
@@ -182,7 +201,7 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <button 
             onClick={onBack}
-            className="text-gray-400 hover:text-white transition-colors p-2 -ml-2"
+            className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 touch-manipulation active:scale-95 rounded-lg"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -223,7 +242,7 @@ export default function UserProfile({ user, userData, onBack, onEditProfile }) {
             <button
               key={index}
               onClick={item.action}
-              className={`w-full bg-gradient-to-br from-gray-900/80 via-black/90 to-gray-900/80 backdrop-blur-xl rounded-2xl p-4 transition-all duration-200 border hover:scale-[1.02] ${
+              className={`w-full bg-gradient-to-br from-gray-900/80 via-black/90 to-gray-900/80 backdrop-blur-xl rounded-2xl p-4 transition-all duration-200 border hover:scale-[1.02] touch-manipulation ${
                 item.danger 
                   ? 'border-red-600/40 hover:border-red-500/60' 
                   : 'border-gray-700 hover:border-red-500/40'
