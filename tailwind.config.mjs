@@ -8,10 +8,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        gray: {
+          750: '#374151',
+          850: '#1f2937',
+          900: '#111827',
+        }
       },
+      animation: {
+        'spin': 'spin 1s linear infinite',
+      }
     },
   },
   plugins: [],
-};
+}

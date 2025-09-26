@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indifly - Badhna Aasaan Hai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background - Curved Orange Section */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: white;
+        }
+
+        .background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8553 50%, #FFA071 100%);
+            clip-path: ellipse(70% 100% at 100% 50%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 25px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1a365d;
+        }
+
+        .logo .fly {
+            color: #FF6B35;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 45px;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #FF6B35;
+        }
+
+        .dropdown::after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: 8px;
+            opacity: 0.6;
+        }
+
+        .cta-button {
+            background: #2563eb;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .content-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            align-items: center;
+            gap: 80px;
+        }
+
+        /* Left Content */
+        .content-left {
+            padding-right: 40px;
+        }
+
+        .main-heading {
+            font-size: 4.8rem;
+            font-weight: 900;
+            line-height: 0.85;
+            margin-bottom: 35px;
+            letter-spacing: -2px;
+        }
+
+        .main-heading .badhna {
+            color: #1a365d;
+            display: block;
+        }
+
+        .main-heading .aasaan-hai {
+            color: #1a365d;
+            display: block;
+        }
+
+        .main-heading .aasaan {
+            color: #FF6B35;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 45px;
+            line-height: 1.7;
+            max-width: 500px;
+            font-weight: 400;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            margin-bottom: 90px;
+        }
+
+        .get-empowered-btn {
+            background: #FF6B35;
+            color: white;
+            padding: 18px 35px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .get-empowered-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .watch-video {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: #1a365d;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .watch-video:hover {
+            transform: translateX(5px);
+        }
+
+        .play-button {
+            width: 50px;
+            height: 50px;
+            background: #1a365d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .play-button::before {
+            content: '▶';
+            margin-left: 3px;
+        }
+
+        /* Statistics */
+        .stats-container {
+            display: flex;
+            gap: 60px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 85px;
+            height: 85px;
+            background: rgba(26, 54, 93, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 30px;
+            color: #1a365d;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #1a365d;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        /* Right Content */
+        .content-right {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-left: 60px;
+        }
+
+        .person-section {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .person-image {
+            width: 380px;
+            height: 520px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 25px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Person representation */
+        .person-image::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 420px;
+            background: linear-gradient(145deg, #fef3c7, #fed7aa);
+            border-radius: 40px;
+            top: 50px;
+        }
+
+        .person-image::after {
+            content: '👳🏽‍♂️📱';
+            position: absolute;
+            font-size: 120px;
+            top: 120px;
+            z-index: 2;
+            line-height: 1;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            position: absolute;
+            right: -140px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 45px;
+            z-index: 10;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 28px;
+            border-radius: 20px;
+            width: 340px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .testimonial::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 15px solid rgba(255, 255, 255, 0.95);
+        }
+
+        .quote-mark {
+            font-size: 36px;
+            color: #2563eb;
+            font-weight: bold;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #374151;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #2563eb;
+            font-size: 16px;
+        }
+
+        /* Progress Indicators */
+        .progress-dots {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #FF6B35;
+            transform: scale(1.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .testimonials {
+                right: -100px;
+            }
+            
+            .testimonial {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .background::after {
+                width: 100%;
+                clip-path: none;
+                background: linear-gradient(180deg, #ffffff 0%, #FF6B35 40%);
+            }
+            
+            .content-container {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            
+            .content-right {
+                padding-left: 0;
+                justify-content: center;
+            }
+            
+            .testimonials {
+                position: static;
+                flex-direction: row;
+                justify-content: center;
+                margin-top: 40px;
+                transform: none;
+                right: auto;
+            }
+            
+            .main-heading {
+                font-size: 3.5rem;
+                text-align: center;
+            }
+            
+            .content-left {
+                text-align: center;
+                padding-right: 0;
+            }
+            
+            .stats-container {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .main-heading {
+                font-size: 2.5rem;
+            }
+            
+            .testimonials {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .testimonial::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="background"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <nav>
+                <div class="logo">
+                    indi<span class="fly">fly</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#incore" class="dropdown">InCORE</a></li>
+                    <li><a href="#insights">INDsights</a></li>
+                    <li><a href="#about">About Us</a></li>
+                </ul>
+                <a href="#contact" class="cta-button">Get in Touch</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-wrapper">
+            <div class="content-container">
+                <!-- Left Content -->
+                <div class="content-left">
+                    <h1 class="main-heading">
+                        <span class="badhna">Badhna</span>
+                        <span class="aasaan-hai"><span class="aasaan">Aasaan</span> Hai</span>
+                    </h1>
+                    
+                    <p class="subtitle">
+                        Empowering the youth, individuals, and businesses with digitally inclusive solutions — transforming one sector at a time!
+                    </p>
+                    
+                    <div class="action-buttons">
+                        <a href="#empower" class="get-empowered-btn">GET EMPOWERED</a>
+                        <a href="#video" class="watch-video">
+                            <div class="play-button"></div>
+                            Watch Video
+                        </a>
+                    </div>
+
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label">Special<br>Treatments</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-number">25+</div>
+                            <div class="stat-label">Professional<br>Therapist</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">🌿</div>
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Herbal<br>Cream Formula</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="content-right">
+                    <div class="person-section">
+                        <div class="person-image"></div>
+                        
+                        <div class="testimonials">
+                            <div class="testimonial">
+                                <div class="quote-mark">"</div>
+                                <p class="testimonial-text">
+                                    I have a regular schedule to take treatment from GlowQueen, they gave me the best service and treatment ever to maintain the beauty and health of my skin.
+                                </p>
+                                <div class="author-name">Sophia Princeton</div>
+                            </div>
+                            
+                            <div class="testimonial">
+                                <div class="quote-mark">"</div>
+                                <p class="testimonial-text">
+                                    For the past few years, I've had a hard time finding the right place for skin care to deal with my complicated skin condition, thank God I found GlowQueen to treat my skin
+                                </p>
+                                <div class="author-name">Tamara Jules</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
