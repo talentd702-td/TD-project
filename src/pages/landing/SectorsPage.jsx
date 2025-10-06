@@ -1,0 +1,317 @@
+import React, { useState } from 'react';
+import { Shield, TrendingUp, Users, Briefcase, Target, Award, CheckCircle, Brain, Globe, Zap } from 'lucide-react';
+
+export const SectorsPage = () => {
+  const [hoveredCard, setHoveredCard] = useState(null);
+
+  const expertiseAreas = [
+    {
+      id: 'underwriting',
+      name: 'Underwriting Excellence',
+      description: 'Comprehensive talent solutions across all underwriting domains',
+      details: 'Life • Health • Property & Casualty • Treaty & Facultative Reinsurance',
+      icon: Shield,
+      gradient: 'from-blue-600 to-blue-700',
+      bgColor: '#003566'
+    },
+    {
+      id: 'claims',
+      name: 'Claims & Operations',
+      description: 'Specialists who streamline processes and enhance customer satisfaction',
+      details: 'Health Claims • Motor • Liability • Commercial Claims Management',
+      icon: CheckCircle,
+      gradient: 'from-orange-500 to-orange-600',
+      bgColor: '#FF4500'
+    },
+    {
+      id: 'actuarial',
+      name: 'Actuarial & Risk',
+      description: 'Top-tier professionals who drive financial stability and innovation',
+      details: 'Appointed Actuaries • Pricing & Reserving • Risk & Compliance Leaders',
+      icon: Brain,
+      gradient: 'from-blue-600 to-blue-700',
+      bgColor: '#003566'
+    },
+    {
+      id: 'distribution',
+      name: 'Distribution & Broking',
+      description: 'Revenue-generating talent across traditional and emerging channels',
+      details: 'Agency • Bancassurance • Corporate Broking • Digital Distribution',
+      icon: Users,
+      gradient: 'from-orange-500 to-orange-600',
+      bgColor: '#FF4500'
+    },
+    {
+      id: 'technology',
+      name: 'Technology & Innovation',
+      description: 'Forward-thinking leaders transforming insurance through digital capabilities',
+      details: 'InsurTech • Analytics • Product Innovation • Embedded Insurance',
+      icon: Zap,
+      gradient: 'from-blue-600 to-blue-700',
+      bgColor: '#003566'
+    },
+    {
+      id: 'leadership',
+      name: 'Executive Leadership',
+      description: 'C-suite and board-level talent driving organizational transformation',
+      details: 'CXO Positions • Senior Management • Strategic Board Appointments',
+      icon: Award,
+      gradient: 'from-orange-500 to-orange-600',
+      bgColor: '#FF4500'
+    }
+  ];
+
+  const differentiators = [
+    {
+      icon: Target,
+      title: 'Niche Focus',
+      description: 'Exclusive dedication to insurance and financial services talent acquisition'
+    },
+    {
+      icon: Globe,
+      title: 'Deep Industry Network',
+      description: 'Direct access to exceptional professionals across the entire ecosystem'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Market Intelligence',
+      description: 'Strategic insights on compensation trends, competitor movements, and emerging roles'
+    },
+    {
+      icon: Zap,
+      title: 'Speed with Accuracy',
+      description: 'Customized search methodology that delivers optimal candidates efficiently'
+    },
+    {
+      icon: Shield,
+      title: 'Trusted Partnership',
+      description: 'Preferred advisor to leading insurers, brokers, and reinsurers across India and beyond'
+    }
+  ];
+
+  const valueAdditions = [
+    {
+      title: 'Talent Strategy Consulting',
+      description: 'Strategic guidance on workforce planning and organizational design for evolving insurance needs'
+    },
+    {
+      title: 'Compensation Intelligence',
+      description: 'Data-driven benchmarking to maintain competitive positioning in talent attraction and retention'
+    },
+    {
+      title: 'Succession Planning',
+      description: 'Identifying and nurturing future leaders to ensure organizational continuity and growth'
+    },
+    {
+      title: 'Market Insights',
+      description: 'Regular intelligence on sectoral hiring dynamics, talent availability, and competitive landscape'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #003566 0%, #001122 100%)' }}>
+      {/* Background effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-64 h-64 sm:w-80 sm:h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-80 h-80 sm:w-96 sm:h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      <div className="relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6">
+              Specialized Hiring for <span style={{ color: '#FF4500' }}>Insurance</span>
+            </h1>
+            <div className="w-20 sm:w-24 h-1 mx-auto mb-6 sm:mb-8" style={{ backgroundColor: '#FF4500' }}></div>
+            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-4xl mx-auto leading-relaxed px-4">
+              The insurance landscape is evolving rapidly—digital transformation, regulatory shifts, and intensifying competition demand more than just employees. Organizations require <span className="font-semibold" style={{ color: '#FF4500' }}>specialized talent</span> who understand risk, compliance, distribution, and customer-centric innovation.
+            </p>
+          </div>
+
+          {/* Mission Statement */}
+          <div className="bg-gradient-to-r from-orange-500/20 to-blue-600/20 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/20 mb-12 sm:mb-16 shadow-2xl max-w-5xl mx-auto">
+            <div className="text-center">
+              <p className="text-lg sm:text-xl md:text-2xl text-white font-semibold mb-4 sm:mb-6">
+                We are not generalist recruiters.
+              </p>
+              <p className="text-base sm:text-lg md:text-xl text-white/90 leading-relaxed">
+                We are a <span className="font-bold" style={{ color: '#FF4500' }}>niche search and talent consulting partner</span> dedicated exclusively to the insurance sector—spanning <span className="font-semibold">life, health, general, and reinsurance</span>.
+              </p>
+            </div>
+          </div>
+
+          {/* Areas of Expertise */}
+          <div className="mb-12 sm:mb-16">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                Our <span style={{ color: '#FF4500' }}>Expertise Areas</span>
+              </h2>
+              <p className="text-base sm:text-lg text-gray-300 max-w-3xl mx-auto">
+                Comprehensive talent solutions across the entire insurance value chain
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {expertiseAreas.map((area) => {
+                const IconComponent = area.icon;
+                return (
+                  <div
+                    key={area.id}
+                    onMouseEnter={() => setHoveredCard(area.id)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    className="group bg-white/5 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border-2 border-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-pointer"
+                    style={{
+                      borderColor: hoveredCard === area.id ? area.bgColor : 'rgba(255, 255, 255, 0.1)',
+                      boxShadow: hoveredCard === area.id ? `0 20px 60px -10px ${area.bgColor}60` : 'none'
+                    }}
+                  >
+                    <div className="flex flex-col items-center text-center">
+                      <div
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"
+                        style={{ background: `linear-gradient(135deg, ${area.bgColor} 0%, ${area.bgColor}dd 100%)` }}
+                      >
+                        <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                      </div>
+                      
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-orange-300 transition-colors">
+                        {area.name}
+                      </h3>
+                      
+                      <p className="text-sm sm:text-base text-gray-300 mb-3 sm:mb-4 leading-relaxed">
+                        {area.description}
+                      </p>
+                      
+                      <div className="pt-3 sm:pt-4 border-t border-white/20 w-full">
+                        <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+                          {area.details}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Differentiators */}
+          <div className="mb-12 sm:mb-16">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                What Sets Us <span style={{ color: '#FF4500' }}>Apart</span>
+              </h2>
+              <p className="text-base sm:text-lg text-gray-300 max-w-3xl mx-auto">
+                Five pillars that define our approach to insurance talent acquisition
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+              {differentiators.map((diff, index) => {
+                const IconComponent = diff.icon;
+                return (
+                  <div
+                    key={index}
+                    className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 hover:shadow-xl text-center"
+                  >
+                    <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-xl mb-4 shadow-lg" style={{ backgroundColor: 'rgba(255, 69, 0, 0.2)', border: '2px solid #FF4500' }}>
+                      <IconComponent className="w-7 h-7 sm:w-8 sm:h-8" style={{ color: '#FF4500' }} />
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{diff.title}</h3>
+                    <p className="text-sm text-gray-300 leading-relaxed">{diff.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Value Beyond Hiring */}
+          <div className="mb-12 sm:mb-16">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                Value Beyond <span style={{ color: '#FF4500' }}>Hiring</span>
+              </h2>
+              <p className="text-base sm:text-lg text-gray-300 max-w-3xl mx-auto">
+                Strategic advisory services that extend far beyond candidate placement
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+              {valueAdditions.map((value, index) => (
+                <div
+                  key={index}
+                  className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-300 hover:shadow-2xl"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full mt-2" style={{ backgroundColor: '#FF4500' }}></div>
+                    </div>
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">
+                        {value.title}
+                      </h3>
+                      <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
+                        {value.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Track Record */}
+          <div className="bg-gradient-to-br from-blue-600/20 to-orange-500/20 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/20 shadow-2xl max-w-5xl mx-auto mb-12 sm:mb-16">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Proven <span style={{ color: '#FF4500' }}>Track Record</span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/90">
+                Success stories that define our expertise
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="bg-white/10 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 mb-3 sm:mb-4" style={{ color: '#FF4500' }} />
+                <p className="text-base sm:text-lg text-white font-semibold mb-2">Appointed Actuaries</p>
+                <p className="text-sm sm:text-base text-white/80">Successfully placed with leading global insurers</p>
+              </div>
+              
+              <div className="bg-white/10 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 mb-3 sm:mb-4" style={{ color: '#FF4500' }} />
+                <p className="text-base sm:text-lg text-white font-semibold mb-2">Complete Team Builds</p>
+                <p className="text-sm sm:text-base text-white/80">Built underwriting and claims teams for emerging insurers</p>
+              </div>
+              
+              <div className="bg-white/10 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 mb-3 sm:mb-4" style={{ color: '#FF4500' }} />
+                <p className="text-base sm:text-lg text-white font-semibold mb-2">Leadership Placements</p>
+                <p className="text-sm sm:text-base text-white/80">Supported brokers and reinsurers with C-suite appointments</p>
+              </div>
+              
+              <div className="bg-white/10 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 mb-3 sm:mb-4" style={{ color: '#FF4500' }} />
+                <p className="text-base sm:text-lg text-white font-semibold mb-2">InsurTech Scaling</p>
+                <p className="text-sm sm:text-base text-white/80">Helped innovation teams scale technology and product capabilities</p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center bg-white/5 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-8 sm:p-10 md:p-12 border border-white/10 shadow-2xl">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
+              Partner With Us
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed">
+              In a talent market as specialized as insurance, the wrong hire can be costly. With Talent Discoveri as your search partner, you gain access to <span className="font-semibold" style={{ color: '#FF4500' }}>specialized expertise, deep networks, and strategic insights</span>—ensuring you hire not just for today's needs, but for tomorrow's growth.
+            </p>
+            <button className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+              Start Your Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

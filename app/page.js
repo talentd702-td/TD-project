@@ -1,5 +1,5 @@
-import TalentDiscoveryDashboard from '../src/components/TalentDiscoveryDashboard'
+import TalentDiscoveryApp from '../src/App'
 
 export default function Home() {
-  return <TalentDiscoveryDashboard />
+  return <TalentDiscoveryApp />
 }
