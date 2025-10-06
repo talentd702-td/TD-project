@@ -7,23 +7,23 @@ import { AddClientModal } from '../../components/dashboard/AddClientModal';
 import { ComingSoon } from '../../components/common/ComingSoon';
 
 export const AppLayout = ({ 
-  clients,
-  filteredClients,
-  loading,
-  searchTerm,
-  setSearchTerm,
-  statusFilter,
-  setStatusFilter,
-  showAddClient,
-  setShowAddClient,
-  editingClient,
-  formData,
-  setFormData,
-  handleSubmit,
-  handleEdit,
-  handleDelete,
-  resetForm,
-  setIsSignedIn
+  clients = [],
+  filteredClients = [],
+  loading = false,
+  searchTerm = '',
+  setSearchTerm = () => {},
+  statusFilter = '',
+  setStatusFilter = () => {},
+  showAddClient = false,
+  setShowAddClient = () => {},
+  editingClient = null,
+  formData = {},
+  setFormData = () => {},
+  handleSubmit = () => {},
+  handleEdit = () => {},
+  handleDelete = () => {},
+  resetForm = () => {},
+  setIsSignedIn = () => {}
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
