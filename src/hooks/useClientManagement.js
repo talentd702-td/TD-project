@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../config/supabase';
 
+
 export const useClientManagement = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
