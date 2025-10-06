@@ -11,16 +11,16 @@ import {
 } from '../../components/common/Icons';
 
 export const ClientsView = ({
-  clients,
-  filteredClients,
-  loading,
-  searchTerm,
-  setSearchTerm,
-  statusFilter,
-  setStatusFilter,
-  setShowAddClient,
-  handleEdit,
-  handleDelete,
+  clients = [],
+  filteredClients = [],
+  loading = false,
+  searchTerm = '',
+  setSearchTerm = () => {},
+  statusFilter = 'all',
+  setStatusFilter = () => {},
+  setShowAddClient = () => {},
+  handleEdit = () => {},
+  handleDelete = () => {},
 }) => (
   <div className="space-y-6">
     {/* Header */}
@@ -83,7 +83,7 @@ export const ClientsView = ({
           </div>
         ))}
       </div>
-    ) : filteredClients.length === 0 ? (
+    ) : (filteredClients?.length ?? 0) === 0 ? (
       // Empty state
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -109,8 +109,7 @@ export const ClientsView = ({
     ) : (
       // Client cards
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredClients.map((client) => {
-          // Ensure website link has proper protocol
+        {filteredClients?.map((client) => {
           const websiteUrl = client.website?.startsWith('http')
             ? client.website
             : `http://${client.website}`;
