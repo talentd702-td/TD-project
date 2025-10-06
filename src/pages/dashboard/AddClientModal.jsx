@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserIcon, LocationIcon, PhoneIcon, DocumentIcon } from '../common/icons';
+import { UserIcon, LocationIcon, PhoneIcon, DocumentIcon } from '../../components/common/Icons';
 import { indianStates } from '../../data/indianStates';
 
 export const AddClientModal = ({ 
