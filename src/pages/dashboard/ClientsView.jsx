@@ -193,3 +193,5 @@ export const ClientsView = ({
     )}
   </div>
 );
+
+export default ClientsView;

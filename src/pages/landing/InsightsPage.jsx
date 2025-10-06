@@ -176,3 +176,5 @@ export const InsightsPage = () => {
     </div>
   );
 };
+
+export default InsightsPage;

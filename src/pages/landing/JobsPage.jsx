@@ -195,3 +195,5 @@ export const JobsPage = () => {
     </div>
   );
 };
+
+export default JobsPage;

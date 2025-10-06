@@ -315,3 +315,5 @@ export const SectorsPage = () => {
     </div>
   );
 };
+
+export default SectorsPage;

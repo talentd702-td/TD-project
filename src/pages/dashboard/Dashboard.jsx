@@ -132,3 +132,5 @@ export const Dashboard = ({ clients, setActiveTab, setShowAddClient }) => (
     </div>
   </div>
 );
+
+export default Dashboard;

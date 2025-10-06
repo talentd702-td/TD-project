@@ -183,3 +183,5 @@ export const LandingPage = ({ setIsSignedIn }) => {
     </div>
   );
 };
+
+export default LandingPage;
