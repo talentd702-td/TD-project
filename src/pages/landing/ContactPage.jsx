@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from '../../config/supabase';
 import { PhoneIcon, MailIcon, LocationIcon } from '../../components/common/Icons';
 
 export const ContactPage = () => {
@@ -19,20 +20,50 @@ export const ContactPage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.fullName || !formData.email || !formData.enquiryType || !formData.message) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    try {
+      const { error } = await supabase
+        .from('td_enquiries')
+        .insert([{
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone || null,
+          enquiry_type: formData.enquiryType,
+          company_name: formData.companyName || null,
+          message: formData.message,
+          status: 'New'
+        }]);
+
+      if (error) throw error;
+
       setSubmitSuccess(true);
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        enquiryType: '',
+        companyName: '',
+        message: ''
+      });
+
       setTimeout(() => {
-        setFormData({
-          fullName: '', email: '', phone: '', enquiryType: '',
-          companyName: '', message: ''
-        });
         setSubmitSuccess(false);
-      }, 3000);
-    }, 1500);
+      }, 5000);
+    } catch (error) {
+      console.error('Error submitting enquiry:', error);
+      alert('Error submitting your enquiry. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -73,7 +104,7 @@ export const ContactPage = () => {
                 </div>
               ) : (
                 <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
-                  <div className="p-6">
+                  <form onSubmit={handleSubmit} className="p-6">
                     <h3 className="text-lg font-bold text-white mb-4">Send us a Message</h3>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -166,8 +197,7 @@ export const ContactPage = () => {
                       </div>
 
                       <button 
-                        type="button"
-                        onClick={handleSubmit}
+                        type="submit"
                         disabled={isSubmitting}
                         className="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all hover:scale-[1.02] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
                         style={{ backgroundColor: '#FF4500' }}
@@ -186,7 +216,7 @@ export const ContactPage = () => {
                         <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       </button>
                     </div>
-                  </div>
+                  </form>
                 </div>
               )}
             </div>
