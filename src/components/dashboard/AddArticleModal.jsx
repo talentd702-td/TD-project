@@ -19,10 +19,12 @@ export const AddArticleModal = ({
   const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
-    if (formData.featured_image_url) {
+    if (formData?.featured_image_url) {
       setImagePreview(formData.featured_image_url);
+    } else {
+      setImagePreview('');
     }
-  }, [formData.featured_image_url]);
+  }, [formData?.featured_image_url]);
 
   if (!showAddArticle) return null;
 
@@ -99,7 +101,7 @@ export const AddArticleModal = ({
                 type="text"
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.title}
+                value={formData?.title || ''}
                 onChange={handleTitleChange}
                 placeholder="Enter article title"
               />
@@ -112,7 +114,7 @@ export const AddArticleModal = ({
               <input
                 type="text"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
-                value={formData.slug}
+                value={formData?.slug || ''}
                 readOnly
                 placeholder="auto-generated-from-title"
               />
@@ -128,7 +130,7 @@ export const AddArticleModal = ({
             <textarea
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-              value={formData.excerpt}
+              value={formData?.excerpt || ''}
               onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
               placeholder="Brief summary of your article (optional)"
             ></textarea>
@@ -140,7 +142,7 @@ export const AddArticleModal = ({
               Article Content *
             </label>
             <RichTextEditor
-              content={formData.content}
+              content={formData?.content || ''}
               onChange={(content) => setFormData({...formData, content})}
             />
           </div>
@@ -199,7 +201,7 @@ export const AddArticleModal = ({
               <input
                 type="text"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.author_name}
+                value={formData?.author_name || ''}
                 onChange={(e) => setFormData({...formData, author_name: e.target.value})}
                 placeholder="Author name"
               />
@@ -212,7 +214,7 @@ export const AddArticleModal = ({
               <input
                 type="text"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={formData.category}
+                value={formData?.category || ''}
                 onChange={(e) => setFormData({...formData, category: e.target.value})}
                 placeholder="e.g., Technology, Career Tips"
               />
@@ -227,7 +229,7 @@ export const AddArticleModal = ({
             <input
               type="text"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={formData.tags}
+              value={formData?.tags || ''}
               onChange={(e) => setFormData({...formData, tags: e.target.value})}
               placeholder="recruitment, hiring, career (comma-separated)"
             />
@@ -240,7 +242,7 @@ export const AddArticleModal = ({
             </label>
             <select
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              value={formData.status}
+              value={formData?.status || 'Draft'}
               onChange={(e) => setFormData({...formData, status: e.target.value})}
             >
               <option value="Draft">Draft</option>
@@ -279,3 +281,5 @@ export const AddArticleModal = ({
     </div>
   );
 };
+
+export default AddArticleModal;
