@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { FileText, Upload, Plus, X, Download, Users, Calendar } from 'lucide-react';
 
 export const SalaryGuideView = ({
-  guides,
-  filteredGuides,
-  downloads,
+  guides = [],
+  filteredGuides = [],
+  downloads = [],
   loading,
   searchTerm,
   setSearchTerm,
@@ -34,6 +34,7 @@ export const SalaryGuideView = ({
   };
 
   const getDownloadsForGuide = (guideId) => {
+    if (!downloads || !Array.isArray(downloads)) return [];
     return downloads.filter(d => d.salary_guide_id === guideId);
   };
 
@@ -41,6 +42,11 @@ export const SalaryGuideView = ({
     setSelectedGuideDownloads(guide);
     setShowDownloads(true);
   };
+
+  // Calculate unique users safely
+  const uniqueUsers = downloads && Array.isArray(downloads) 
+    ? new Set(downloads.map(d => d.email)).size 
+    : 0;
 
   return (
     <div>
@@ -65,7 +71,9 @@ export const SalaryGuideView = ({
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Guides</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{guides.length}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">
+                {guides?.length || 0}
+              </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
               <FileText className="w-6 h-6 text-blue-600" />
@@ -77,7 +85,9 @@ export const SalaryGuideView = ({
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Downloads</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{downloads.length}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">
+                {downloads?.length || 0}
+              </p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
               <Download className="w-6 h-6 text-green-600" />
@@ -90,7 +100,7 @@ export const SalaryGuideView = ({
             <div>
               <p className="text-sm text-gray-600">Unique Users</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
-                {new Set(downloads.map(d => d.email)).size}
+                {uniqueUsers}
               </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -106,12 +116,12 @@ export const SalaryGuideView = ({
           <input
             type="text"
             placeholder="Search guides..."
-            value={searchTerm}
+            value={searchTerm || ''}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
           />
           <select
-            value={statusFilter}
+            value={statusFilter || 'all'}
             onChange={(e) => setStatusFilter(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
           >
@@ -152,7 +162,7 @@ export const SalaryGuideView = ({
                     Loading...
                   </td>
                 </tr>
-              ) : filteredGuides.length === 0 ? (
+              ) : !filteredGuides || filteredGuides.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
                     No salary guides found
@@ -288,4 +298,4 @@ export const SalaryGuideView = ({
   );
 };
 
-export default SalaryGuideView;
+export default SalaryGuideView
