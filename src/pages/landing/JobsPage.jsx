@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../config/supabase';
 import { JobApplicationModal } from '../../components/landing/JobApplicationModal';
+import { JobDetailsModal } from '../../components/landing/JobDetailsModal';
 
 export const JobsPage = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -10,6 +11,7 @@ export const JobsPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState(null);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   // Fetch jobs from database
   useEffect(() => {
@@ -70,6 +72,11 @@ export const JobsPage = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     // Search is handled by useEffect above
+  };
+
+  const handleViewDetails = (job) => {
+    setSelectedJob(job);
+    setShowDetailsModal(true);
   };
 
   const handleApply = (job) => {
@@ -290,7 +297,7 @@ export const JobsPage = () => {
 
                     <div className="flex flex-col sm:flex-row gap-2">
                       <button 
-                        onClick={() => handleApply(job)}
+                        onClick={() => handleViewDetails(job)}
                         className="px-5 py-2.5 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-all font-medium text-sm hover:scale-105"
                       >
                         View Details
@@ -319,6 +326,17 @@ export const JobsPage = () => {
           )}
         </div>
       </div>
+
+      {/* Job Details Modal */}
+      <JobDetailsModal 
+        isOpen={showDetailsModal}
+        onClose={() => {
+          setShowDetailsModal(false);
+          setSelectedJob(null);
+        }}
+        job={selectedJob || {}}
+        onApply={handleApply}
+      />
 
       {/* Application Modal */}
       <JobApplicationModal 
