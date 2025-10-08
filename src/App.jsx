@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LandingPage } from './pages/landing/LandingPage';
+import { SignInPage } from './pages/landing/SignInPage';
 import { AppLayout } from './pages/dashboard/AppLayout';
 import { useClientManagement } from './hooks/useClientManagement';
 import { useJobManagement } from './hooks/useJobManagement';
@@ -11,6 +12,8 @@ import { useEnquiryManagement } from './hooks/useEnquiryManagement';
 
 const TalentDiscoveryApp = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Client Management
   const clientManagement = useClientManagement();
@@ -27,6 +30,27 @@ const TalentDiscoveryApp = () => {
   // Enquiry Management
   const enquiryManagement = useEnquiryManagement();
 
+  // Check for existing session on mount
+  useEffect(() => {
+    const checkSession = () => {
+      const adminUser = localStorage.getItem('admin_user');
+      if (adminUser) {
+        setIsSignedIn(true);
+      }
+      setLoading(false);
+    };
+
+    checkSession();
+  }, []);
+
+  // Handle sign out
+  const handleSignOut = () => {
+    localStorage.removeItem('admin_user');
+    setIsSignedIn(false);
+    setShowSignIn(false);
+  };
+
+  // Fetch data when signed in
   useEffect(() => {
     if (isSignedIn) {
       clientManagement.fetchClients();
@@ -38,10 +62,29 @@ const TalentDiscoveryApp = () => {
     }
   }, [isSignedIn]);
 
-  if (!isSignedIn) {
-    return <LandingPage setIsSignedIn={setIsSignedIn} />;
+  // Show loading screen while checking session
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #003566 0%, #001122 100%)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
+  // Show Sign In Page
+  if (!isSignedIn && showSignIn) {
+    return <SignInPage setIsSignedIn={setIsSignedIn} setShowSignIn={setShowSignIn} />;
+  }
+
+  // Show Landing Page
+  if (!isSignedIn) {
+    return <LandingPage setShowSignIn={setShowSignIn} />;
+  }
+
+  // Show Dashboard
   return (
     <AppLayout
       // Client props
@@ -134,7 +177,7 @@ const TalentDiscoveryApp = () => {
       updateEnquiryNotes={enquiryManagement.updateEnquiryNotes}
       handleEnquiryDelete={enquiryManagement.handleDelete}
       
-      setIsSignedIn={setIsSignedIn}
+      setIsSignedIn={handleSignOut} 
     />
   );
 };

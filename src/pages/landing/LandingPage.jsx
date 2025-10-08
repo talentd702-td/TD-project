@@ -9,7 +9,7 @@ import { InsightsPage } from './InsightsPage';
 import { ContactPage } from './ContactPage';
 import { Home, User, Briefcase, LayoutGrid, Search, FileText, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Award } from 'lucide-react';
 
-export const LandingPage = ({ setIsSignedIn }) => {
+export const LandingPage = ({ setShowSignIn }) => {
   const [activePage, setActivePage] = useState('home');
 
   const navItems = [
@@ -40,7 +40,7 @@ export const LandingPage = ({ setIsSignedIn }) => {
             </span>
           </button>
           <button
-            onClick={() => setIsSignedIn(true)}
+            onClick={() => setShowSignIn(true)}
             className="bg-white hover:bg-gray-100 text-black px-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm font-medium"
           >
             Sign In
