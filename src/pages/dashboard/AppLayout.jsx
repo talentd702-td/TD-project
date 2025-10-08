@@ -7,10 +7,12 @@ import { JobsView } from './JobsView';
 import { CandidatesView } from './CandidatesView';
 import { ArticlesView } from './ArticlesView';
 import { EnquiriesView } from './EnquiriesView';
+import { SalaryGuideView } from './SalaryGuideView';
 import { AddClientModal } from '../../components/dashboard/AddClientModal';
 import { AddJobModal } from '../../components/dashboard/AddJobModal';
 import { AddCandidateModal } from '../../components/dashboard/AddCandidateModal';
 import { AddArticleModal } from '../../components/dashboard/AddArticleModal';
+import { AddSalaryGuideModal } from '../../components/dashboard/AddSalaryGuideModal';
 import { ComingSoon } from '../../components/common/ComingSoon';
 
 export const AppLayout = ({ 
@@ -103,6 +105,26 @@ export const AppLayout = ({
   updateEnquiryStatus,
   updateEnquiryNotes,
   handleEnquiryDelete,
+
+  // Salary Guide props
+  guides,
+  filteredGuides,
+  downloads,
+  guidesLoading,
+  guideSearchTerm,
+  setGuideSearchTerm,
+  guideStatusFilter,
+  setGuideStatusFilter,
+  showAddGuide,
+  setShowAddGuide,
+  editingGuide,
+  guideFormData,
+  setGuideFormData,
+  uploadingFile,
+  handleGuideSubmit,
+  handleGuideEdit,
+  handleGuideDelete,
+  resetGuideForm,
   
   setIsSignedIn
 }) => {
@@ -126,19 +148,19 @@ export const AppLayout = ({
         />
 
         <main className="flex-1 p-4 lg:p-8">
-        {activeTab === 'dashboard' && (
-  <Dashboard 
-    clients={clients}
-    jobs={jobs}
-    candidates={candidates}
-    articles={articles}
-    enquiries={enquiries}
-    setActiveTab={setActiveTab}
-    setShowAddClient={setShowAddClient}
-    setShowAddJob={setShowAddJob}
-    setShowAddCandidate={setShowAddCandidate}
-  />
-)}
+          {activeTab === 'dashboard' && (
+            <Dashboard 
+              clients={clients}
+              jobs={jobs}
+              candidates={candidates}
+              articles={articles}
+              enquiries={enquiries}
+              setActiveTab={setActiveTab}
+              setShowAddClient={setShowAddClient}
+              setShowAddJob={setShowAddJob}
+              setShowAddCandidate={setShowAddCandidate}
+            />
+          )}
           {activeTab === 'client' && (
             <ClientsView 
               clients={clients}
@@ -211,11 +233,25 @@ export const AppLayout = ({
               handleDelete={handleEnquiryDelete}
             />
           )}
+          {activeTab === 'salary-guide' && (
+            <SalaryGuideView 
+              guides={guides}
+              filteredGuides={filteredGuides}
+              downloads={downloads}
+              loading={guidesLoading}
+              searchTerm={guideSearchTerm}
+              setSearchTerm={setGuideSearchTerm}
+              statusFilter={guideStatusFilter}
+              setStatusFilter={setGuideStatusFilter}
+              setShowAddGuide={setShowAddGuide}
+              handleEdit={handleGuideEdit}
+              handleDelete={handleGuideDelete}
+            />
+          )}
           {activeTab === 'my-account' && <ComingSoon title="My Account" />}
           {activeTab === 'interviews' && <ComingSoon title="Interviews" />}
           {activeTab === 'testimonials' && <ComingSoon title="Testimonials" />}
           {activeTab === 'team' && <ComingSoon title="Team" />}
-          {activeTab === 'salary-guide' && <ComingSoon title="Salary Guide" />}
         </main>
       </div>
 
@@ -262,6 +298,17 @@ export const AppLayout = ({
         handleSubmit={handleArticleSubmit}
         resetForm={resetArticleForm}
         generateSlug={generateSlug}
+      />
+
+      <AddSalaryGuideModal 
+        showAddGuide={showAddGuide}
+        editingGuide={editingGuide}
+        formData={guideFormData}
+        setFormData={setGuideFormData}
+        loading={guidesLoading}
+        uploadingFile={uploadingFile}
+        handleSubmit={handleGuideSubmit}
+        resetForm={resetGuideForm}
       />
     </div>
   );

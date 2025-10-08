@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../config/supabase';
+import { SalaryGuideDownload } from '../../components/landing/SalaryGuideDownload';
 
 export const InsightsPage = () => {
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -31,17 +29,6 @@ export const InsightsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
-    }, 1000);
   };
 
   const stripHtml = (html) => {
@@ -106,7 +93,7 @@ export const InsightsPage = () => {
       <div className="relative z-10 pt-24 pb-16 px-4 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">Insights & Resources</h2>
             <div className="w-20 h-0.5 bg-orange-400 mx-auto mb-3"></div>
             <p className="text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
@@ -114,9 +101,20 @@ export const InsightsPage = () => {
             </p>
           </div>
 
+          {/* Salary Guide Download Section */}
+          <SalaryGuideDownload />
+
+          {/* Articles Section Header */}
+          <div className="text-center mb-10 mt-20">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Latest Articles</h3>
+            <p className="text-sm md:text-base text-gray-400">
+              Expert insights and industry trends
+            </p>
+          </div>
+
           {/* Loading State */}
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden animate-pulse">
                   <div className="h-40 bg-white/10"></div>
@@ -130,7 +128,7 @@ export const InsightsPage = () => {
             </div>
           ) : articles.length === 0 ? (
             /* Empty State */
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-12 text-center mb-12">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-12 text-center">
               <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -139,7 +137,7 @@ export const InsightsPage = () => {
             </div>
           ) : (
             /* Articles Grid */
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {articles.map((article, index) => {
                 const colorScheme = getArticleColor(index);
                 return (
@@ -212,43 +210,6 @@ export const InsightsPage = () => {
               })}
             </div>
           )}
-
-          {/* Newsletter Section */}
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 md:p-10 text-center text-white shadow-2xl border border-blue-400/20">
-            <h3 className="text-xl md:text-2xl font-bold mb-3">
-              Get Exclusive Insights Delivered to Your Inbox
-            </h3>
-            <p className="text-sm text-blue-100 mb-6 max-w-xl mx-auto">
-              Subscribe to our newsletter for the latest trends, reports, and expert advice in talent acquisition.
-            </p>
-            
-            {subscribed ? (
-              <div className="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/30 text-green-200 px-6 py-3 rounded-lg">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Successfully subscribed!
-              </div>
-            ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  required
-                  className="flex-1 px-5 py-3 rounded-lg text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-all font-semibold text-sm disabled:opacity-50 hover:scale-105 transform"
-                >
-                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-                </button>
-              </form>
-            )}
-          </div>
         </div>
       </div>
 

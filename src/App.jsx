@@ -9,6 +9,7 @@ import { useJobManagement } from './hooks/useJobManagement';
 import { useCandidateManagement } from './hooks/useCandidateManagement';
 import { useArticleManagement } from './hooks/useArticleManagement';
 import { useEnquiryManagement } from './hooks/useEnquiryManagement';
+import { useSalaryGuideManagement } from './hooks/useSalaryGuideManagement';
 
 const TalentDiscoveryApp = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -29,6 +30,9 @@ const TalentDiscoveryApp = () => {
 
   // Enquiry Management
   const enquiryManagement = useEnquiryManagement();
+
+  // Salary Guide Management
+  const salaryGuideManagement = useSalaryGuideManagement();
 
   // Check for existing session on mount
   useEffect(() => {
@@ -59,6 +63,8 @@ const TalentDiscoveryApp = () => {
       candidateManagement.fetchCandidates();
       articleManagement.fetchArticles();
       enquiryManagement.fetchEnquiries();
+      salaryGuideManagement.fetchGuides();
+      salaryGuideManagement.fetchDownloads();
     }
   }, [isSignedIn]);
 
@@ -176,6 +182,26 @@ const TalentDiscoveryApp = () => {
       updateEnquiryStatus={enquiryManagement.updateEnquiryStatus}
       updateEnquiryNotes={enquiryManagement.updateEnquiryNotes}
       handleEnquiryDelete={enquiryManagement.handleDelete}
+
+      // Salary Guide props
+      guides={salaryGuideManagement.guides}
+      filteredGuides={salaryGuideManagement.filteredGuides}
+      downloads={salaryGuideManagement.downloads}
+      guidesLoading={salaryGuideManagement.loading}
+      guideSearchTerm={salaryGuideManagement.searchTerm}
+      setGuideSearchTerm={salaryGuideManagement.setSearchTerm}
+      guideStatusFilter={salaryGuideManagement.statusFilter}
+      setGuideStatusFilter={salaryGuideManagement.setStatusFilter}
+      showAddGuide={salaryGuideManagement.showAddGuide}
+      setShowAddGuide={salaryGuideManagement.setShowAddGuide}
+      editingGuide={salaryGuideManagement.editingGuide}
+      guideFormData={salaryGuideManagement.formData}
+      setGuideFormData={salaryGuideManagement.setFormData}
+      uploadingFile={salaryGuideManagement.uploadingFile}
+      handleGuideSubmit={salaryGuideManagement.handleSubmit}
+      handleGuideEdit={salaryGuideManagement.handleEdit}
+      handleGuideDelete={salaryGuideManagement.handleDelete}
+      resetGuideForm={salaryGuideManagement.resetForm}
       
       setIsSignedIn={handleSignOut} 
     />
