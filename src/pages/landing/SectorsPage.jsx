@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Shield, Users, Briefcase, Target, Award, CheckCircle, Brain, Globe, Zap } from 'lucide-react';
 
-export const SectorsPage = () => {
+export const SectorsPage = ({ onNavigate }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  const handleNavigation = (page) => {
+    if (onNavigate) {
+      onNavigate(page);
+    }
+  };
 
   const expertiseAreas = [
     {
@@ -305,7 +311,10 @@ export const SectorsPage = () => {
             <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto mb-6 leading-relaxed">
               In a talent market as specialized as insurance, the wrong hire can be costly. With Talent Discoveri as your search partner, you gain access to <span className="font-semibold" style={{ color: '#FF4500' }}>specialized expertise, deep networks, and strategic insights</span>—ensuring you hire not just for today's needs, but for tomorrow's growth.
             </p>
-            <button className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <button 
+              onClick={() => handleNavigation('contact')}
+              className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
               Start Your Search
             </button>
           </div>

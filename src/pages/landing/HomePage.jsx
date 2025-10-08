@@ -15,7 +15,7 @@ import {
   Play 
 } from 'lucide-react';
 
-export const HomePage = () => {
+export const HomePage = ({ onNavigate }) => {
   const [isVideo1Playing, setIsVideo1Playing] = useState(false);
   const [isVideo2Playing, setIsVideo2Playing] = useState(false);
 
@@ -45,10 +45,14 @@ export const HomePage = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 px-2 sm:px-4 w-full sm:w-auto">
-          <button className="bg-white hover:bg-gray-100 text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto">
+          <button 
+            onClick={() => onNavigate('jobs')}
+            className="bg-white hover:bg-gray-100 text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto"
+          >
             Search Jobs
           </button>
           <button 
+            onClick={() => onNavigate('contact')}
             className="border-2 border-white hover:bg-white text-white hover:text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
             style={{ borderColor: '#FF4500', color: '#FF4500' }}
           >
@@ -555,7 +559,10 @@ export const HomePage = () => {
           We are not generalist recruiters. We are a niche search and talent consulting partner 
           dedicated to the insurance sector—across life, health, general, and reinsurance.
         </p>
-        <button className="bg-white hover:bg-gray-100 text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto max-w-xs sm:max-w-none">
+        <button 
+          onClick={() => onNavigate('services')}
+          className="bg-white hover:bg-gray-100 text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg w-full sm:w-auto max-w-xs sm:max-w-none"
+        >
           Explore Our Services
         </button>
       </div>

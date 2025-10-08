@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Search, Users, MapPin, Briefcase, Target, Award, Shield, CheckCircle, Brain, Zap } from 'lucide-react';
 
-export const ServicesPage = () => {
+export const ServicesPage = ({ onNavigate }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  const handleNavigation = (page) => {
+    if (onNavigate) {
+      onNavigate(page);
+    }
+  };
 
   const coreServices = [
     {
@@ -270,17 +276,12 @@ export const ServicesPage = () => {
             <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto mb-6 leading-relaxed">
               Partner with Talent Discoveri to access specialized insurance talent expertise, comprehensive market intelligence, and dedicated support that drives lasting success.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 transform hover:scale-105 shadow-lg">
-                Schedule Consultation
-              </button>
-              <button 
-                className="border-2 hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 transform hover:scale-105"
-                style={{ borderColor: '#FF4500', color: '#FF4500' }}
-              >
-                View Case Studies
-              </button>
-            </div>
+            <button 
+              onClick={() => onNavigate('contact')}
+              className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold text-base transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              Schedule Consultation
+            </button>
           </div>
         </div>
       </div>

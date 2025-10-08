@@ -50,10 +50,10 @@ export const LandingPage = ({ setIsSignedIn }) => {
 
       <NavBar items={navItems} onNavItemClick={handleNavClick} activePage={activePage} />
 
-      {activePage === 'home' && <HomePage />}
+      {activePage === 'home' && <HomePage onNavigate={handleNavClick} />}
       {activePage === 'about' && <AboutPage />}
-      {activePage === 'services' && <ServicesPage />}
-      {activePage === 'sectors' && <SectorsPage />}
+      {activePage === 'services' && <ServicesPage onNavigate={handleNavClick} />}
+      {activePage === 'sectors' && <SectorsPage onNavigate={handleNavClick} />}
       {activePage === 'jobs' && <JobsPage />}
       {activePage === 'insights' && <InsightsPage />}
       {activePage === 'contact' && <ContactPage />}

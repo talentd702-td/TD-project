@@ -317,22 +317,6 @@ export const JobsPage = () => {
               </p>
             </div>
           )}
-
-          {/* CTA Section */}
-          <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl rounded-xl p-8 text-center border border-white/10 shadow-2xl">
-            <svg className="w-16 h-16 mx-auto mb-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <h3 className="text-xl font-bold text-white mb-2">
-              Don't See the Right Opportunity?
-            </h3>
-            <p className="text-gray-300 mb-6 max-w-xl mx-auto text-sm">
-              Submit your profile for future openings and we'll match you with the perfect role.
-            </p>
-            <button className="px-8 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-all font-semibold text-sm hover:scale-105 shadow-xl">
-              Submit Confidential Application
-            </button>
-          </div>
         </div>
       </div>
 
