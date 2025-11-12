@@ -11,7 +11,7 @@ const defaultColors = {
 };
 
 export const Timeline3D = ({
-  events,
+  events = [],
   backgroundColor = defaultColors.background,
   primaryColor = defaultColors.primary,
   secondaryColor = defaultColors.secondary,
