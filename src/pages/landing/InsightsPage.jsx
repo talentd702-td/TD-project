@@ -101,11 +101,8 @@ export const InsightsPage = () => {
             </p>
           </div>
 
-          {/* Salary Guide Download Section */}
-          <SalaryGuideDownload />
-
           {/* Articles Section Header */}
-          <div className="text-center mb-10 mt-20">
+          <div className="text-center mb-10">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Latest Articles</h3>
             <p className="text-sm md:text-base text-gray-400">
               Expert insights and industry trends
@@ -210,6 +207,11 @@ export const InsightsPage = () => {
               })}
             </div>
           )}
+
+          {/* Salary Guide Download Section - Moved Below Articles */}
+          <div className="mt-20">
+            <SalaryGuideDownload />
+          </div>
         </div>
       </div>
 

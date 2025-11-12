@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Shield, Users, Briefcase, Target, Award, CheckCircle, Brain, Globe, Zap } from 'lucide-react';
 
 export const SectorsPage = ({ onNavigate }) => {
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [selectedExpertise, setSelectedExpertise] = useState('underwriting');
 
   const handleNavigation = (page) => {
     if (onNavigate) {
@@ -15,16 +15,28 @@ export const SectorsPage = ({ onNavigate }) => {
       id: 'underwriting',
       name: 'Underwriting Excellence',
       description: 'Comprehensive talent solutions across all underwriting domains',
-      details: 'Life • Health • Property & Casualty • Treaty & Facultative Reinsurance',
+      details: [
+        'Chief Underwriting Officers and Underwriting Heads',
+        'Motor, Health, Property, Marine, Aviation & Specialty Lines experts',
+        'Reinsurance Treaty and Facultative professionals',
+        'Risk Assessment and Pricing Specialists',
+        'Underwriting Operations and Portfolio Management teams'
+      ],
       icon: Shield,
       gradient: 'from-blue-600 to-blue-700',
-      bgColor: '#003566'
+      bgColor: '#FF4500'
     },
     {
       id: 'claims',
       name: 'Claims & Operations',
       description: 'Specialists who streamline processes and enhance customer satisfaction',
-      details: 'Health Claims • Motor • Liability • Commercial Claims Management',
+      details: [
+        'Chief Claims Officers and Claims Leadership',
+        'Motor, Health, Property & Casualty Claims Managers',
+        'Fraud Detection and Investigation experts',
+        'Claims Operations and Service Delivery teams',
+        'Third Party Administrators (TPA) professionals'
+      ],
       icon: CheckCircle,
       gradient: 'from-orange-500 to-orange-600',
       bgColor: '#FF4500'
@@ -33,16 +45,27 @@ export const SectorsPage = ({ onNavigate }) => {
       id: 'actuarial',
       name: 'Actuarial & Risk',
       description: 'Top-tier professionals who drive financial stability and innovation',
-      details: 'Appointed Actuaries • Pricing & Reserving • Risk & Compliance Leaders',
+      details: [
+        'Appointed Actuaries and Chief Actuarial Officers',
+        'Pricing Actuaries for Life, Health & General Insurance',
+        'Valuation and Reserving experts',
+        'Risk Management and ERM professionals'
+       ],
       icon: Brain,
       gradient: 'from-blue-600 to-blue-700',
-      bgColor: '#003566'
+      bgColor: '#FF4500'
     },
     {
       id: 'distribution',
       name: 'Distribution & Broking',
       description: 'Revenue-generating talent across traditional and emerging channels',
-      details: 'Agency • Bancassurance • Corporate Broking • Digital Distribution',
+      details: [
+        'Chief Distribution Officers and Sales Leadership',
+        'Agency, Bancassurance & Corporate Partnerships heads',
+        'Direct and Digital Channel experts',
+        'Insurance Broking professionals across Retail & Corporate',
+        'Reinsurance Broking specialists'
+      ],
       icon: Users,
       gradient: 'from-orange-500 to-orange-600',
       bgColor: '#FF4500'
@@ -51,16 +74,28 @@ export const SectorsPage = ({ onNavigate }) => {
       id: 'technology',
       name: 'Technology & Innovation',
       description: 'Forward-thinking leaders transforming insurance through digital capabilities',
-      details: 'InsurTech • Analytics • Product Innovation • Embedded Insurance',
+      details: [
+        'Chief Technology Officers and IT Leadership',
+        'Core Insurance Platform Implementation experts',
+        'Data Science, AI/ML and Analytics professionals',
+        'Digital Transformation and Innovation leaders',
+        'Product Development and InsurTech specialists'
+      ],
       icon: Zap,
       gradient: 'from-blue-600 to-blue-700',
-      bgColor: '#003566'
+      bgColor: '#FF4500'
     },
     {
       id: 'leadership',
       name: 'Executive Leadership',
       description: 'C-suite and board-level talent driving organizational transformation',
-      details: 'CXO Positions • Senior Management • Strategic Board Appointments',
+      details: [
+        'CEOs, Managing Directors & Country Heads',
+        'Chief Financial Officers and Finance Leadership',
+        'Chief Risk Officers and Compliance Heads',
+        'Chief Marketing Officers and Brand Leaders',
+        'Board Members and Independent Directors'
+      ],
       icon: Award,
       gradient: 'from-orange-500 to-orange-600',
       bgColor: '#FF4500'
@@ -95,27 +130,28 @@ export const SectorsPage = ({ onNavigate }) => {
     }
   ];
 
-  const valueAdditions = [
-    {
-      title: 'Talent Strategy Consulting',
-      description: 'Strategic guidance on workforce planning and organizational design for evolving insurance needs'
-    },
-    {
-      title: 'Compensation Intelligence',
-      description: 'Data-driven benchmarking to maintain competitive positioning in talent attraction and retention'
-    },
-    {
-      title: 'Succession Planning',
-      description: 'Identifying and nurturing future leaders to ensure organizational continuity and growth'
-    },
-    {
-      title: 'Market Insights',
-      description: 'Regular intelligence on sectoral hiring dynamics, talent availability, and competitive landscape'
-    }
-  ];
+  const selectedArea = expertiseAreas.find(area => area.id === selectedExpertise);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #003566 0%, #001122 100%)' }}>
+    <>
+      <style>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-33.333%);
+          }
+        }
+        .animate-scroll-fast {
+          animation: scroll 8s linear infinite;
+        }
+        .animate-scroll-fast:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+      
+      <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #003566 0%, #001122 100%)' }}>
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-10 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -124,83 +160,132 @@ export const SectorsPage = ({ onNavigate }) => {
 
       <div className="relative z-10 pt-24 pb-16 px-4 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">
-              Specialized Hiring for <span style={{ color: '#FF4500' }}>Insurance</span>
-            </h2>
-            <div className="w-20 h-0.5 bg-orange-400 mx-auto mb-3"></div>
-            <p className="text-base md:text-lg text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              The insurance landscape is evolving rapidly—digital transformation, regulatory shifts, and intensifying competition demand more than just employees. Organizations require <span className="font-semibold" style={{ color: '#FF4500' }}>specialized talent</span> who understand risk, compliance, distribution, and customer-centric innovation.
-            </p>
-          </div>
+          {/* Mission Statement - Updated */}
+          <div className="mb-16 relative overflow-hidden rounded-2xl">
+            {/* Background with overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-gray-900/60 to-blue-950/40 backdrop-blur-sm"></div>
+            
+            {/* Optional: Add your custom background image here */}
+            <div 
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: 'url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            ></div>
+            
+            {/* Decorative overlay pattern */}
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(0, 53, 102, 0.1) 0%, transparent 50%)'
+            }}></div>
+            
+            <div className="max-w-5xl mx-auto relative z-10 py-16 px-8">
+              {/* Decorative top line */}
+              <div className="flex items-center justify-center mb-8">
+                <div className="h-px w-20 bg-gradient-to-r from-transparent to-orange-500"></div>
+                <div className="w-2 h-2 rounded-full bg-orange-500 mx-3"></div>
+                <div className="h-px w-20 bg-gradient-to-l from-transparent to-orange-500"></div>
+              </div>
 
-          {/* Mission Statement */}
-          <div className="bg-gradient-to-r from-orange-500/20 to-blue-600/20 backdrop-blur-xl rounded-xl p-8 border border-white/20 mb-12 shadow-2xl">
-            <div className="text-center">
-              <p className="text-lg md:text-xl text-white font-semibold mb-4">
-                We are not generalist recruiters.
-              </p>
-              <p className="text-base md:text-lg text-gray-300 leading-relaxed">
-                We are a <span className="font-bold" style={{ color: '#FF4500' }}>niche search and talent consulting partner</span> dedicated exclusively to the insurance sector—spanning <span className="font-semibold">life, health, general, and reinsurance</span>.
-              </p>
+              <div className="text-center space-y-6">
+                <p className="text-xl md:text-2xl text-gray-400 font-light tracking-wide uppercase">
+                  Not Generalist Recruiters
+                </p>
+                
+                <div className="relative py-4">
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+                    We are a{' '}
+                    <span style={{ color: '#FF4500' }}>
+                      boutique talent consulting partner
+                    </span>
+                  </h1>
+                </div>
+                
+                <p className="text-2xl md:text-3xl lg:text-4xl text-gray-300 italic font-light leading-relaxed pt-2">
+                  Dedicated exclusively to the BFSI and insurance sector
+                </p>
+              </div>
+
+              {/* Decorative bottom line */}
+              <div className="flex items-center justify-center mt-8">
+                <div className="h-px w-20 bg-gradient-to-r from-transparent to-blue-500"></div>
+                <div className="w-2 h-2 rounded-full bg-blue-500 mx-3"></div>
+                <div className="h-px w-20 bg-gradient-to-l from-transparent to-blue-500"></div>
+              </div>
             </div>
           </div>
 
-          {/* Areas of Expertise */}
+          {/* Core Expertise - New Layout Matching Reference Image */}
           <div className="mb-12">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">
-                Our <span style={{ color: '#FF4500' }}>Expertise Areas</span>
+                Our <span style={{ color: '#FF4500' }}>Core Expertise</span>
               </h2>
-              <p className="text-base md:text-lg text-gray-300">
-                Comprehensive talent solutions across the entire insurance value chain
-              </p>
+              <div className="w-20 h-0.5 bg-orange-400 mx-auto"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {expertiseAreas.map((area) => {
-                const IconComponent = area.icon;
-                return (
-                  <div
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
+              {/* Left Side - Expertise List */}
+              <div className="lg:col-span-5 space-y-3">
+                {expertiseAreas.map((area) => (
+                  <button
                     key={area.id}
-                    onMouseEnter={() => setHoveredCard(area.id)}
-                    onMouseLeave={() => setHoveredCard(null)}
-                    className="group bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden hover:border-orange-400/50 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                    onClick={() => setSelectedExpertise(area.id)}
+                    className={`w-full text-left px-6 py-4 rounded-xl transition-all duration-300 ${
+                      selectedExpertise === area.id
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold shadow-xl shadow-orange-500/30'
+                        : 'bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-orange-400/50'
+                    }`}
                   >
-                    <div className="p-6">
-                      <div className="flex flex-col items-center text-center">
-                        <div
-                          className="w-16 h-16 rounded-xl flex items-center justify-center mb-4 shadow-lg transform group-hover:scale-110 transition-all duration-300"
-                          style={{ background: `linear-gradient(135deg, ${area.bgColor} 0%, ${area.bgColor}dd 100%)` }}
-                        >
-                          <IconComponent className="w-8 h-8 text-white" />
-                        </div>
-                        
-                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-orange-300 transition-colors">
-                          {area.name}
-                        </h3>
-                        
-                        <p className="text-sm text-gray-300 mb-4 leading-relaxed line-clamp-2">
-                          {area.description}
-                        </p>
-                        
-                        <div className="pt-4 border-t border-white/20 w-full">
-                          <p className="text-xs text-white/80 leading-relaxed">
-                            {area.details}
-                          </p>
-                        </div>
+                    <div className="text-lg">
+                      {area.name}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Right Side - Selected Expertise Description */}
+              <div className="lg:col-span-7">
+                {selectedArea && (
+                  <div className="bg-gradient-to-br from-blue-600/20 to-orange-500/20 backdrop-blur-xl rounded-xl p-8 border border-white/20 shadow-2xl h-full">
+                    <div className="flex flex-col h-full">
+                      <div
+                        className="w-20 h-20 rounded-xl flex items-center justify-center mb-6 shadow-lg"
+                        style={{ background: `linear-gradient(135deg, ${selectedArea.bgColor} 0%, ${selectedArea.bgColor}dd 100%)` }}
+                      >
+                        {React.createElement(selectedArea.icon, { className: 'w-10 h-10 text-white' })}
+                      </div>
+                      
+                      <h3 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                        {selectedArea.name}
+                      </h3>
+                      
+                      <p className="text-lg text-gray-300 leading-relaxed mb-6">
+                        {selectedArea.description}
+                      </p>
+                      
+                      {/* Detailed content */}
+                      <div className="space-y-3 flex-grow">
+                        {selectedArea.details.map((detail, index) => (
+                          <div key={index} className="flex items-start gap-3 group">
+                            <div className="flex-shrink-0 w-2 h-2 rounded-full mt-2 bg-orange-500 group-hover:scale-125 transition-transform duration-300"></div>
+                            <p className="text-base text-gray-200 leading-relaxed group-hover:text-white transition-colors duration-300">
+                              {detail}
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
-                );
-              })}
+                )}
+              </div>
             </div>
           </div>
 
           {/* Differentiators */}
-          <div className="mb-12">
-            <div className="text-center mb-8">
+          <div className="mb-16">
+            <div className="text-center mb-10">
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">
                 What Sets Us <span style={{ color: '#FF4500' }}>Apart</span>
               </h2>
@@ -209,59 +294,85 @@ export const SectorsPage = ({ onNavigate }) => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-              {differentiators.map((diff, index) => {
-                const IconComponent = diff.icon;
-                return (
-                  <div
-                    key={index}
-                    className="bg-white/5 backdrop-blur-xl p-6 rounded-xl border border-white/10 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] text-center"
-                  >
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl mb-4 shadow-lg" style={{ backgroundColor: 'rgba(255, 69, 0, 0.2)', border: '2px solid #FF4500' }}>
-                      <IconComponent className="w-7 h-7" style={{ color: '#FF4500' }} />
-                    </div>
-                    <h3 className="text-base font-bold text-white mb-2">{diff.title}</h3>
-                    <p className="text-sm text-gray-300 leading-relaxed">{diff.description}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Value Beyond Hiring */}
-          <div className="mb-12">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-3">
-                Value Beyond <span style={{ color: '#FF4500' }}>Hiring</span>
-              </h2>
-              <p className="text-base md:text-lg text-gray-300">
-                Strategic advisory services that extend far beyond candidate placement
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              {valueAdditions.map((value, index) => (
-                <div
-                  key={index}
-                  className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden hover:border-purple-400/50 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:scale-[1.02]"
-                >
-                  <div className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">
-                        <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: '#FF4500' }}></div>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-white mb-2">
-                          {value.title}
-                        </h3>
-                        <p className="text-sm text-gray-300 leading-relaxed">
-                          {value.description}
-                        </p>
+            {/* Scrolling container with enhanced design */}
+            <div className="relative overflow-hidden py-8">
+              {/* Top glow line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/30 to-transparent"></div>
+              {/* Bottom glow line */}
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+              
+              {/* Scrolling content - Fast */}
+              <div className="flex animate-scroll-fast gap-6">
+                {/* First set of items */}
+                {differentiators.map((diff, index) => {
+                  const IconComponent = diff.icon;
+                  return (
+                    <div
+                      key={`first-${index}`}
+                      className="flex-shrink-0"
+                    >
+                      <div className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl px-10 py-5 rounded-full border-2 border-white/20 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/40 transition-all duration-500 flex items-center gap-4 whitespace-nowrap overflow-hidden">
+                        {/* Animated background gradient on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                        
+                        <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-full shadow-xl group-hover:scale-110 transition-transform duration-300" style={{ 
+                          background: 'linear-gradient(135deg, #FF4500 0%, #FF6347 100%)',
+                          boxShadow: '0 4px 20px rgba(255, 69, 0, 0.3)'
+                        }}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="text-xl font-bold text-white relative z-10 group-hover:text-orange-300 transition-colors duration-300">{diff.title}</span>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
+                {/* Second set for seamless loop */}
+                {differentiators.map((diff, index) => {
+                  const IconComponent = diff.icon;
+                  return (
+                    <div
+                      key={`second-${index}`}
+                      className="flex-shrink-0"
+                    >
+                      <div className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl px-10 py-5 rounded-full border-2 border-white/20 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/40 transition-all duration-500 flex items-center gap-4 whitespace-nowrap overflow-hidden">
+                        {/* Animated background gradient on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                        
+                        <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-full shadow-xl group-hover:scale-110 transition-transform duration-300" style={{ 
+                          background: 'linear-gradient(135deg, #FF4500 0%, #FF6347 100%)',
+                          boxShadow: '0 4px 20px rgba(255, 69, 0, 0.3)'
+                        }}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="text-xl font-bold text-white relative z-10 group-hover:text-orange-300 transition-colors duration-300">{diff.title}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {/* Third set for extra smooth infinite loop */}
+                {differentiators.map((diff, index) => {
+                  const IconComponent = diff.icon;
+                  return (
+                    <div
+                      key={`third-${index}`}
+                      className="flex-shrink-0"
+                    >
+                      <div className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl px-10 py-5 rounded-full border-2 border-white/20 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/40 transition-all duration-500 flex items-center gap-4 whitespace-nowrap overflow-hidden">
+                        {/* Animated background gradient on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full"></div>
+                        
+                        <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-full shadow-xl group-hover:scale-110 transition-transform duration-300" style={{ 
+                          background: 'linear-gradient(135deg, #FF4500 0%, #FF6347 100%)',
+                          boxShadow: '0 4px 20px rgba(255, 69, 0, 0.3)'
+                        }}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="text-xl font-bold text-white relative z-10 group-hover:text-orange-300 transition-colors duration-300">{diff.title}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -320,7 +431,8 @@ export const SectorsPage = ({ onNavigate }) => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from './pages/landing/LandingPage';
 import { SignInPage } from './pages/landing/SignInPage';
 import { AppLayout } from './pages/dashboard/AppLayout';
@@ -13,7 +14,6 @@ import { useSalaryGuideManagement } from './hooks/useSalaryGuideManagement';
 
 const TalentDiscoveryApp = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [showSignIn, setShowSignIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Client Management
@@ -51,7 +51,6 @@ const TalentDiscoveryApp = () => {
   const handleSignOut = () => {
     localStorage.removeItem('admin_user');
     setIsSignedIn(false);
-    setShowSignIn(false);
   };
 
   // Fetch data when signed in
@@ -80,131 +79,138 @@ const TalentDiscoveryApp = () => {
     );
   }
 
-  // Show Sign In Page
-  if (!isSignedIn && showSignIn) {
-    return <SignInPage setIsSignedIn={setIsSignedIn} setShowSignIn={setShowSignIn} />;
-  }
-
-  // Show Landing Page
-  if (!isSignedIn) {
-    return <LandingPage setShowSignIn={setShowSignIn} />;
-  }
-
-  // Show Dashboard
   return (
-    <AppLayout
-      // Client props
-      clients={clientManagement.clients}
-      filteredClients={clientManagement.filteredClients}
-      clientsLoading={clientManagement.loading}
-      clientSearchTerm={clientManagement.searchTerm}
-      setClientSearchTerm={clientManagement.setSearchTerm}
-      clientStatusFilter={clientManagement.statusFilter}
-      setClientStatusFilter={clientManagement.setStatusFilter}
-      showAddClient={clientManagement.showAddClient}
-      setShowAddClient={clientManagement.setShowAddClient}
-      editingClient={clientManagement.editingClient}
-      clientFormData={clientManagement.formData}
-      setClientFormData={clientManagement.setFormData}
-      handleClientSubmit={clientManagement.handleSubmit}
-      handleClientEdit={clientManagement.handleEdit}
-      handleClientDelete={clientManagement.handleDelete}
-      resetClientForm={clientManagement.resetForm}
-      
-      // Job props
-      jobs={jobManagement.jobs}
-      filteredJobs={jobManagement.filteredJobs}
-      activeClients={jobManagement.clients}
-      jobsLoading={jobManagement.loading}
-      jobSearchTerm={jobManagement.searchTerm}
-      setJobSearchTerm={jobManagement.setSearchTerm}
-      jobStatusFilter={jobManagement.statusFilter}
-      setJobStatusFilter={jobManagement.setStatusFilter}
-      showAddJob={jobManagement.showAddJob}
-      setShowAddJob={jobManagement.setShowAddJob}
-      editingJob={jobManagement.editingJob}
-      jobFormData={jobManagement.formData}
-      setJobFormData={jobManagement.setFormData}
-      handleJobSubmit={jobManagement.handleSubmit}
-      handleJobEdit={jobManagement.handleEdit}
-      handleJobDelete={jobManagement.handleDelete}
-      resetJobForm={jobManagement.resetForm}
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/*" element={!isSignedIn ? <LandingPage /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/signin" element={!isSignedIn ? <SignInPage setIsSignedIn={setIsSignedIn} /> : <Navigate to="/dashboard" replace />} />
 
-      // Candidate props
-      candidates={candidateManagement.candidates}
-      filteredCandidates={candidateManagement.filteredCandidates}
-      candidatesLoading={candidateManagement.loading}
-      candidateSearchTerm={candidateManagement.searchTerm}
-      setCandidateSearchTerm={candidateManagement.setSearchTerm}
-      candidateStatusFilter={candidateManagement.statusFilter}
-      setCandidateStatusFilter={candidateManagement.setStatusFilter}
-      showAddCandidate={candidateManagement.showAddCandidate}
-      setShowAddCandidate={candidateManagement.setShowAddCandidate}
-      editingCandidate={candidateManagement.editingCandidate}
-      candidateFormData={candidateManagement.formData}
-      setCandidateFormData={candidateManagement.setFormData}
-      uploadingResume={candidateManagement.uploadingResume}
-      handleCandidateSubmit={candidateManagement.handleSubmit}
-      handleCandidateEdit={candidateManagement.handleEdit}
-      handleCandidateDelete={candidateManagement.handleDelete}
-      resetCandidateForm={candidateManagement.resetForm}
+        {/* Protected Dashboard Route */}
+        <Route
+          path="/dashboard"
+          element={
+            isSignedIn ? (
+              <AppLayout
+                // Client props
+                clients={clientManagement.clients}
+                filteredClients={clientManagement.filteredClients}
+                clientsLoading={clientManagement.loading}
+                clientSearchTerm={clientManagement.searchTerm}
+                setClientSearchTerm={clientManagement.setSearchTerm}
+                clientStatusFilter={clientManagement.statusFilter}
+                setClientStatusFilter={clientManagement.setStatusFilter}
+                showAddClient={clientManagement.showAddClient}
+                setShowAddClient={clientManagement.setShowAddClient}
+                editingClient={clientManagement.editingClient}
+                clientFormData={clientManagement.formData}
+                setClientFormData={clientManagement.setFormData}
+                handleClientSubmit={clientManagement.handleSubmit}
+                handleClientEdit={clientManagement.handleEdit}
+                handleClientDelete={clientManagement.handleDelete}
+                resetClientForm={clientManagement.resetForm}
+                
+                // Job props
+                jobs={jobManagement.jobs}
+                filteredJobs={jobManagement.filteredJobs}
+                activeClients={jobManagement.clients}
+                jobsLoading={jobManagement.loading}
+                jobSearchTerm={jobManagement.searchTerm}
+                setJobSearchTerm={jobManagement.setSearchTerm}
+                jobStatusFilter={jobManagement.statusFilter}
+                setJobStatusFilter={jobManagement.setStatusFilter}
+                showAddJob={jobManagement.showAddJob}
+                setShowAddJob={jobManagement.setShowAddJob}
+                editingJob={jobManagement.editingJob}
+                jobFormData={jobManagement.formData}
+                setJobFormData={jobManagement.setFormData}
+                handleJobSubmit={jobManagement.handleSubmit}
+                handleJobEdit={jobManagement.handleEdit}
+                handleJobDelete={jobManagement.handleDelete}
+                resetJobForm={jobManagement.resetForm}
 
-      // Article props
-      articles={articleManagement.articles}
-      filteredArticles={articleManagement.filteredArticles}
-      articlesLoading={articleManagement.loading}
-      articleSearchTerm={articleManagement.searchTerm}
-      setArticleSearchTerm={articleManagement.setSearchTerm}
-      articleStatusFilter={articleManagement.statusFilter}
-      setArticleStatusFilter={articleManagement.setStatusFilter}
-      showAddArticle={articleManagement.showAddArticle}
-      setShowAddArticle={articleManagement.setShowAddArticle}
-      editingArticle={articleManagement.editingArticle}
-      articleFormData={articleManagement.formData}
-      setArticleFormData={articleManagement.setFormData}
-      uploadingImage={articleManagement.uploadingImage}
-      handleArticleSubmit={articleManagement.handleSubmit}
-      handleArticleEdit={articleManagement.handleEdit}
-      handleArticleDelete={articleManagement.handleDelete}
-      resetArticleForm={articleManagement.resetForm}
-      generateSlug={articleManagement.generateSlug}
+                // Candidate props
+                candidates={candidateManagement.candidates}
+                filteredCandidates={candidateManagement.filteredCandidates}
+                candidatesLoading={candidateManagement.loading}
+                candidateSearchTerm={candidateManagement.searchTerm}
+                setCandidateSearchTerm={candidateManagement.setSearchTerm}
+                candidateStatusFilter={candidateManagement.statusFilter}
+                setCandidateStatusFilter={candidateManagement.setStatusFilter}
+                showAddCandidate={candidateManagement.showAddCandidate}
+                setShowAddCandidate={candidateManagement.setShowAddCandidate}
+                editingCandidate={candidateManagement.editingCandidate}
+                candidateFormData={candidateManagement.formData}
+                setCandidateFormData={candidateManagement.setFormData}
+                uploadingResume={candidateManagement.uploadingResume}
+                handleCandidateSubmit={candidateManagement.handleSubmit}
+                handleCandidateEdit={candidateManagement.handleEdit}
+                handleCandidateDelete={candidateManagement.handleDelete}
+                resetCandidateForm={candidateManagement.resetForm}
 
-      // Enquiry props
-      enquiries={enquiryManagement.enquiries}
-      filteredEnquiries={enquiryManagement.filteredEnquiries}
-      enquiriesLoading={enquiryManagement.loading}
-      enquirySearchTerm={enquiryManagement.searchTerm}
-      setEnquirySearchTerm={enquiryManagement.setSearchTerm}
-      enquiryStatusFilter={enquiryManagement.statusFilter}
-      setEnquiryStatusFilter={enquiryManagement.setStatusFilter}
-      enquiryTypeFilter={enquiryManagement.typeFilter}
-      setEnquiryTypeFilter={enquiryManagement.setTypeFilter}
-      updateEnquiryStatus={enquiryManagement.updateEnquiryStatus}
-      updateEnquiryNotes={enquiryManagement.updateEnquiryNotes}
-      handleEnquiryDelete={enquiryManagement.handleDelete}
+                // Article props
+                articles={articleManagement.articles}
+                filteredArticles={articleManagement.filteredArticles}
+                articlesLoading={articleManagement.loading}
+                articleSearchTerm={articleManagement.searchTerm}
+                setArticleSearchTerm={articleManagement.setSearchTerm}
+                articleStatusFilter={articleManagement.statusFilter}
+                setArticleStatusFilter={articleManagement.setStatusFilter}
+                showAddArticle={articleManagement.showAddArticle}
+                setShowAddArticle={articleManagement.setShowAddArticle}
+                editingArticle={articleManagement.editingArticle}
+                articleFormData={articleManagement.formData}
+                setArticleFormData={articleManagement.setFormData}
+                uploadingImage={articleManagement.uploadingImage}
+                handleArticleSubmit={articleManagement.handleSubmit}
+                handleArticleEdit={articleManagement.handleEdit}
+                handleArticleDelete={articleManagement.handleDelete}
+                resetArticleForm={articleManagement.resetForm}
+                generateSlug={articleManagement.generateSlug}
 
-      // Salary Guide props
-      guides={salaryGuideManagement.guides}
-      filteredGuides={salaryGuideManagement.filteredGuides}
-      downloads={salaryGuideManagement.downloads}
-      guidesLoading={salaryGuideManagement.loading}
-      guideSearchTerm={salaryGuideManagement.searchTerm}
-      setGuideSearchTerm={salaryGuideManagement.setSearchTerm}
-      guideStatusFilter={salaryGuideManagement.statusFilter}
-      setGuideStatusFilter={salaryGuideManagement.setStatusFilter}
-      showAddGuide={salaryGuideManagement.showAddGuide}
-      setShowAddGuide={salaryGuideManagement.setShowAddGuide}
-      editingGuide={salaryGuideManagement.editingGuide}
-      guideFormData={salaryGuideManagement.formData}
-      setGuideFormData={salaryGuideManagement.setFormData}
-      uploadingFile={salaryGuideManagement.uploadingFile}
-      handleGuideSubmit={salaryGuideManagement.handleSubmit}
-      handleGuideEdit={salaryGuideManagement.handleEdit}
-      handleGuideDelete={salaryGuideManagement.handleDelete}
-      resetGuideForm={salaryGuideManagement.resetForm}
-      
-      setIsSignedIn={handleSignOut} 
-    />
+                // Enquiry props
+                enquiries={enquiryManagement.enquiries}
+                filteredEnquiries={enquiryManagement.filteredEnquiries}
+                enquiriesLoading={enquiryManagement.loading}
+                enquirySearchTerm={enquiryManagement.searchTerm}
+                setEnquirySearchTerm={enquiryManagement.setSearchTerm}
+                enquiryStatusFilter={enquiryManagement.statusFilter}
+                setEnquiryStatusFilter={enquiryManagement.setStatusFilter}
+                enquiryTypeFilter={enquiryManagement.typeFilter}
+                setEnquiryTypeFilter={enquiryManagement.setTypeFilter}
+                updateEnquiryStatus={enquiryManagement.updateEnquiryStatus}
+                updateEnquiryNotes={enquiryManagement.updateEnquiryNotes}
+                handleEnquiryDelete={enquiryManagement.handleDelete}
+
+                // Salary Guide props
+                guides={salaryGuideManagement.guides}
+                filteredGuides={salaryGuideManagement.filteredGuides}
+                downloads={salaryGuideManagement.downloads}
+                guidesLoading={salaryGuideManagement.loading}
+                guideSearchTerm={salaryGuideManagement.searchTerm}
+                setGuideSearchTerm={salaryGuideManagement.setSearchTerm}
+                guideStatusFilter={salaryGuideManagement.statusFilter}
+                setGuideStatusFilter={salaryGuideManagement.setStatusFilter}
+                showAddGuide={salaryGuideManagement.showAddGuide}
+                setShowAddGuide={salaryGuideManagement.setShowAddGuide}
+                editingGuide={salaryGuideManagement.editingGuide}
+                guideFormData={salaryGuideManagement.formData}
+                setGuideFormData={salaryGuideManagement.setFormData}
+                uploadingFile={salaryGuideManagement.uploadingFile}
+                handleGuideSubmit={salaryGuideManagement.handleSubmit}
+                handleGuideEdit={salaryGuideManagement.handleEdit}
+                handleGuideDelete={salaryGuideManagement.handleDelete}
+                resetGuideForm={salaryGuideManagement.resetForm}
+                
+                setIsSignedIn={handleSignOut} 
+              />
+            ) : (
+              <Navigate to="/signin" replace />
+            )
+          }
+        />
+      </Routes>
+    </Router>
   );
 };
 

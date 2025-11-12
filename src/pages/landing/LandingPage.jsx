@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { NavBar } from '../../components/common/NavBar';
 import { HomePage } from './HomePage';
 import { AboutPage } from './AboutPage';
@@ -7,24 +8,31 @@ import { SectorsPage } from './SectorsPage';
 import { JobsPage } from './JobsPage';
 import { InsightsPage } from './InsightsPage';
 import { ContactPage } from './ContactPage';
-import { Home, User, Briefcase, LayoutGrid, Search, FileText, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Award } from 'lucide-react';
+import { Home, User, Briefcase, LayoutGrid, Search, FileText, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Award, Instagram } from 'lucide-react';
 
-export const LandingPage = ({ setShowSignIn }) => {
-  const [activePage, setActivePage] = useState('home');
+export const LandingPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
-    { name: 'Home', id: 'home', url: '#', icon: Home },
-    { name: 'About', id: 'about', url: '#', icon: User },
-    { name: 'Services', id: 'services', url: '#', icon: Briefcase },
-    { name: 'Sectors', id: 'sectors', url: '#', icon: LayoutGrid },
-    { name: 'Jobs', id: 'jobs', url: '#', icon: Search },
-    { name: 'Insights', id: 'insights', url: '#', icon: FileText },
-    { name: 'Contact', id: 'contact', url: '#', icon: Mail }
+    { name: 'Home', id: 'home', url: '/home', icon: Home },
+    { name: 'About', id: 'about', url: '/about', icon: User },
+    { name: 'Services', id: 'services', url: '/services', icon: Briefcase },
+    { name: 'Core', id: 'sectors', url: '/sectors', icon: LayoutGrid },
+    { name: 'Jobs', id: 'jobs', url: '/jobs', icon: Search },
+    { name: 'Insights', id: 'insights', url: '/insights', icon: FileText },
+    { name: 'Contact', id: 'contact', url: '/contact', icon: Mail }
   ];
 
   const handleNavClick = (page) => {
-    setActivePage(page);
+    navigate(`/${page}`);
     window.scrollTo(0, 0);
+  };
+
+  // Get active page from current route
+  const getActivePage = () => {
+    const path = location.pathname.slice(1) || 'home';
+    return path;
   };
 
   return (
@@ -39,24 +47,22 @@ export const LandingPage = ({ setShowSignIn }) => {
               Talent Discoveri
             </span>
           </button>
-          <button
-            onClick={() => setShowSignIn(true)}
-            className="bg-white hover:bg-gray-100 text-black px-5 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm font-medium"
-          >
-            Sign In
-          </button>
+         
         </div>
       </header>
 
-      <NavBar items={navItems} onNavItemClick={handleNavClick} activePage={activePage} />
+      <NavBar items={navItems} onNavItemClick={handleNavClick} activePage={getActivePage()} />
 
-      {activePage === 'home' && <HomePage onNavigate={handleNavClick} />}
-      {activePage === 'about' && <AboutPage />}
-      {activePage === 'services' && <ServicesPage onNavigate={handleNavClick} />}
-      {activePage === 'sectors' && <SectorsPage onNavigate={handleNavClick} />}
-      {activePage === 'jobs' && <JobsPage />}
-      {activePage === 'insights' && <InsightsPage />}
-      {activePage === 'contact' && <ContactPage />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<HomePage onNavigate={handleNavClick} />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/services" element={<ServicesPage onNavigate={handleNavClick} />} />
+        <Route path="/sectors" element={<SectorsPage onNavigate={handleNavClick} />} />
+        <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+      </Routes>
 
       {/* Enhanced Footer */}
       <footer className="relative overflow-hidden">
@@ -81,7 +87,7 @@ export const LandingPage = ({ setShowSignIn }) => {
               </div>
               <h3 className="text-white font-bold text-xl">Talent Discoveri</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
-                India's first women-led BFSI recruitment firm, connecting exceptional talent with visionary organizations.
+                India's all women-led BFSI recruitment firm, connecting exceptional talent with visionary organizations.
               </p>
               <div className="flex items-center gap-2 text-sm">
                 <Award className="w-5 h-5" style={{ color: '#FF4500' }} />
@@ -99,7 +105,7 @@ export const LandingPage = ({ setShowSignIn }) => {
                     onClick={() => handleNavClick(item.id)}
                     className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center gap-2 group text-left text-sm"
                   >
-                    <span className="w-1 h-1 rounded-full bg-gray-300 group-hover:bg-orange-500 transition-colors duration-200" style={{ backgroundColor: activePage === item.id ? '#FF4500' : undefined }}></span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300 group-hover:bg-orange-500 transition-colors duration-200" style={{ backgroundColor: getActivePage() === item.id ? '#FF4500' : undefined }}></span>
                     {item.name}
                   </button>
                 ))}
@@ -112,16 +118,13 @@ export const LandingPage = ({ setShowSignIn }) => {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3 text-gray-300 text-sm">
                   <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#FF4500' }} />
-                  <span>Mumbai, Maharashtra, India</span>
+                  <span>WeWork Enam Sambhav, C - 20, G Block Rd, G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra 400051</span>
                 </li>
-                <li className="flex items-start gap-3 text-gray-300 text-sm">
-                  <Phone className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#FF4500' }} />
-                  <span>+91 (XXX) XXX-XXXX</span>
-                </li>
+                
                 <li className="flex items-start gap-3 text-gray-300 text-sm">
                   <Mail className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#FF4500' }} />
                   <a href="mailto:info@talentdiscoveri.com" className="hover:text-white transition-colors duration-200">
-                    info@talentdiscoveri.com
+                    talent@talentdiscoveri.com
                   </a>
                 </li>
               </ul>
@@ -130,21 +133,13 @@ export const LandingPage = ({ setShowSignIn }) => {
               <div className="pt-4">
                 <h4 className="text-white font-semibold text-sm mb-3">Follow Us</h4>
                 <div className="flex gap-3">
-                  <a
-                    href="https://www.facebook.com/talentdiscoveri"
+                <a
+                    href="https://www.instagram.com/talentdiscoveri/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-300 transform hover:scale-110 group"
                   >
-                    <Facebook className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-200" />
-                  </a>
-                  <a
-                    href="https://x.com/TalentDiscoveri"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-300 transform hover:scale-110 group"
-                  >
-                    <Twitter className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-200" />
+                    <Instagram className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-200" />
                   </a>
                   <a
                     href="https://www.linkedin.com/company/talent-discoveri-consulting-india-pvt-ltd/"

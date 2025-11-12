@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Lock, User } from 'lucide-react';
 import { supabase } from '../../config/supabase';
 
-export const SignInPage = ({ setIsSignedIn, setShowSignIn }) => {
+export const SignInPage = ({ setIsSignedIn }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,6 +31,7 @@ export const SignInPage = ({ setIsSignedIn, setShowSignIn }) => {
         // Store username in localStorage for session persistence
         localStorage.setItem('admin_user', username);
         setIsSignedIn(true);
+        navigate('/dashboard');
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -37,7 +40,7 @@ export const SignInPage = ({ setIsSignedIn, setShowSignIn }) => {
   };
 
   const handleBackToHome = () => {
-    setShowSignIn(false);
+    navigate('/home');
     setUsername('');
     setPassword('');
     setError('');
@@ -68,7 +71,7 @@ export const SignInPage = ({ setIsSignedIn, setShowSignIn }) => {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: 'linear-gradient(135deg, #FF4500 0%, #FF6A33 100%)', boxShadow: '0 0 30px rgba(255, 69, 0, 0.5)' }}>
               <Lock className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Only for Admin</h1>
             <p className="text-gray-300 text-sm">Sign in to access your dashboard</p>
           </div>
 

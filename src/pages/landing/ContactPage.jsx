@@ -223,23 +223,13 @@ export const ContactPage = () => {
 
             {/* Contact Info Cards */}
             <div className="space-y-6">
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02]">
-                <div className="p-6 text-center">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg" style={{ background: 'linear-gradient(135deg, #FF4500 0%, #FF6A33 100%)' }}>
-                    <PhoneIcon className="text-white w-6 h-6" />
-                  </div>
-                  <h4 className="font-bold text-white text-base mb-2">Call Us</h4>
-                  <p className="text-gray-300 text-sm">+91 (0) 123 456 7890</p>
-                </div>
-              </div>
-
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden hover:border-orange-400/50 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:scale-[1.02]">
                 <div className="p-6 text-center">
                   <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg" style={{ background: 'linear-gradient(135deg, #FF4500 0%, #FF6A33 100%)' }}>
                     <MailIcon className="text-white w-6 h-6" />
                   </div>
                   <h4 className="font-bold text-white text-base mb-2">Email Us</h4>
-                  <p className="text-gray-300 text-sm">hello@talentdiscoveri.com</p>
+                  <p className="text-gray-300 text-sm">talent@talentdiscoveri.com</p>
                 </div>
               </div>
 
@@ -249,7 +239,7 @@ export const ContactPage = () => {
                     <LocationIcon className="text-white w-6 h-6" />
                   </div>
                   <h4 className="font-bold text-white text-base mb-2">Visit Us</h4>
-                  <p className="text-gray-300 text-sm">Mumbai, Maharashtra, India</p>
+                  <p className="text-gray-300 text-sm">WeWork Enam Sambhav, C - 20, G Block Rd, G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra 400051</p>
                 </div>
               </div>
             </div>
