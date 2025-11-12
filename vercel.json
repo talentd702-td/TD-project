@@ -1,0 +1,9 @@
+{
+    "build": {
+      "env": {
+        "NEXT_DISABLE_STATIC_IMAGES": "true",
+        "NEXT_SKIP_BUILD_STATIC_GENERATION": "true"
+      }
+    }
+  }
+  

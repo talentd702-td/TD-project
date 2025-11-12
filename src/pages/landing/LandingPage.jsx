@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { NavBar } from '../../components/common/NavBar';
 import { HomePage } from './HomePage';
 import { AboutPage } from './AboutPage';
@@ -11,8 +11,8 @@ import { ContactPage } from './ContactPage';
 import { Home, User, Briefcase, LayoutGrid, Search, FileText, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Award, Instagram } from 'lucide-react';
 
 export const LandingPage = () => {
-  const router = useRouter();
-  const { page = 'home' } = router.query;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
     { name: 'Home', id: 'home', url: '/home', icon: Home },
@@ -24,36 +24,15 @@ export const LandingPage = () => {
     { name: 'Contact', id: 'contact', url: '/contact', icon: Mail }
   ];
 
-  const handleNavClick = (pageName) => {
-    router.push(`/landing?page=${pageName}`, undefined, { shallow: true });
+  const handleNavClick = (page) => {
+    navigate(`/${page}`);
     window.scrollTo(0, 0);
   };
 
-  // Get active page from query params
+  // Get active page from current route
   const getActivePage = () => {
-    return (page || 'home').toString();
-  };
-
-  // Render the appropriate page component
-  const renderPage = () => {
-    switch (getActivePage()) {
-      case 'home':
-        return <HomePage onNavigate={handleNavClick} />;
-      case 'about':
-        return <AboutPage />;
-      case 'services':
-        return <ServicesPage onNavigate={handleNavClick} />;
-      case 'sectors':
-        return <SectorsPage onNavigate={handleNavClick} />;
-      case 'jobs':
-        return <JobsPage />;
-      case 'insights':
-        return <InsightsPage />;
-      case 'contact':
-        return <ContactPage />;
-      default:
-        return <HomePage onNavigate={handleNavClick} />;
-    }
+    const path = location.pathname.slice(1) || 'home';
+    return path;
   };
 
   return (
@@ -74,8 +53,16 @@ export const LandingPage = () => {
 
       <NavBar items={navItems} onNavItemClick={handleNavClick} activePage={getActivePage()} />
 
-      {/* Render the current page */}
-      {renderPage()}
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<HomePage onNavigate={handleNavClick} />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/services" element={<ServicesPage onNavigate={handleNavClick} />} />
+        <Route path="/sectors" element={<SectorsPage onNavigate={handleNavClick} />} />
+        <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+      </Routes>
 
       {/* Enhanced Footer */}
       <footer className="relative overflow-hidden">
