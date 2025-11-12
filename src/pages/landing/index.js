@@ -1,8 +1,9 @@
-// pages/landing/index.js
 import dynamic from "next/dynamic";
 
-const LandingPage = dynamic(() => import("./LandingPage"), {
-  ssr: false, // <--- disables server-side rendering for this page
-});
+// Import from components folder now
+const LandingPage = dynamic(
+  () => import("../../src/components/landing/LandingPage"), 
+  { ssr: false }
+);
 
 export default LandingPage;
