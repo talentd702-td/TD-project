@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // Force fully dynamic rendering
+    // Make everything dynamic at runtime — disables static optimization
     output: 'standalone',
-  
-    // Optional safety: ensure no static generation is attempted
+    generateBuildId: async () => 'build',
     experimental: {
-      appDir: true, // if you’re using the /app directory
+      // This key is stable in Next 15 for forcing runtime rendering
+      dynamicIO: true,
     },
+    // Force all pages to be rendered on demand instead of at build
+    revalidate: 0,
   };
   
   export default nextConfig;

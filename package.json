@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "touch .no-static && next build",
     "start": "next start",
     "lint": "next lint"
   },
