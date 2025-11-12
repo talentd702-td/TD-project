@@ -4,7 +4,8 @@
         "NEXT_SKIP_BUILD_STATIC_GENERATION": "true",
         "NEXT_DISABLE_STATIC_IMAGES": "true",
         "NEXT_FORCE_DYNAMIC": "true",
-        "NEXT_RUNTIME": "nodejs"
+        "NEXT_RUNTIME": "nodejs",
+        "DISABLE_ESLINT_PLUGIN": "true"
       }
     }
   }
