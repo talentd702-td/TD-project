@@ -180,7 +180,7 @@ export const AboutPage = () => {
                     A Pioneer's Journey
                   </h3>
                   <p className="text-lg text-white/90 leading-relaxed mb-6">
-                    India's first women-led, homegrown recruitment firm specializing exclusively in BFSI
+                    India's women-led, homegrown recruitment firm specializing exclusively in BFSI
                   </p>
                   <div className="pt-4 border-t border-white/30">
                     <p className="text-sm text-white/80 italic">
