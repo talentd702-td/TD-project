@@ -1,3 +1,6 @@
+"use client";
+export const dynamic = "force-dynamic";
+
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { NavBar } from '../../components/common/NavBar';
