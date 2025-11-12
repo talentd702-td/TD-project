@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { LandingPage } from './pages/landing/LandingPageComponent';
+import LandingPage from './pages/landing/LandingPage';
 import { SignInPage } from './pages/landing/SignInPage';
 import { AppLayout } from './pages/dashboard/AppLayout';
 import { useClientManagement } from './hooks/useClientManagement';
@@ -11,6 +11,8 @@ import { useCandidateManagement } from './hooks/useCandidateManagement';
 import { useArticleManagement } from './hooks/useArticleManagement';
 import { useEnquiryManagement } from './hooks/useEnquiryManagement';
 import { useSalaryGuideManagement } from './hooks/useSalaryGuideManagement';
+
+
 
 const TalentDiscoveryApp = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
