@@ -18,14 +18,10 @@ export default function TalentDiscoveryApp() {
         padding: "2rem",
       }}
     >
-      <img
-        src="/logo.png"
-        alt="Talent Discoveri"
-        style={{ width: "120px", marginBottom: "2rem" }}
-      />
       <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
         🚧 Under Construction 🚧
       </h1>
+
       <p style={{ fontSize: "1.25rem", color: "#ccc", maxWidth: "500px" }}>
         We’re working hard to improve your experience.<br />
         Please check back soon.
