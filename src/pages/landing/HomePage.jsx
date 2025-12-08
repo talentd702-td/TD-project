@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import { TrustElements } from '../../components/landing/TrustElements';
-import { GradientBars } from '../../components/landing/GradientBars';
-import { TestimonialsWithNavigation } from '../../components/landing/TestimonialsWithNavigation';
-import { testimonialsdir } from '../../data/testimonialsdir';
-import { testimonials } from '../../data/testimonials';
 import { 
   Users, 
   Briefcase, 
@@ -441,18 +436,10 @@ export const HomePage = ({ onNavigate }) => {
                   <h3 className="text-3xl sm:text-4xl font-bold text-white mb-3">
                     Abhishek Sharma
                   </h3>
-                  
-                  <div className="inline-block mb-4">
-                    <div className="px-6 py-2 rounded-full border-2 border-orange-500 bg-orange-500/20">
-                      <p className="text-base font-bold text-orange-400">
-                        Founder & Principal Architect
-                      </p>
-                    </div>
-                  </div>
 
                   <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
                     <CheckCircle className="w-4 h-4 text-orange-500" />
-                    <p>PGDIRM, B.Com (H) • Delhi University</p>
+                    <p>PGDIRM • B.Com (H), Delhi University</p>
                   </div>
                 </div>
 
@@ -462,20 +449,17 @@ export const HomePage = ({ onNavigate }) => {
                 {/* Bio */}
                 <div className="space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
                   <p>
-                    Driven by the belief that <span className="font-semibold text-white">people are the core of every organization's strength</span>, 
-                    Abhishek embodies a rare balance of entrepreneurial vision and deep industry expertise.
+                    Abhishek brings a mature and multidimensional view to human-capital consulting, built on deep experience across the people spectrum. His expertise extends far beyond recruitment—allowing him to evaluate leadership capability, organisational alignment, and long-term talent strategy with clarity and precision.
                   </p>
                   
                   <p>
-                    As Founder of <span className="font-bold text-orange-400">Talent Discoveri (est. 2008)</span>, he has redefined 
-                    talent acquisition within the BFSI sector, evolving from traditional search to becoming an influential force 
-                    in shaping leadership and enabling organizational growth.
+                    While senior leadership hiring remains a defining strength, his exposure to talent management, compensation and benefits, and training and development equips him with a 360° understanding of how organisations build, develop, and sustain high-performing teams. Abhishek's approach is holistic, insight-driven, and rooted in long-term impact, enabling him to support clients in shaping talent structures that drive enduring organisational success.
                   </p>
 
                   {/* Quote */}
                   <div className="relative pl-4 border-l-3 border-orange-500 bg-orange-500/5 rounded-r-lg py-3 pr-4 mt-6">
                     <p className="text-white font-semibold italic text-sm">
-                      "Uniting vision with integrity, turning human potential into lasting organizational success."
+                      "Uniting vision with integrity—transforming human potential into lasting organisational success."
                     </p>
                   </div>
 
@@ -483,19 +467,23 @@ export const HomePage = ({ onNavigate }) => {
                   <div className="grid grid-cols-2 gap-3 mt-6">
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                      <span>20+ Years Experience</span>
+                      <span>Leadership Hiring</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                      <span>Risk Management Expert</span>
+                      <span>Strategic Advisory</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                      <span>Strategic Advisor</span>
+                      <span>Human-Capital Consulting</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                      <span>Industry Pioneer</span>
+                      <span>Risk Management</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                      <span>Industry Expertise</span>
                     </div>
                   </div>
                 </div>
@@ -538,14 +526,6 @@ export const HomePage = ({ onNavigate }) => {
                   <h3 className="text-3xl sm:text-4xl font-bold text-white mb-3">
                     Krunal B. Kumar
                   </h3>
-                  
-                  <div className="inline-block mb-4">
-                    <div className="px-6 py-2 rounded-full border-2 border-blue-500 bg-blue-500/20">
-                      <p className="text-base font-bold text-blue-400">
-                        Director & Strategic Partner
-                      </p>
-                    </div>
-                  </div>
 
                   <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
                     <CheckCircle className="w-4 h-4 text-blue-500" />
@@ -559,19 +539,17 @@ export const HomePage = ({ onNavigate }) => {
                 {/* Bio */}
                 <div className="space-y-4 text-gray-300 text-sm sm:text-base leading-relaxed">
                   <p>
-                    Driven by the conviction that <span className="font-semibold text-white">people constitute the nucleus of every transformation</span>, 
-                    Krunal anchors her philosophy on a profound axiom: when people evolve, organizations flourish.
+                    Krunal brings a globally informed and strategically grounded approach to people transformation. Her expertise spans talent architecture, culture building, and organisational evolution—enabling companies to translate ambition into reality through their people.
                   </p>
                   
                   <p>
-                    With extensive expertise in talent architecture and organizational evolution, she masterfully bridges 
-                    strategic intent with empathetic leadership—transmuting human potential into sustained organizational excellence.
+                    With a strong blend of analytical insight and human-centric leadership, she designs people systems that unlock capability, strengthen culture, and drive sustainable performance. Her exposure across diverse environments gives her a nuanced understanding of how organisations adapt, grow, and maintain long-term impact.
                   </p>
 
                   {/* Quote */}
                   <div className="relative pl-4 border-l-3 border-blue-600 bg-blue-600/5 rounded-r-lg py-3 pr-4 mt-6">
                     <p className="text-white font-semibold italic text-sm">
-                      "Crafting ecosystems where purpose, performance, and people harmoniously converge."
+                      "Discovering talent, elevating people, and enabling organisations to evolve with purpose and clarity."
                     </p>
                   </div>
 
@@ -583,11 +561,15 @@ export const HomePage = ({ onNavigate }) => {
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
-                      <span>Global Expertise</span>
+                      <span>Culture Transformation</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
-                      <span>Culture Transformation</span>
+                      <span>People Strategy</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                      <span>Global Expertise</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
                       <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
