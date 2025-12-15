@@ -439,7 +439,7 @@ export const HomePage = ({ onNavigate }) => {
 
                   <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
                     <CheckCircle className="w-4 h-4 text-orange-500" />
-                    <p>PGDIRM • B.Com (H), Delhi University</p>
+                    <p>BIMTECH • B.Com (H), Delhi University</p>
                   </div>
                 </div>
 
