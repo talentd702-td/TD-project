@@ -152,7 +152,7 @@ export const AboutPage = () => {
                     </div>
                     <div className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
                       <div className="text-3xl md:text-4xl font-bold mb-2" style={{ color: '#FF4500' }}>#1</div>
-                      <div className="text-sm text-gray-300">Women-Led Firm</div>
+                      <div className="text-sm text-gray-300">Indian Recruitment Firm</div>
                     </div>
                   </div>
                 </div>
