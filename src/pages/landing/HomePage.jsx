@@ -98,7 +98,7 @@ export const HomePage = ({ onNavigate }) => {
               <Users className="w-8 h-8 sm:w-10 sm:h-10" style={{ color: '#FF4500' }} />
             </div>
             <h3 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">1000+</h3>
-            <p className="text-white text-base sm:text-lg font-semibold mb-1 sm:mb-2">Candidates in Network</p>
+            <p className="text-white text-base sm:text-lg font-semibold mb-1 sm:mb-2">Successful Placements</p>
             <p className="text-white text-sm opacity-75">Niche specialists & senior leadership</p>
           </div>
 
@@ -106,7 +106,7 @@ export const HomePage = ({ onNavigate }) => {
             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full mb-4 sm:mb-6" style={{ backgroundColor: 'rgba(255, 69, 0, 0.2)', border: '2px solid #FF4500' }}>
               <Briefcase className="w-8 h-8 sm:w-10 sm:h-10" style={{ color: '#FF4500' }} />
             </div>
-            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Diverse</h3>
+            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Well-established Insurance</h3>
             <p className="text-white text-base sm:text-lg font-semibold mb-1 sm:mb-2">Client Portfolio</p>
             <p className="text-white text-sm opacity-75">Insurance & financial services leaders</p>
           </div>
@@ -124,8 +124,8 @@ export const HomePage = ({ onNavigate }) => {
             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full mb-4 sm:mb-6" style={{ backgroundColor: 'rgba(255, 69, 0, 0.2)', border: '2px solid #FF4500' }}>
               <Award className="w-8 h-8 sm:w-10 sm:h-10" style={{ color: '#FF4500' }} />
             </div>
-            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Woman-led</h3>
-            <p className="text-white text-base sm:text-lg font-semibold mb-1 sm:mb-2">BFSI Firm</p>
+            <h3 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Experts-led</h3>
+            <p className="text-white text-base sm:text-lg font-semibold mb-1 sm:mb-2">Insurance Firm</p>
             <p className="text-white text-sm opacity-75">Pioneering ethos in India</p>
           </div>
         </div>
@@ -235,7 +235,7 @@ export const HomePage = ({ onNavigate }) => {
                     Proven Expertise
                   </h3>
                   <p className="text-white text-base sm:text-lg leading-relaxed opacity-90">
-                    Over 20 years of specialized recruitment across Insurance, BFSI, and allied sectors.
+                    Over 20 years of specialized recruitment across Insurance and allied sectors.
                   </p>
                 </div>
               </div>
@@ -326,7 +326,7 @@ export const HomePage = ({ onNavigate }) => {
                     Trusted Partner
                   </h3>
                   <p className="text-white text-base sm:text-lg leading-relaxed opacity-90">
-                    Preferred recruitment ally for leading BFSI institutions.
+                    Preferred recruitment ally for leading Insurance institutions.
                   </p>
                 </div>
               </div>
