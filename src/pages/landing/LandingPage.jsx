@@ -229,9 +229,6 @@ export default function LandingPage() {
           <div className="pb-6 flex justify-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
               <Award className="w-4 h-4" style={{ color: "#FF4500" }} />
-              <span className="text-gray-300 text-xs font-medium">
-                Pioneering Women-Led BFSI Recruitment Excellence
-              </span>
             </div>
           </div>
         </div>
