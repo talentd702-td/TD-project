@@ -138,7 +138,7 @@ export default function LandingPage() {
               </p>
               <div className="flex items-center gap-2 text-sm">
                 <Award className="w-5 h-5" style={{ color: "#FF4500" }} />
-                <span className="text-gray-300">Women-Led Excellence</span>
+                <span className="text-gray-300"></span>
               </div>
             </div>
 
