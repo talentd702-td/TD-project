@@ -229,7 +229,7 @@ export const ContactPage = () => {
                     <MailIcon className="text-white w-6 h-6" />
                   </div>
                   <h4 className="font-bold text-white text-base mb-2">Email Us</h4>
-                  <p className="text-gray-300 text-sm">talent@talentdiscoveri.com</p>
+                  <p className="text-gray-300 text-sm">enquiries@talentdiscoveri.com</p>
                 </div>
               </div>
 
