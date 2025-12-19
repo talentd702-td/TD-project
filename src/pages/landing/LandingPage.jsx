@@ -133,7 +133,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-white font-bold text-xl">Talent Discoveri</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
-                India's Insurance recruitment firm recruitment firm, connecting
+                India's Insurance recruitment firm, connecting
                 exceptional talent with visionary organizations.
               </p>
               <div className="flex items-center gap-2 text-sm">
