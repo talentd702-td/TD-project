@@ -203,7 +203,7 @@ export const SectorsPage = ({ onNavigate }) => {
                 </div>
                 
                 <p className="text-2xl md:text-3xl lg:text-4xl text-gray-300 italic font-light leading-relaxed pt-2">
-                  Dedicated exclusively to the BFSI and insurance sector
+                  Rooted in the Insurance sector, with a broader industry perspective
                 </p>
               </div>
 
