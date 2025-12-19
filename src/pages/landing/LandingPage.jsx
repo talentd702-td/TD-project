@@ -133,7 +133,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-white font-bold text-xl">Talent Discoveri</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
-                India's all women-led BFSI recruitment firm, connecting
+                India's Insurance recruitment firm recruitment firm, connecting
                 exceptional talent with visionary organizations.
               </p>
               <div className="flex items-center gap-2 text-sm">
@@ -184,10 +184,10 @@ export default function LandingPage() {
                     style={{ color: "#FF4500" }}
                   />
                   <a
-                    href="mailto:info@talentdiscoveri.com"
+                    href="mailto:enquiries@talentdiscoveri.com"
                     className="hover:text-white transition-colors duration-200"
                   >
-                    talent@talentdiscoveri.com
+                    enquiries@talentdiscoveri.com
                   </a>
                 </li>
               </ul>
