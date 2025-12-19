@@ -97,15 +97,15 @@ export const AboutPage = () => {
 
       <div className="relative z-10 pt-24 pb-16 px-4 sm:px-6 md:px-8">
         <div className="max-w-7xl mx-auto">
-          
+
           {/* Hero Section - Powerful Opening */}
           <div className="mb-20">
             <div className="relative overflow-hidden rounded-3xl">
               {/* Background with overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-gray-900/70 to-orange-900/50 backdrop-blur-sm"></div>
-              
+
               {/* Background image */}
-              <div 
+              <div
                 className="absolute inset-0 opacity-25"
                 style={{
                   backgroundImage: 'url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200")',
@@ -113,7 +113,7 @@ export const AboutPage = () => {
                   backgroundPosition: 'center'
                 }}
               ></div>
-              
+
               {/* Decorative overlay */}
               <div className="absolute inset-0" style={{
                 backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(255, 69, 0, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(0, 53, 102, 0.15) 0%, transparent 50%)'
@@ -131,9 +131,9 @@ export const AboutPage = () => {
                   <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6">
                     Where Ambition Meets <span style={{ color: '#FF4500' }}>Opportunity</span>
                   </h1>
-                  
+
                   <p className="text-xl md:text-2xl text-gray-300 font-light leading-relaxed mb-8 max-w-4xl mx-auto">
-                    For over 17 years, we've been the trusted bridge connecting exceptional talent with transformative careers in BFSI
+                    For over 17 years, we've been the trusted bridge connecting exceptional talent with transformative careers in Insurance
                   </p>
 
                   {/* Stats Row */}
@@ -148,11 +148,7 @@ export const AboutPage = () => {
                     </div>
                     <div className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
                       <div className="text-3xl md:text-4xl font-bold text-white mb-2">100%</div>
-                      <div className="text-sm text-gray-300">BFSI Focused</div>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-xl rounded-xl p-6 border border-white/20">
-                      <div className="text-3xl md:text-4xl font-bold mb-2" style={{ color: '#FF4500' }}>#1</div>
-                      <div className="text-sm text-gray-300">Indian Recruitment Firm</div>
+                      <div className="text-sm text-gray-300">Insurance-focused</div>
                     </div>
                   </div>
                 </div>
@@ -166,7 +162,7 @@ export const AboutPage = () => {
               {/* Left - Image/Visual */}
               <div className="relative overflow-hidden rounded-2xl h-full min-h-[400px]">
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-600/90 to-blue-900/90"></div>
-                <div 
+                <div
                   className="absolute inset-0 opacity-30"
                   style={{
                     backgroundImage: 'url("https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200")',
@@ -180,7 +176,7 @@ export const AboutPage = () => {
                     A Pioneer's Journey
                   </h3>
                   <p className="text-lg text-white/90 leading-relaxed mb-6">
-                    India's women-led, homegrown recruitment firm specializing exclusively in BFSI
+                    India's women-led, homegrown recruitment firm specializing exclusively in Insurance
                   </p>
                   <div className="pt-4 border-t border-white/30">
                     <p className="text-sm text-white/80 italic">
@@ -202,7 +198,7 @@ export const AboutPage = () => {
                 <p className="text-lg text-gray-300 leading-relaxed">
                   Talent Discoveri Consulting is a <span className="font-semibold text-white">premier recruitment and executive search enterprise</span>, distinguished for its ability to align exceptional human capital with visionary organizations.
                 </p>
-                
+
                 <p className="text-lg text-gray-300 leading-relaxed">
                   Our mandate transcends conventional hiring — we delve deeply into aspirations, competencies, and long-term ambitions, curating opportunities where professionals can truly flourish and lead.
                 </p>
@@ -239,10 +235,10 @@ export const AboutPage = () => {
                   >
                     {/* Animated background on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
+
                     <div className="relative z-10 p-8">
                       <div className="flex items-start gap-6">
-                        <div 
+                        <div
                           className="w-16 h-16 flex-shrink-0 rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
                           style={{ background: `linear-gradient(135deg, ${value.color} 0%, ${value.color}dd 100%)` }}
                         >
@@ -274,18 +270,18 @@ export const AboutPage = () => {
                   <span className="text-sm font-semibold text-white uppercase tracking-wider">17 Years of Excellence</span>
                 </div>
               </div>
-              
+
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
                 The Journey from <span style={{ color: '#FF4500' }}>Dream</span> to <span style={{ color: '#FF4500' }}>Distinction</span>
               </h2>
-              
+
               <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-4">
-                Every great company has a story. Ours is one of resilience, innovation, and unwavering commitment 
+                Every great company has a story. Ours is one of resilience, innovation, and unwavering commitment
                 to connecting exceptional talent with transformative opportunities.
               </p>
-              
+
               <p className="text-lg text-gray-400 max-w-3xl mx-auto italic">
-                Five defining chapters that shaped India's premier BFSI talent consultancy
+                Five defining chapters that shaped India's premier Insurance talent consultancy
               </p>
             </div>
 
@@ -293,14 +289,14 @@ export const AboutPage = () => {
             <div className="relative overflow-hidden rounded-3xl">
               {/* Dark background to blend with page */}
               <div className="absolute inset-0 bg-gradient-to-br from-gray-900/50 via-slate-900/50 to-gray-900/50"></div>
-              
+
               {/* Subtle glow effects */}
               <div className="absolute top-1/4 left-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
               <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
-              
+
               {/* Timeline Component */}
               <div className="relative z-10 p-8 md:p-12">
-                <Timeline3D 
+                <Timeline3D
                   events={timelineEvents}
                   backgroundColor="bg-transparent"
                   primaryColor="bg-gradient-to-br from-orange-600 via-orange-500 to-orange-700"
@@ -339,7 +335,7 @@ export const AboutPage = () => {
               </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto mb-6"></div>
               <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-                Driven by expertise, united by purpose — our team brings decades of combined experience in BFSI talent acquisition
+                Driven by expertise, united by purpose — our team brings decades of combined experience in Insurance talent acquisition
               </p>
             </div>
 
@@ -353,7 +349,7 @@ export const AboutPage = () => {
               Your Success is Our Legacy
             </h3>
             <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
-              Whether you're a professional seeking your next career milestone or an organization building tomorrow's leadership team, 
+              Whether you're a professional seeking your next career milestone or an organization building tomorrow's leadership team,
               we're here to make that vision a reality.
             </p>
             <div className="flex items-center justify-center gap-3">
