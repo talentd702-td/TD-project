@@ -44,7 +44,7 @@ export const testimonials = [
   {
     quote: "Results-oriented talent acquisition professional with strong consulting and advisory capabilities. Skilled in sourcing specialized talent and managing complex recruitment mandates.",
     name: "Shubhangi Kavishwar",
-    designation: "Executive - Principal Consultant - Talent Acquisition",
+    designation: "Principal Consultant - Talent Acquisition",
     src: "./shubhangi.png"
   },
   {
